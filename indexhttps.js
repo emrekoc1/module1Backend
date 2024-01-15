@@ -10,11 +10,11 @@ const { pool } = require('./db');
 const nodemailer = require("nodemailer");
 const path = require('path');
 const transliteration = require('transliteration');
-const axios = require('axios'); // Import the axios module
 const { finished } = require("nodemailer/lib/xoauth2");
 const { url } = require("inspector");
 const { Console } = require("console");
 const https = require('https');
+const axios = require('axios');
 
 
 
@@ -23,7 +23,9 @@ app.use(cors());
 
 const options = {
   key: fs.readFileSync('./key.pem'),     
-  cert: fs.readFileSync('./cert.pem')    
+  cert: fs.readFileSync('./cert.pem') ,  
+  rejectUnauthorized: false,
+ 
 };
 app.use(express.json());
 

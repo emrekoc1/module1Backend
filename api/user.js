@@ -122,6 +122,7 @@ router.post('/getusers', async (req, res, next) => {
             // 	res.json({ status: 402, message: "", data: err })
             // })
             let ts = Date.now();
+            console.log(result)
             res.json({
               "status": 200,
               "data": {
