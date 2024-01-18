@@ -13,7 +13,32 @@ const { pool } = require('../db');
 
 
 
-
+router.post("/getanketicerik", async (req, res) => {
+    try {
+      await pool.connect()
+      const poolRequest = await pool.request();
+  
+      user_departman = req.body.departman_id
+      anket_id = req.body.anket_id
+      const getDatas = await poolRequest.query(`SELECT an.anket_baslik, an.anket_aciklama,ad.departman,ai.soru_basligi, ai.soru_type,ao.options,ai.id as soru_id, an.id as anket_id FROM anket an INNER JOIN anket_departman ad ON  ad.anket_id = an.id INNER JOIN anket_icerik ai ON ai.anket_id = an.id INNER JOIN anket_options ao ON ao.icerik_id = ai.id where an.id = '${anket_id}' AND ad.departman = '${user_departman}'`)
+      if (getDatas.recordset[0] == 0) {
+        res.json({
+          "status": 400,
+          data: []
+        })
+      } else {
+  
+        res.json({
+          "status": 200,
+          data: getDatas
+        })
+      }
+  
+  
+    } catch (err) {
+      console.error(err.message);
+    }
+  });
 router.post("/postanket", async (req, res) => {
     try {
       let is_activite
@@ -71,6 +96,7 @@ router.post("/postanket", async (req, res) => {
           data: getDatas
         })
       }
+      
   
   
     } catch (err) {
@@ -78,32 +104,6 @@ router.post("/postanket", async (req, res) => {
     }
   });
 
-  router.post("/getanketicerik", async (req, res) => {
-    try {
-      await pool.connect()
-      const poolRequest = await pool.request();
-  
-      user_departman = req.body.departman_id
-      anket_id = req.body.anket_id
-      const getDatas = await poolRequest.query(`SELECT an.anket_baslik, an.anket_aciklama,ad.departman,ai.soru_basligi, ai.soru_type,ao.options,ai.id as soru_id, an.id as anket_id FROM anket an INNER JOIN anket_departman ad ON  ad.anket_id = an.id INNER JOIN anket_icerik ai ON ai.anket_id = an.id INNER JOIN anket_options ao ON ao.icerik_id = ai.id where an.id = '${anket_id}' AND ad.departman = '${user_departman}'`)
-      if (getDatas.recordset[0] == 0) {
-        res.json({
-          "status": 400,
-          data: []
-        })
-      } else {
-  
-        res.json({
-          "status": 200,
-          data: getDatas
-        })
-      }
-  
-  
-    } catch (err) {
-      console.error(err.message);
-    }
-  });
 
   
 router.post("/updateanketicerikDuzenle", async (req, res) => {

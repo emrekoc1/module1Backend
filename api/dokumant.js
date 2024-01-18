@@ -9,7 +9,9 @@ const request = require('request')
 router.use(cors());
 const { pool } = require('../db');
 const multer = require('multer');
+const path = require('path');
 
+const transliteration = require('transliteration');
 
 
 
@@ -21,7 +23,7 @@ const storageDocs = multer.diskStorage({
   
   
   
-      const destinationPath = path.join(__dirname, '..', '..', '..', '..', '..', 'wamp64', 'www', 'assets', 'docs');
+      const destinationPath = path.join(__dirname, '..', '..', '..', '..','..', '..', 'wamp64', 'www', 'assets', 'docs');
       //const destinationPath = path.join(__dirname, '..', 'front end', 'front end', 'src', 'assets', 'docs');
       console.log("burayı tamamladı ", destinationPath)
       callBack(null, destinationPath)
