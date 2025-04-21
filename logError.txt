@@ -1,0 +1,818 @@
+Error occurred at 2024-05-13T04:38:21.803Z:
+Error: TypeError: Cannot read properties of undefined (reading 'user_name')
+Error occurred at 2024-05-13T13:51:25.407Z:
+Error: error: syntax error at or near "SELECT"
+Error occurred at 2024-05-16T08:43:46.225Z:
+Error: error: division by zero
+Error occurred at 2024-05-16T08:45:24.984Z:
+Error: error: division by zero
+Error occurred at 2024-05-16T09:43:26.984Z:
+Error: TypeError: Cannot read properties of undefined (reading 'user_name')
+Error occurred at 2024-05-16T09:44:07.515Z:
+Error: TypeError: Cannot read properties of undefined (reading 'user_name')
+Error occurred at 2024-05-16T09:47:27.947Z:
+Error: TypeError: Cannot read properties of undefined (reading 'user_name')
+Error occurred at 2024-05-17T07:31:37.573Z:
+Error: error: invalid input syntax for type date: "undefined"
+Error occurred at 2024-05-20T08:15:05.530Z:
+Error: error: invalid input syntax for type integer: "{"vardiya":1,"production_dates":"2024-5-20","hat_id":1}"
+Error occurred at 2024-05-28T09:14:41.077Z:
+Error: error: syntax error at or near "order"
+Error occurred at 2024-05-28T11:31:21.988Z:
+Error: ReferenceError: birim_id is not defined
+Error occurred at 2024-05-28T11:31:57.523Z:
+Error: ReferenceError: birim_id is not defined
+Error occurred at 2024-05-28T11:32:22.581Z:
+Error: TypeError: Assignment to constant variable.
+Error occurred at 2024-05-28T11:32:57.265Z:
+Error: TypeError: Assignment to constant variable.
+Error occurred at 2024-05-28T11:57:09.708Z:
+Error: TypeError: Cannot read properties of undefined (reading 'user_name')
+Error occurred at 2024-05-28T12:00:13.902Z:
+Error: TypeError: Cannot read properties of undefined (reading 'user_name')
+Error occurred at 2024-05-28T14:17:48.052Z:
+Error: error: operator does not exist: integer = boolean
+Error occurred at 2024-05-28T14:19:34.613Z:
+Error: error: operator does not exist: integer = boolean
+Error occurred at 2024-05-28T14:21:17.614Z:
+Error: error: operator does not exist: integer = boolean
+Error occurred at 2024-05-28T14:21:48.301Z:
+Error: error: operator does not exist: integer = boolean
+Error occurred at 2024-05-28T14:24:15.519Z:
+Error: error: operator does not exist: integer = boolean
+Error occurred at 2024-05-28T14:25:32.040Z:
+Error: error: operator does not exist: integer = boolean
+Error occurred at 2024-05-28T14:26:29.295Z:
+Error: error: operator does not exist: integer = boolean
+Error occurred at 2024-05-28T14:26:58.475Z:
+Error: error: invalid input syntax for type integer: "2024-05-27"
+Error occurred at 2024-05-28T14:28:40.712Z:
+Error: error: trailing junk after numeric literal at or near "27A"
+Error occurred at 2024-05-30T05:32:08.495Z:
+Error: error: column "undefined" does not exist
+Error occurred at 2024-05-30T05:40:01.060Z:
+Error: error: syntax error at or near "as"
+Error occurred at 2024-05-30T05:40:34.456Z:
+Error: error: syntax error at or near "as"
+Error occurred at 2024-05-30T06:33:54.605Z:
+Error: error: column "nan" does not exist
+Error occurred at 2024-05-30T06:37:05.315Z:
+Error: error: column "nan" does not exist
+Error occurred at 2024-05-30T07:14:31.859Z:
+Error: error: syntax error at or near "Kurma"
+Error occurred at 2024-05-30T07:24:24.964Z:
+Error: error: column mpps.operasyon_time does not exist
+Error occurred at 2024-05-30T07:25:20.015Z:
+Error: error: subquery uses ungrouped column "mp.work_id" from outer query
+Error occurred at 2024-05-30T08:07:09.868Z:
+Error: error: syntax error at or near "SELECT"
+Error occurred at 2024-05-31T08:48:25.044Z:
+Error: error: column "undefined" does not exist
+Error occurred at 2024-06-03T06:12:23.105Z:
+Error: ReferenceError: item is not defined
+Error occurred at 2024-06-03T06:13:16.764Z:
+Error: ReferenceError: item is not defined
+Error occurred at 2024-06-03T06:15:31.158Z:
+Error: ReferenceError: item is not defined
+Error occurred at 2024-06-26T06:05:02.791Z:
+Error: error: division by zero
+Error occurred at 2024-06-26T06:06:22.778Z:
+Error: error: division by zero
+Error occurred at 2024-06-26T06:09:07.134Z:
+Error: error: division by zero
+Error occurred at 2024-06-26T06:09:47.290Z:
+Error: error: division by zero
+Error occurred at 2024-06-26T06:11:14.648Z:
+Error: error: division by zero
+Error occurred at 2024-06-26T06:17:13.887Z:
+Error: error: division by zero
+Error occurred at 2024-06-26T06:24:56.432Z:
+Error: error: division by zero
+Error occurred at 2024-06-26T06:25:42.669Z:
+Error: error: division by zero
+Error occurred at 2024-06-26T06:29:06.474Z:
+Error: error: division by zero
+Error occurred at 2024-06-26T06:30:35.903Z:
+Error: error: division by zero
+Error occurred at 2024-06-26T06:31:32.567Z:
+Error: error: division by zero
+Error occurred at 2024-06-26T07:19:02.859Z:
+Error: error: division by zero
+Error occurred at 2024-06-26T13:27:59.220Z:
+Error: error: division by zero
+Error occurred at 2024-06-26T13:31:21.671Z:
+Error: error: column mm.machine_id does not exist
+Error occurred at 2024-06-26T13:31:58.610Z:
+Error: error: column mm.machines_id does not exist
+Error occurred at 2024-06-26T13:44:35.043Z:
+Error: error: division by zero
+Error occurred at 2024-06-27T04:56:28.202Z:
+Error: error: division by zero
+Error occurred at 2024-06-27T04:59:28.423Z:
+Error: error: division by zero
+Error occurred at 2024-06-27T04:59:52.809Z:
+Error: error: division by zero
+Error occurred at 2024-06-27T05:03:11.645Z:
+Error: error: division by zero
+Error occurred at 2024-06-27T05:26:05.856Z:
+Error: error: division by zero
+Error occurred at 2024-06-28T12:13:36.134Z:
+Error: ReferenceError: poolPromise is not defined
+Error occurred at 2024-06-28T12:14:43.181Z:
+Error: ReferenceError: poolRequest is not defined
+Error occurred at 2024-06-28T12:15:16.188Z:
+Error: ReferenceError: userGet is not defined
+Error occurred at 2024-07-01T05:02:04.516Z:
+Error: error: subquery must return only one column
+Error occurred at 2024-07-01T05:21:51.658Z:
+Error: ReferenceError: results is not defined
+Error occurred at 2024-07-01T05:29:46.867Z:
+Error: error: column "mm.machines_kod" must appear in the GROUP BY clause or be used in an aggregate function
+Error occurred at 2024-07-01T06:46:08.490Z:
+Error: error: column "undefined" does not exist
+Error occurred at 2024-07-01T06:50:55.279Z:
+Error: error: column "undefined" does not exist
+Error occurred at 2024-07-01T06:52:45.681Z:
+Error: error: column "undefined" does not exist
+Error occurred at 2024-07-01T06:53:32.195Z:
+Error: error: column "undefined" does not exist
+Error occurred at 2024-07-01T06:55:39.138Z:
+Error: error: column "undefined" does not exist
+Error occurred at 2024-07-01T09:02:36.107Z:
+Error: ReferenceError: startDate is not defined
+Error occurred at 2024-07-01T09:03:20.394Z:
+Error: error: operator does not exist: text = integer
+Error occurred at 2024-07-01T12:38:34.488Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-07-01T12:38:55.172Z:
+Error: TypeError: result.forEach is not a function
+Error occurred at 2024-07-11T11:06:39.534Z:
+Error: error: syntax error at or near "DESC"
+Error occurred at 2024-07-24T05:01:11.941Z:
+Error: error: column "nan" does not exist
+Error occurred at 2024-07-24T05:05:23.901Z:
+Error: error: column "nan" does not exist
+Error occurred at 2024-07-26T13:25:23.524Z:
+Error: error: division by zero
+Error occurred at 2024-07-26T13:34:59.722Z:
+Error: error: division by zero
+Error occurred at 2024-07-26T13:37:34.020Z:
+Error: error: division by zero
+Error occurred at 2024-08-15T08:39:54.543Z:
+Error: error: invalid input syntax for type date: "{"year":2024,"month":8,"day":12}"
+Error occurred at 2024-08-15T08:41:58.933Z:
+Error: error: invalid input syntax for type date: "{"year":2024,"month":8,"day":15}"
+Error occurred at 2024-08-15T08:43:06.259Z:
+Error: error: column "sevk_miktar" of relation "m_uretim_sevk_iptal" does not exist
+Error occurred at 2024-08-15T08:43:21.927Z:
+Error: error: column "sevk_miktar" of relation "m_uretim_sevk_iptal" does not exist
+Error occurred at 2024-08-15T08:45:15.391Z:
+Error: error: column "sevk_miktar" of relation "m_uretim_sevk_iptal" does not exist
+Error occurred at 2024-08-15T08:45:54.671Z:
+Error: error: column "sevk_miktar" of relation "m_uretim_sevk_iptal" does not exist
+Error occurred at 2024-08-15T08:47:02.717Z:
+Error: error: column "sevk_miktar" of relation "m_uretim_sevk_iptal" does not exist
+Error occurred at 2024-08-15T08:48:39.737Z:
+Error: error: column "sevk_miktar" of relation "m_uretim_sevk_iptal" does not exist
+Error occurred at 2024-08-15T08:50:57.021Z:
+Error: error: column "sevk_miktar" of relation "m_uretim_sevk_iptal" does not exist
+Error occurred at 2024-08-15T12:39:28.118Z:
+Error: TypeError: Cannot read properties of undefined (reading 'id')
+Error occurred at 2024-09-03T06:52:54.856Z:
+Error: TypeError: Cannot read properties of undefined (reading 'id')
+Error occurred at 2024-09-03T06:56:39.277Z:
+Error: ReferenceError: onceki is not defined
+Error occurred at 2024-09-03T06:59:11.550Z:
+Error: error: syntax error at or near "DESC"
+Error occurred at 2024-09-09T08:46:26.347Z:
+Error: error: syntax error at or near ","
+Error occurred at 2024-09-09T08:48:05.800Z:
+Error: error: invalid input syntax for type timestamp: ""
+Error occurred at 2024-09-09T08:56:54.823Z:
+Error: error: INSERT has more target columns than expressions
+Error occurred at 2024-09-09T08:58:22.910Z:
+Error: error: INSERT has more target columns than expressions
+Error occurred at 2024-09-09T14:03:23.773Z:
+Error: error: invalid input syntax for type timestamp: "{"year":2024,"month":9,"day":28}"
+Error occurred at 2024-09-10T08:00:47.015Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-09-10T08:02:22.029Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-09-10T08:04:33.437Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-09-10T08:33:33.713Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-09-10T10:15:49.241Z:
+Error: TypeError: Cannot read properties of undefined (reading 'id')
+Error occurred at 2024-09-10T10:21:28.482Z:
+Error: error: column "siparis_id" does not exist
+Error occurred at 2024-09-10T10:22:21.504Z:
+Error: error: column "siparis_id" does not exist
+Error occurred at 2024-09-10T10:22:58.589Z:
+Error: error: invalid input syntax for type timestamp: "{"year":null,"month":null,"day":null}"
+Error occurred at 2024-09-10T10:25:45.631Z:
+Error: error: invalid input syntax for type timestamp: "{"year":null,"month":null,"day":null}"
+Error occurred at 2024-09-16T13:55:57.783Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-09-17T04:52:51.853Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-09-17T04:53:28.065Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-09-17T04:54:18.890Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-09-17T06:50:32.824Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-09-17T07:41:56.220Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-09-17T07:42:08.355Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-09-17T08:21:27.432Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-09-17T08:22:34.663Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-09-17T08:23:10.802Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-09-18T06:50:14.582Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-09-18T06:55:25.811Z:
+Error: error: invalid input syntax for type timestamp: "{"year":null,"month":null,"day":null}"
+Error occurred at 2024-09-18T07:00:30.408Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-09-18T07:02:54.136Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-09-18T07:32:17.145Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-09-18T07:38:41.357Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-09-18T07:38:50.448Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-09-18T08:05:28.844Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-09-18T08:40:16.692Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-09-18T08:44:04.283Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-09-18T08:57:17.459Z:
+Error: error: invalid input syntax for type double precision: ""
+Error occurred at 2024-09-18T09:01:20.265Z:
+Error: error: invalid input syntax for type double precision: ""
+Error occurred at 2024-09-18T09:02:13.897Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-09-18T11:13:03.452Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-09-18T11:25:56.666Z:
+Error: error: invalid input syntax for type double precision: ""
+Error occurred at 2024-09-18T11:27:29.036Z:
+Error: error: invalid input syntax for type double precision: ""
+Error occurred at 2024-09-18T11:28:14.658Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-09-18T11:32:40.827Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-09-18T11:37:00.971Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-09-18T11:49:34.687Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-09-18T12:02:37.155Z:
+Error: error: invalid input syntax for type double precision: ""
+Error occurred at 2024-09-18T12:05:07.427Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-09-18T13:40:08.250Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-09-18T13:40:22.633Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-09-18T13:47:02.418Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-09-18T13:47:53.949Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-09-18T13:48:14.764Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-09-18T13:48:24.678Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-09-18T13:49:05.887Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-09-18T13:53:06.556Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-09-18T13:54:09.094Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-09-18T13:55:46.214Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-09-18T14:05:44.316Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-09-18T14:08:28.342Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-09-18T14:12:57.221Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-09-19T07:01:26.091Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-09-19T07:33:48.981Z:
+Error: error: OFFSET must not be negative
+Error occurred at 2024-09-19T07:49:50.500Z:
+Error: error: OFFSET must not be negative
+Error occurred at 2024-09-19T08:24:46.705Z:
+Error: error: syntax error at or near "$4"
+Error occurred at 2024-09-19T08:53:56.639Z:
+Error: error: syntax error at or near "$4"
+Error occurred at 2024-09-19T10:08:21.800Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-09-19T10:09:37.236Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-09-19T10:18:54.598Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-09-19T10:18:58.911Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-09-19T10:19:00.869Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-09-19T10:19:25.664Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-09-19T10:19:27.725Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-09-19T10:42:22.874Z:
+Error: error: bind message supplies 4 parameters, but prepared statement "" requires 0
+Error occurred at 2024-09-19T10:51:18.116Z:
+Error: error: syntax error at or near ","
+Error occurred at 2024-09-19T10:52:20.490Z:
+Error: error: syntax error at or near ","
+Error occurred at 2024-09-19T11:58:33.165Z:
+Error: error: column "sevk_tarihasc" does not exist
+Error occurred at 2024-09-19T11:59:08.054Z:
+Error: error: syntax error at or near "sorted_data"
+Error occurred at 2024-09-19T11:59:46.046Z:
+Error: error: column "sevk_tarihasc" does not exist
+Error occurred at 2024-09-19T13:29:41.503Z:
+Error: error: syntax error at or near ")"
+Error occurred at 2024-09-19T13:29:58.542Z:
+Error: error: syntax error at or near ")"
+Error occurred at 2024-09-19T13:30:04.541Z:
+Error: error: syntax error at or near ")"
+Error occurred at 2024-09-19T13:30:08.452Z:
+Error: error: syntax error at or near ")"
+Error occurred at 2024-09-19T13:34:29.458Z:
+Error: error: syntax error at or near ")"
+Error occurred at 2024-09-19T13:37:31.014Z:
+Error: error: syntax error at or near ")"
+Error occurred at 2024-09-20T06:55:44.181Z:
+Error: error: invalid input syntax for type timestamp: "{"year":2024,"month":6,"day":12}"
+Error occurred at 2024-09-20T08:07:39.449Z:
+Error: TypeError: Cannot read properties of undefined (reading 'id')
+Error occurred at 2024-09-20T08:23:04.747Z:
+Error: TypeError: Cannot read properties of undefined (reading 'id')
+Error occurred at 2024-09-20T11:27:34.686Z:
+Error: error: column "undefined" does not exist
+Error occurred at 2024-09-20T12:06:32.814Z:
+Error: error: operator does not exist: timestamp without time zone >= integer
+Error occurred at 2024-09-20T12:28:56.797Z:
+Error: error: invalid input syntax for type timestamp: "undefined"
+Error occurred at 2024-09-20T12:29:33.237Z:
+Error: error: invalid input syntax for type timestamp: "undefined"
+Error occurred at 2024-09-20T12:33:59.101Z:
+Error: error: invalid input syntax for type timestamp: "null"
+Error occurred at 2024-09-20T12:34:41.252Z:
+Error: error: invalid input syntax for type timestamp: "null"
+Error occurred at 2024-09-20T12:35:38.468Z:
+Error: error: invalid input syntax for type timestamp: "null"
+Error occurred at 2024-09-20T12:36:58.249Z:
+Error: error: invalid input syntax for type timestamp: "null"
+Error occurred at 2024-09-20T12:37:32.482Z:
+Error: error: invalid input syntax for type timestamp: "null"
+Error occurred at 2024-09-20T12:38:37.996Z:
+Error: error: invalid input syntax for type timestamp: "null"
+Error occurred at 2024-09-20T13:29:34.344Z:
+Error: error: syntax error at or near "}"
+Error occurred at 2024-09-20T13:30:21.882Z:
+Error: error: syntax error at or near "}"
+Error occurred at 2024-09-20T13:34:04.922Z:
+Error: error: syntax error at or near "}"
+Error occurred at 2024-09-20T13:34:23.657Z:
+Error: error: column mus.urun_kodu does not exist
+Error occurred at 2024-09-20T13:34:59.149Z:
+Error: error: column mus.stok_no does not exist
+Error occurred at 2024-09-20T13:36:23.786Z:
+Error: error: column "undefined" does not exist
+Error occurred at 2024-09-20T13:37:46.470Z:
+Error: error: column "undefined" does not exist
+Error occurred at 2024-09-20T13:38:08.750Z:
+Error: error: column "undefined" does not exist
+Error occurred at 2024-09-20T13:39:51.675Z:
+Error: error: syntax error at or near "OR"
+Error occurred at 2024-09-20T13:40:36.932Z:
+Error: error: syntax error at or near "OR"
+Error occurred at 2024-09-20T13:46:10.243Z:
+Error: error: column mus.siparis_no does not exist
+Error occurred at 2024-09-20T13:54:24.764Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-09-20T13:54:33.127Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-09-20T13:56:02.169Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-09-23T06:50:18.782Z:
+Error: error: invalid input syntax for type date: "$1"
+Error occurred at 2024-09-23T06:51:47.544Z:
+Error: error: invalid input syntax for type date: "$1"
+Error occurred at 2024-09-23T08:04:49.588Z:
+Error: error: invalid input syntax for type date: ""
+Error occurred at 2024-09-23T08:05:54.900Z:
+Error: error: invalid input syntax for type date: ""
+Error occurred at 2024-09-23T08:06:15.543Z:
+Error: error: invalid input syntax for type date: ""
+Error occurred at 2024-09-23T08:06:52.497Z:
+Error: error: invalid input syntax for type date: ""
+Error occurred at 2024-09-23T08:12:59.661Z:
+Error: error: invalid input syntax for type date: ""
+Error occurred at 2024-09-23T08:13:30.749Z:
+Error: error: invalid input syntax for type date: ""
+Error occurred at 2024-09-23T08:26:50.557Z:
+Error: error: invalid input syntax for type date: ""
+Error occurred at 2024-09-23T08:32:51.976Z:
+Error: error: invalid input syntax for type date: ""
+Error occurred at 2024-09-23T08:54:57.644Z:
+Error: error: syntax error at or near "SSELECT"
+Error occurred at 2024-09-23T10:51:38.841Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-09-23T10:51:41.157Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-09-23T10:51:42.215Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-09-23T11:07:43.824Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-09-24T05:54:09.852Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-09-24T06:19:25.757Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-09-26T07:43:59.342Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-09-26T07:48:13.195Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-09-26T07:51:13.372Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-09-26T07:54:03.658Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-09-26T07:54:37.477Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-09-26T07:56:36.947Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-09-26T07:59:30.807Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-09-26T08:00:21.177Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-09-26T08:03:12.599Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-09-26T08:06:03.261Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-09-26T08:07:48.036Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-09-26T08:10:20.706Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-09-26T08:12:03.388Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-09-26T08:13:07.717Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-09-26T08:14:03.016Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-09-26T08:14:44.149Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-09-26T08:15:10.662Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-09-26T08:16:03.660Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-09-26T08:18:41.447Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-09-26T08:18:43.199Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-09-26T08:20:24.035Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-09-26T08:44:11.689Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-09-26T08:44:27.020Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-09-26T08:44:54.016Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-09-26T08:44:59.709Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-09-26T08:46:35.301Z:
+Error: error: invalid input syntax for type double precision: ""
+Error occurred at 2024-09-26T08:46:49.972Z:
+Error: error: invalid input syntax for type double precision: ""
+Error occurred at 2024-09-26T08:47:10.314Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-09-26T10:12:03.601Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-09-26T10:14:01.789Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-09-26T10:14:54.737Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-09-26T10:41:13.672Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-09-26T11:10:50.893Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-09-26T11:46:18.313Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-09-26T11:51:11.813Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-09-26T11:52:50.652Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-09-26T11:54:26.776Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-09-26T11:54:38.063Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-09-26T11:54:55.614Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-09-26T11:55:35.591Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-09-26T11:55:46.100Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-09-26T11:55:47.645Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-09-26T11:58:52.682Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-09-26T12:03:45.884Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-09-26T12:03:47.009Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-09-26T12:04:07.732Z:
+Error: error: invalid input syntax for type double precision: ""
+Error occurred at 2024-09-26T12:06:13.591Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-10-04T06:22:25.058Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-10-04T07:58:18.554Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-10-04T08:47:20.673Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-10-04T13:05:10.177Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-10-04T13:05:22.133Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-10-04T13:05:35.063Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-10-04T13:05:36.801Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-10-04T13:06:01.326Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-10-04T13:06:04.743Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-10-04T13:07:20.678Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-10-04T13:08:40.345Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-10-04T13:08:41.689Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-10-07T17:50:19.983Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-10-07T18:14:02.520Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-10-07T18:14:07.894Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-10-07T18:14:12.489Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-10-07T18:14:32.291Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-10-07T18:16:43.495Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-10-07T18:16:45.434Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-10-07T18:16:52.857Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-10-07T18:17:41.579Z:
+Error: error: invalid input syntax for type double precision: ""
+Error occurred at 2024-10-07T18:18:05.575Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-10-07T18:18:16.783Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-10-10T10:42:50.761Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-10-10T10:43:57.067Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-10-10T10:45:20.259Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-10-10T10:45:30.904Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-10-16T08:13:30.345Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-10-16T08:20:27.678Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-10-16T08:20:44.734Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-10-16T08:23:05.594Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-10-16T08:27:18.941Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-10-16T08:32:56.403Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-10-16T08:36:32.058Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-10-16T08:37:19.830Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-10-16T08:37:21.711Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-10-16T08:38:44.862Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-10-22T10:54:13.873Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-10-25T10:44:00.658Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-10-25T10:44:13.383Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-10-25T10:50:04.926Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-10-25T10:51:02.817Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-10-25T11:14:51.552Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-10-25T11:17:41.905Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-10-25T11:20:15.043Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-10-25T11:23:44.166Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-10-31T12:52:44.248Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-10-31T12:58:06.272Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-10-31T13:00:25.247Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-10-31T13:02:27.420Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-10-31T13:03:52.230Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-10-31T13:07:07.604Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-10-31T14:14:41.821Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-10-31T14:16:49.713Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-10-31T14:19:22.702Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-10-31T14:28:15.181Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-11-01T06:50:55.361Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-11-01T10:32:54.668Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-11-01T10:35:36.568Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-11-01T10:45:38.151Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-11-01T12:06:52.074Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-11-01T12:07:04.348Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-11-01T12:07:55.699Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-11-01T12:20:02.370Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-11-01T12:20:16.484Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-11-01T12:20:47.360Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-11-01T12:29:47.888Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-11-01T12:30:21.539Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-11-01T12:30:59.255Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-11-01T12:38:39.951Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-11-01T12:38:52.036Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-11-01T12:39:03.036Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-11-01T12:39:14.195Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-11-01T12:39:23.545Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-11-01T12:39:34.208Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-11-01T12:39:44.534Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-11-01T12:39:49.712Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-11-01T12:39:59.734Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-11-01T12:40:13.058Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-11-01T12:41:14.576Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-11-01T12:42:20.441Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-11-01T12:43:05.688Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-11-01T12:45:07.289Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-11-01T12:45:42.823Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-11-01T12:46:23.042Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-11-13T14:01:30.388Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-11-14T14:40:18.594Z:
+Error: Error: Cannot use a pool after calling end on the pool
+Error occurred at 2024-11-14T14:40:59.889Z:
+Error: Error: Cannot use a pool after calling end on the pool
+Error occurred at 2024-11-14T14:40:59.900Z:
+Error: Error: Cannot use a pool after calling end on the pool
+Error occurred at 2024-11-14T14:41:45.604Z:
+Error: Error: Cannot use a pool after calling end on the pool
+Error occurred at 2024-11-14T14:41:45.613Z:
+Error: Error: Cannot use a pool after calling end on the pool
+Error occurred at 2024-11-14T22:50:56.643Z:
+Error: Error: Cannot use a pool after calling end on the pool
+Error occurred at 2024-11-14T22:50:56.657Z:
+Error: Error: Cannot use a pool after calling end on the pool
+Error occurred at 2024-11-14T23:29:45.908Z:
+Error: Error: Cannot use a pool after calling end on the pool
+Error occurred at 2024-11-14T23:29:45.932Z:
+Error: Error: Cannot use a pool after calling end on the pool
+Error occurred at 2024-11-14T23:30:15.658Z:
+Error: Error: Cannot use a pool after calling end on the pool
+Error occurred at 2024-11-14T23:30:17.177Z:
+Error: Error: Cannot use a pool after calling end on the pool
+Error occurred at 2024-11-14T23:30:17.204Z:
+Error: Error: Cannot use a pool after calling end on the pool
+Error occurred at 2024-11-15T04:54:35.814Z:
+Error: Error: Cannot use a pool after calling end on the pool
+Error occurred at 2024-11-15T04:54:37.702Z:
+Error: Error: Cannot use a pool after calling end on the pool
+Error occurred at 2024-11-15T04:54:41.182Z:
+Error: Error: Cannot use a pool after calling end on the pool
+Error occurred at 2024-11-15T04:54:43.184Z:
+Error: Error: Cannot use a pool after calling end on the pool
+Error occurred at 2024-11-15T04:54:45.660Z:
+Error: Error: Cannot use a pool after calling end on the pool
+Error occurred at 2024-11-21T07:32:00.173Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-11-26T14:25:02.945Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-11-27T13:24:05.513Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-11-27T16:04:00.650Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-11-27T16:10:23.961Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-11-27T16:10:56.578Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-11-27T16:11:07.225Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-11-27T16:13:04.386Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-11-27T16:13:07.464Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-11-27T16:13:20.793Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-11-27T16:13:48.571Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-11-27T16:14:08.827Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-11-27T16:21:06.887Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-11-27T16:21:29.248Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-11-27T16:22:07.435Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-11-27T16:22:24.725Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-11-27T16:22:41.055Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-12-02T09:04:14.083Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-12-04T10:16:07.819Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-12-04T10:16:49.047Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-12-04T10:17:00.239Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-12-04T10:17:02.597Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-12-04T10:17:16.008Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-12-04T10:24:50.221Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-12-04T10:24:54.283Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-12-04T10:38:05.800Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-12-04T10:38:29.636Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-12-10T07:00:40.748Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-12-10T07:20:00.692Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-12-10T07:36:43.196Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-12-10T07:38:18.664Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-12-10T08:21:09.649Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-12-10T10:22:13.271Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-12-10T10:22:26.187Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2024-12-10T10:51:25.173Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2025-01-21T14:18:04.735Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2025-01-22T07:40:15.817Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2025-01-24T14:15:45.802Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2025-01-24T14:17:28.188Z:
+Error: ReferenceError: data is not defined

@@ -1,0 +1,6 @@
+200 -> Başarılı
+303 -> Şifre Yada Kullanıcı Hatalı
+300 -> Şifre Değiştirilemedi
+302 -> Şifreniz Doğru Değil 
+301 -> Siciliniz Doğru Değil
+400 -> İşlem Başarısız

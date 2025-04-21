@@ -1,0 +1,5544 @@
+[
+    {
+        "user_name": "İHSAN ÖZSOY",
+        "user_typename": "GENEL MÜDÜR",
+        "sicil": 2000,
+        "birim": [
+            {
+                "birim_id": 1
+            }
+        ],
+        "user_type": 1,
+        "password": 135219,
+        "email": "iozsoy@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "SILA YILDIRIM",
+        "user_typename": "ÜRETİM PLANLAMA MÜDÜRÜ",
+        "sicil": 1117,
+        "birim": [
+            {
+                "birim_id": 11
+            }
+        ],
+        "user_type": 1,
+        "main_user": 1519,
+        "password": "2210275Sy",
+        "email": "syildirim@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "YENER HALICI",
+        "user_typename": "TEKNİK ALT YAPI MÜDÜRÜ",
+        "sicil": 1035,
+        "birim": [
+            {
+                "birim_id": 22
+            }
+        ],
+        "user_type": 1,
+        "main_user": 2000,
+        "password": 1801,
+        "email": "yhalici@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "RÜVEYDA ARSLAN",
+        "user_typename": "UZMAN ",
+        "sicil": 1121,
+        "birim": [
+            {
+                "birim_id": 39
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1386,
+        "password": "Elif2020",
+        "email": "rarslan@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "KÜRŞAT ÖZKAN",
+        "user_typename": "MUHASEBE VE FİNANS PERSONELİ",
+        "sicil": 1149,
+        "birim": [
+            {
+                "birim_id": 9
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1504,
+        "password": "kursatoz91",
+        "email": "kozkan@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "FİKRET ALTAN",
+        "user_typename": "KIDEMLİ UZMAN YARDIMCISI",
+        "sicil": 1253,
+        "birim": [
+            {
+                "birim_id": 9
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1149,
+        "password": "zara123",
+        "email": "faltan@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "İLKER KADIOĞLU",
+        "user_typename": "UZMAN ",
+        "sicil": 1275,
+        "birim": [
+            {
+                "birim_id": 42
+            }
+        ],
+        "user_type": 1,
+        "main_user": 2000,
+        "password": "235689*",
+        "email": "ikadioglu@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "HASAN GÖK",
+        "user_typename": "UZMAN",
+        "sicil": 1372,
+        "birim": [
+            {
+                "birim_id": 1
+            }
+        ],
+        "user_type": 1,
+        "main_user": 1035,
+        "password": 541796,
+        "email": "hgok@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "ENES TEKİN",
+        "user_typename": "UZMAN",
+        "sicil": 1386,
+        "birim": [
+            {
+                "birim_id": 39
+            }
+        ],
+        "user_type": 1,
+        "main_user": 1504,
+        "password": "enes3489",
+        "email": "etekin@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "DİLARA KÖKÇÜ",
+        "user_typename": "YÖNETİCİ ASİSTANI ",
+        "sicil": 1405,
+        "birim": [
+            {
+                "birim_id": 1
+            }
+        ],
+        "user_type": 1,
+        "main_user": 2000,
+        "password": "Dd12345**",
+        "email": "dgeven@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "BATUHAN ERDABAK",
+        "user_typename": "UZMAN YARDIMCISI",
+        "sicil": 1429,
+        "birim": [
+            {
+                "birim_id": 40
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1519,
+        "password": "339BAT",
+        "email": "berdabak@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "HANDE ÜNÜVAR",
+        "user_typename": "UZMAN YARDIMCISI",
+        "sicil": 1456,
+        "birim": [
+            {
+                "birim_id": 39
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1386,
+        "password": 169551005,
+        "email": "hunuvar@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "BURAK DOĞAN",
+        "user_typename": "UZMAN",
+        "sicil": 1083,
+        "birim": [
+            {
+                "birim_id": 43
+            }
+        ],
+        "user_type": 1,
+        "main_user": 1117,
+        "password": 583460,
+        "email": "bdogan@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "EMRE OKUTANSOY",
+        "user_typename": "UZMAN YARDIMCISI",
+        "sicil": 1134,
+        "birim": [
+            {
+                "birim_id": 29
+            }
+        ],
+        "user_type": 1,
+        "main_user": 1519,
+        "password": "Ecem.5858",
+        "email": "eokutansoy@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "ÖMER AKAY",
+        "user_typename": "TEKNİK UZMAN YARDIMCISI",
+        "sicil": 3031,
+        "birim": [
+            {
+                "birim_id": 2
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1299,
+        "password": "Om447755",
+        "email": "oakay@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "BİLAL CÜREK",
+        "user_typename": "TEKNİK UZMAN YARDIMCISI",
+        "sicil": 1105,
+        "birim": [
+            {
+                "birim_id": 2
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1299,
+        "password": "123456BC",
+        "email": "bcurek@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "FERHAT POLAT",
+        "user_typename": "TEKNİK UZMAN",
+        "sicil": 1009,
+        "birim": [
+            {
+                "birim_id": 13
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1427,
+        "password": "Ghost__1996",
+        "email": "fpolat@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "ECEM HASPOLAT",
+        "user_typename": "UZMAN YARDIMCISI",
+        "sicil": 1493,
+        "birim": [
+            {
+                "birim_id": 40
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1519,
+        "password": "123456*",
+        "email": "ehaspolat@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "BURAK ERSOY",
+        "user_typename": "KURUMSAL VE MALİ YÖNETİM DİREKTÖRÜ",
+        "sicil": 1504,
+        "birim": [
+            {
+                "birim_id": 9
+            },
+            {
+                "birim_id": 42
+            },
+            {
+                "birim_id": 39
+            },
+            {
+                "birim_id": 41
+            }
+        ],
+        "user_type": 1,
+        "main_user": 2000,
+        "password": "Bubu7243",
+        "email": "bersoy@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "YAVUZ GENÇ",
+        "user_typename": "KALİTE VE TEDARİK ZİNDİRİ DİREKTÖRÜ",
+        "sicil": 1519,
+        "birim": [
+            {
+                "birim_id": 23
+            },
+            {
+                "birim_id": 26
+            },
+            {
+                "birim_id": 12
+            },
+            {
+                "birim_id": 40
+            },
+            {
+                "birim_id": 15
+            }
+        ],
+        "user_type": 1,
+        "main_user": 2000,
+        "password": "Yg1357**",
+        "email": "ygenc@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "CİHAN GÜLPINAR",
+        "user_typename": "OPTİK ÜRETİM MÜDÜRÜ",
+        "sicil": 1002,
+        "birim": [
+            {
+                "birim_id": 13
+            }
+        ],
+        "user_type": 1,
+        "main_user": 1519,
+        "password": "CHN58",
+        "email": "cgulpinar@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "GÖKNİL ADA",
+        "user_typename": "KALİTE SİSTEM MÜDÜRÜ",
+        "sicil": 1005,
+        "birim": [
+            {
+                "birim_id": 23
+            },
+            {
+                "birim_id": 26
+            },
+            {
+                "birim_id": 12
+            }
+        ],
+        "user_type": 1,
+        "main_user": 1519,
+        "password": "Ga8756*",
+        "email": "gada@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "ZEYNEP ERKAN",
+        "user_typename": "UZMAN YARDIMCISI",
+        "sicil": 1524,
+        "birim": [
+            {
+                "birim_id": 9
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1149,
+        "password": 123456,
+        "email": "zerkan@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "DERYA ÖCALAN",
+        "user_typename": "UZMAN YARDIMCISI",
+        "sicil": 1039,
+        "birim": [
+            {
+                "birim_id": 39
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1386,
+        "password": "Dd12345**",
+        "email": "docalan@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "CEMAL BULUT",
+        "user_typename": "KIDEMLİ ŞOFÖR",
+        "sicil": 1148,
+        "birim": [
+            {
+                "birim_id": 43
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1083,
+        "password": "300CEM",
+        "email": "cbulut@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "FATİH AHMET KAÇMAZ",
+        "user_typename": "ŞOFÖR 2",
+        "sicil": 3066,
+        "birim": [
+            {
+                "birim_id": 43
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1372,
+        "password": "479FAT",
+        "email": "fkacmaz@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "NAZIM KURTCU",
+        "user_typename": "ŞOFÖR 2",
+        "sicil": 1489,
+        "birim": [
+            {
+                "birim_id": 43
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1354,
+        "password": "SNefefe151023",
+        "email": "nkurtcu@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "FATİH GÜNGÖR",
+        "user_typename": "ŞOFÖR 2",
+        "sicil": 1157,
+        "birim": [
+            {
+                "birim_id": 43
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1372,
+        "password": "105FAT",
+        "email": "fgungor@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "CEMGÖKTUĞ AKPINAR",
+        "user_typename": "ŞOFÖR 2",
+        "sicil": 1222,
+        "birim": [
+            {
+                "birim_id": 43
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1354,
+        "password": 204,
+        "email": "cakpinar@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "EMEL KURT",
+        "user_typename": "BÜRO PERSONELİ 2",
+        "sicil": 1411,
+        "birim": [
+            {
+                "birim_id": 20
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1354,
+        "password": "102EME",
+        "email": "ekurt@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "BÜLENT ORAN",
+        "user_typename": "KIDEMLİ UZMAN YARDIMCISI",
+        "sicil": 1443,
+        "birim": [
+            {
+                "birim_id": 1
+            }
+        ],
+        "user_type": 1,
+        "main_user": 1354,
+        "password": 1443,
+        "email": "boran@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "GÖKHAN TOKER",
+        "user_typename": "SATIŞ VE PROGRAMLAR MÜDÜRÜ",
+        "sicil": 1354,
+        "birim": [
+            {
+                "birim_id": 1
+            }
+        ],
+        "user_type": 1,
+        "main_user": 2000,
+        "password": "G123tkr..",
+        "email": "gtoker@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "MERYEM DEMİR",
+        "user_typename": "KIDEMLİ MÜHENDİS",
+        "sicil": 1206,
+        "birim": [
+            {
+                "birim_id": 4
+            }
+        ],
+        "user_type": 1,
+        "main_user": 1379,
+        "password": 123456,
+        "email": "mdemir@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "NAZAN AKKAYA",
+        "user_typename": "UZMAN MÜHENDİS",
+        "sicil": 1207,
+        "birim": [
+            {
+                "birim_id": 9
+            },
+            {
+                "birim_id": 31
+            }
+        ],
+        "user_type": 1,
+        "main_user": 2000,
+        "password": "NAZ5858",
+        "email": "nakkaya@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "TUĞÇE SODAN",
+        "user_typename": "KIDEMLİ MÜHENDİS",
+        "sicil": 1361,
+        "birim": [
+            {
+                "birim_id": 27
+            }
+        ],
+        "user_type": 1,
+        "main_user": 2000,
+        "password": "Tuso-907",
+        "email": "tsodan@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "KADİR OSMANOĞLU",
+        "user_typename": "UZMAN MÜHENDİS (TAKIM LİDERİ)",
+        "sicil": 1141,
+        "birim": [
+            {
+                "birim_id": 9
+            }
+        ],
+        "main_user": 1504,
+        "password": 123456,
+        "email": "kosmanoglu@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "AHMET SELİM BİÇER",
+        "user_typename": "KIDEMLİ MÜHENDİS (TAKIM LİDERİ)",
+        "sicil": 1384,
+        "birim": [
+            {
+                "birim_id": 10
+            }
+        ],
+        "user_type": 1,
+        "main_user": 1519,
+        "password": 228161,
+        "email": "sbicer@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "EMRE MÜCAHİT KOÇ",
+        "user_typename": "KIDEMLİ MÜHENDİS",
+        "sicil": 1385,
+        "birim": [
+            {
+                "birim_id": 9
+            }
+        ],
+        "main_user": 1141,
+        "password": 12345678,
+        "email": "ekoc@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "KAMER DORUKHAN KESME",
+        "user_typename": "MÜHENDİS",
+        "sicil": 1435,
+        "birim": [
+            {
+                "birim_id": 10
+            }
+        ],
+        "user_type": 1,
+        "main_user": 1384,
+        "password": "Kapo:2266",
+        "email": "kkesme@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "SELİM TANRIVERDİ",
+        "user_typename": "MÜHENDİS",
+        "sicil": 1436,
+        "birim": [
+            {
+                "birim_id": 12
+            }
+        ],
+        "user_type": 1,
+        "main_user": 1459,
+        "password": "428SEL",
+        "email": "stanriverdi@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "MUHAMMET ZAHİT BAKIŞ",
+        "user_typename": "KIDEMLİ MÜHENDİS",
+        "sicil": 1438,
+        "birim": [
+            {
+                "birim_id": 10
+            }
+        ],
+        "user_type": 1,
+        "main_user": 1384,
+        "password": "722058Zb",
+        "email": "mbakis@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "YAKUP UTLU",
+        "user_typename": "MÜHENDİS",
+        "sicil": 1439,
+        "birim": [
+            {
+                "birim_id": 14
+            }
+        ],
+        "user_type": 1,
+        "main_user": 1519,
+        "password": "Aho1453.",
+        "email": "yutlu@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "ŞÜKRÜ CAN YILDIRIM",
+        "user_typename": "KIDEMLİ MÜHENDİS",
+        "sicil": 1445,
+        "birim": [
+            {
+                "birim_id": 12
+            }
+        ],
+        "user_type": 1,
+        "main_user": 1459,
+        "password": 637646,
+        "email": "sukruyildirim@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "MUSTAFA BUĞRA ERBIYIK",
+        "user_typename": "KIDEMLİ MÜHENDİS",
+        "sicil": 1459,
+        "birim": [
+            {
+                "birim_id": 12
+            }
+        ],
+        "user_type": 1,
+        "main_user": 1519,
+        "password": "1991Bugra",
+        "email": "merbiyik@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "RESUL AYBERK GÖZEN",
+        "user_typename": "MÜHENDİS",
+        "sicil": 1477,
+        "birim": [
+            {
+                "birim_id": 40
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1519,
+        "password": "RAG010599+",
+        "email": "rgozen@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "BURHAN KAPLAN",
+        "user_typename": "KIDEMLİ MÜHENDİS",
+        "sicil": 3094,
+        "birim": [
+            {
+                "birim_id": 13
+            }
+        ],
+        "user_type": 1,
+        "main_user": 1427,
+        "password": "Bb123*",
+        "email": "bkaplan@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "BURAKCAN ŞAHİN",
+        "user_typename": "MÜHENDİS",
+        "sicil": 1478,
+        "birim": [
+            {
+                "birim_id": 13
+            }
+        ],
+        "user_type": 1,
+        "main_user": 1427,
+        "password": "Bu+452RAK",
+        "email": "bsahin@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "AYHAN DURMUŞ",
+        "user_typename": "MÜHENDİS",
+        "sicil": 1484,
+        "birim": [
+            {
+                "birim_id": 40
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1519,
+        "password": "Aa123*",
+        "email": "adurmus@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "SAMET ALTUN",
+        "user_typename": "KIDEMLİ MÜHENDİS",
+        "sicil": 1299,
+        "birim": [
+            {
+                "birim_id": 2
+            }
+        ],
+        "user_type": 1,
+        "main_user": 2000,
+        "password": "SAMET",
+        "email": "saltun@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "CERENAY GÜVENDİ",
+        "user_typename": "MÜHENDİS",
+        "sicil": 1497,
+        "birim": [
+            {
+                "birim_id": 21
+            }
+        ],
+        "user_type": 1,
+        "main_user": 1379,
+        "password": "Cc444*",
+        "email": "cguvendi@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "MUHAMMED GÖKCEK",
+        "user_typename": "MÜHENDİS",
+        "sicil": 1502,
+        "birim": [
+            {
+                "birim_id": 12
+            }
+        ],
+        "user_type": 1,
+        "main_user": 1459,
+        "password": "@Portal.aho58",
+        "email": "mgokcek@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "UFUK SAZAKLI",
+        "user_typename": "KIDEMLİ MÜHENDİS (TAKIM LİDERİ)",
+        "sicil": 1379,
+        "birim": [
+            {
+                "birim_id": 4
+            },
+            {
+                "birim_id": 21
+            }
+        ],
+        "user_type": 1,
+        "main_user": 1519,
+        "password": "951753/Us",
+        "email": "usazakli@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "DAVUT AKBULUT",
+        "user_typename": "KIDEMLİ MÜHENDİS (TAKIM LİDERİ)",
+        "sicil": 1427,
+        "birim": [
+            {
+                "birim_id": 13
+            }
+        ],
+        "user_type": 1,
+        "main_user": 1002,
+        "password": 24123264795,
+        "email": "dakbulut@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "CANSU DÖNER",
+        "user_typename": "MÜHENDİS",
+        "sicil": 1510,
+        "birim": [
+            {
+                "birim_id": 11
+            }
+        ],
+        "user_type": 1,
+        "main_user": 1117,
+        "password": 123456,
+        "email": "cdoner@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "HAYRİYE DAMLA GÜLÜÇ",
+        "user_typename": "MÜHENDİS",
+        "sicil": 1511,
+        "birim": [
+            {
+                "birim_id": 11
+            }
+        ],
+        "user_type": 1,
+        "main_user": 1117,
+        "password": 123456,
+        "email": "dguluc@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "İBRAHİM KAPAN",
+        "user_typename": "KIDEMLİ MÜHENDİS",
+        "sicil": 1400,
+        "birim": [
+            {
+                "birim_id": 45
+            },
+            {
+                "birim_id": 16
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1466,
+        "password": "As123456",
+        "email": "ikapan@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "OĞUZHAN ERTAŞ",
+        "user_typename": "KIDEMLİ MÜHENDİS",
+        "sicil": 1461,
+        "birim": [
+            {
+                "birim_id": 45
+            },
+            {
+                "birim_id": 16
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1466,
+        "password": "RNX64QTT..",
+        "email": "oertas@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "EMRE ERBAY",
+        "user_typename": "UZMAN MÜHENDİS",
+        "sicil": 1466,
+        "birim": [
+            {
+                "birim_id": 45
+            },
+            {
+                "birim_id": 17
+            }
+        ],
+        "user_type": 1,
+        "main_user": 2000,
+        "password": 4146,
+        "email": "eerbay@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "BURAK ZAFER BÜYÜKBEKAR",
+        "user_typename": "KIDEMLİ MÜHENDİS",
+        "sicil": 1296,
+        "birim": [
+            {
+                "birim_id": 16
+            }
+        ],
+        "user_type": 1,
+        "main_user": 1519,
+        "password": "Aho.789",
+        "email": "bbuyukbekar@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "ONUR BARAN KÖPRÜCÜ",
+        "user_typename": "UZMAN MÜHENDİS",
+        "sicil": 1467,
+        "birim": [
+            {
+                "birim_id": 45
+            },
+            {
+                "birim_id": 17
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1466,
+        "password": "Kariyer123*",
+        "email": "okoprucu@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "MURAT KILIÇ",
+        "user_typename": "KIDEMLİ MÜHENDİS",
+        "sicil": 1485,
+        "birim": [
+            {
+                "birim_id": 15
+            }
+        ],
+        "user_type": 1,
+        "main_user": 1519,
+        "password": 4224,
+        "email": "mkilic@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "AYÇA YILDIRIM",
+        "user_typename": "MÜHENDİS",
+        "sicil": 1487,
+        "birim": [
+            {
+                "birim_id": 45
+            },
+            {
+                "birim_id": 16
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1466,
+        "password": 130047,
+        "email": "ayildirim@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "AHMET ÇAĞRI BAYIR",
+        "user_typename": "MÜHENDİS",
+        "sicil": 1486,
+        "birim": [
+            {
+                "birim_id": 45
+            },
+            {
+                "birim_id": 16
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1466,
+        "password": "aho1486",
+        "email": "abayir@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "ENES ŞENOL",
+        "user_typename": "MÜHENDİS",
+        "sicil": 1391,
+        "birim": [
+            {
+                "birim_id": 45
+            },
+            {
+                "birim_id": 16
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1466,
+        "password": 123456,
+        "email": "esenol@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "BURAK ÇELİK",
+        "user_typename": "KIDEMLİ MÜHENDİS",
+        "sicil": 1488,
+        "birim": [
+            {
+                "birim_id": 19
+            }
+        ],
+        "user_type": 1,
+        "main_user": 1466,
+        "password": 5378159983,
+        "email": "burakcelik@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "MUSTAFA BAKİ KALAYCI",
+        "user_typename": "MÜHENDİS",
+        "sicil": 1392,
+        "birim": [
+            {
+                "birim_id": 45
+            }
+        ],
+        "user_type": 2,
+        "main_user": 2000,
+        "password": "Kanberoglu.70d61.",
+        "email": "mkalayci@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "GİZEM AKIN",
+        "user_typename": "KIDEMLİ MÜHENDİS",
+        "sicil": 1503,
+        "birim": [
+            {
+                "birim_id": 45
+            },
+            {
+                "birim_id": 16
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1466,
+        "password": 357753,
+        "email": "gakin@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "ÇAĞLAR İBİŞ",
+        "user_typename": "MÜHENDİS",
+        "sicil": 1507,
+        "birim": [
+            {
+                "birim_id": 45
+            },
+            {
+                "birim_id": 16
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1466,
+        "password": "ÇÇç135**",
+        "email": "cibis@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "MAHMUT YASİN AYGÜN",
+        "user_typename": "MÜHENDİS",
+        "sicil": 1512,
+        "birim": [
+            {
+                "birim_id": 45
+            },
+            {
+                "birim_id": 16
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1466,
+        "password": "308MYA**",
+        "email": "maygun@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "BALDER BERKE KARBAK",
+        "user_typename": "MÜHENDİS",
+        "sicil": 1514,
+        "birim": [
+            {
+                "birim_id": 45
+            },
+            {
+                "birim_id": 16
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1466,
+        "password": "123456*",
+        "email": "bkabak@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "ALİ AKKOYUN",
+        "user_typename": "MÜHENDİS",
+        "sicil": 1518,
+        "birim": [
+            {
+                "birim_id": 45
+            },
+            {
+                "birim_id": 16
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1466,
+        "password": "338AA**",
+        "email": "aakkoyun@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "BURAK TEKİN",
+        "user_typename": "MÜHENDİS",
+        "sicil": 1520,
+        "birim": [
+            {
+                "birim_id": 45
+            },
+            {
+                "birim_id": 16
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1466,
+        "password": "107BT**",
+        "email": "btekin@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "RÜMEYSA İSLAM",
+        "user_typename": "MÜHENDİS",
+        "sicil": 1521,
+        "birim": [
+            {
+                "birim_id": 45
+            },
+            {
+                "birim_id": 17
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1466,
+        "password": "458Rİ**",
+        "email": "rislam@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "ÇAĞLAR BİCİ",
+        "user_typename": "MÜHENDİS",
+        "sicil": 1522,
+        "birim": [
+            {
+                "birim_id": 45
+            }
+        ],
+        "user_type": 2,
+        "main_user": 2000,
+        "password": "Cb246810*",
+        "email": "cbici@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "KÜBRA YALÇIN",
+        "user_typename": "MÜHENDİS",
+        "sicil": 1523,
+        "birim": [
+            {
+                "birim_id": 45
+            },
+            {
+                "birim_id": 17
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1466,
+        "password": "100KY**",
+        "email": "kyalcin@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "AHMET ÜNAL YAVUZ",
+        "user_typename": "MÜHENDİS",
+        "sicil": 1525,
+        "birim": [
+            {
+                "birim_id": 45
+            }
+        ],
+        "user_type": 2,
+        "main_user": 2000,
+        "password": "101AÜY**",
+        "email": "ayavuz@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "KARDELEN CANOĞLU",
+        "user_typename": "MÜHENDİS",
+        "sicil": 1527,
+        "birim": [
+            {
+                "birim_id": 45
+            }
+        ],
+        "user_type": 2,
+        "main_user": 2000,
+        "password": 123456,
+        "email": "kcanoglu@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "BARIŞ MAÇAN",
+        "sicil": 1531,
+        "birim": [
+            {
+                "birim_id": 45
+            }
+        ],
+        "user_type": 2,
+        "main_user": 2000,
+        "password": 123456,
+        "email": "bmacan@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "İLKNUR KABA",
+        "sicil": 1533,
+        "birim": [
+            {
+                "birim_id": 45
+            }
+        ],
+        "user_type": 2,
+        "main_user": 2000,
+        "password": 123456,
+        "email": "ikaba@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "BURAK KARATAŞ",
+        "user_typename": "TEKNİSYEN",
+        "sicil": 1453,
+        "birim": [
+            {
+                "birim_id": 15
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1519,
+        "password": "081114BB",
+        "email": "bkaratas@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "OĞUZHAN ÖZTÜRK",
+        "user_typename": "YRD.TEKNİSYEN",
+        "sicil": 3083,
+        "birim": [
+            {
+                "birim_id": 20
+            }
+        ],
+        "user_type": 2,
+        "main_user": 2000,
+        "password": 338858,
+        "email": "oozturk@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "HATİCE ESEN TOPUZ",
+        "user_typename": "YRD.TEKNİSYEN",
+        "sicil": 3017,
+        "birim": [
+            {
+                "birim_id": 20
+            }
+        ],
+        "user_type": 2,
+        "main_user": 2000,
+        "password": 373601,
+        "email": "htopuz@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "MEHMET ALPEREN ASLANPINAR",
+        "user_typename": "TEKNİSYEN",
+        "sicil": 1287,
+        "birim": [
+            {
+                "birim_id": 20
+            }
+        ],
+        "user_type": 2,
+        "main_user": 2000,
+        "password": 58672,
+        "email": "maslanpinar@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "BAKİYE BÜKER",
+        "user_typename": "TEKNİSYEN",
+        "sicil": 1320,
+        "birim": [
+            {
+                "birim_id": 20
+            }
+        ],
+        "user_type": 2,
+        "main_user": 2000,
+        "password": "134BAK",
+        "email": "bbuker@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "ENES KARAKAYA",
+        "user_typename": "YRD.TEKNİSYEN",
+        "sicil": 6000,
+        "birim": [
+            {
+                "birim_id": 20
+            }
+        ],
+        "user_type": 2,
+        "main_user": 2000,
+        "password": 123456,
+        "email": "ekarakaya@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "BUĞRA KARACA",
+        "user_typename": "YRD.TEKNİSYEN",
+        "sicil": 6001,
+        "birim": [
+            {
+                "birim_id": 20
+            }
+        ],
+        "user_type": 2,
+        "main_user": 2000,
+        "password": 123456,
+        "email": "bkaraca@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "İSMAİL CANKARA",
+        "user_typename": "ALAN ŞEFİ (MESLEKİ VE TEKNİK)",
+        "sicil": 1413,
+        "birim": [
+            {
+                "birim_id": 20
+            }
+        ],
+        "user_type": 2,
+        "main_user": 2000,
+        "password": "475İSM",
+        "email": "icankara@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "CAN RAMAZAN KUŞKUŞ",
+        "user_typename": "KIDEMLİ TEKNİSYEN",
+        "sicil": 1008,
+        "birim": [
+            {
+                "birim_id": 11
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1117,
+        "password": "B9731ccc",
+        "email": "ckuskus@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "YASİN AYIK",
+        "user_typename": "YRD. UZMAN TEKNİSYEN",
+        "sicil": 1012,
+        "birim": [
+            {
+                "birim_id": 22
+            }
+        ],
+        "main_user": 1035,
+        "password": 2525,
+        "email": "ayikyasin@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "ORHAN KARATEPE",
+        "user_typename": "UZMAN TEKNİSYEN",
+        "sicil": 1013,
+        "birim": [
+            {
+                "birim_id": 14
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1439,
+        "password": 5270597,
+        "email": "okaratepe@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "DİLEK ÇİFTÇİ",
+        "user_typename": "KIDEMLİ TEKNİSYEN",
+        "sicil": 1018,
+        "birim": [
+            {
+                "birim_id": 26
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1146,
+        "password": 123456,
+        "email": "dciftci@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "İSRAFİL YÜCEYURT",
+        "user_typename": "YRD. UZMAN TEKNİSYEN",
+        "sicil": 1019,
+        "birim": [
+            {
+                "birim_id": 22
+            }
+        ],
+        "main_user": 1035,
+        "password": 2525,
+        "email": "iyuceyurt@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "MEHMET AYDOĞDU",
+        "user_typename": "YRD. UZMAN TEKNİSYEN",
+        "sicil": 1020,
+        "birim": [
+            {
+                "birim_id": 22
+            }
+        ],
+        "main_user": 1035,
+        "password": 2525,
+        "email": "maydogdu@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "ABDULKADİR DUMAN",
+        "user_typename": "KIDEMLİ TEKNİSYEN",
+        "sicil": 1040,
+        "birim": [
+            {
+                "birim_id": 13
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1427,
+        "password": 123456,
+        "email": "aduman@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "YUSUF MUSLULAR",
+        "user_typename": "KIDEMLİ TEKNİSYEN",
+        "sicil": 1042,
+        "birim": [
+            {
+                "birim_id": 12
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1459,
+        "password": 5663,
+        "email": "ymuslular@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "DENİZ SOYLU",
+        "user_typename": "KIDEMLİ TEKNİSYEN",
+        "sicil": 1045,
+        "birim": [
+            {
+                "birim_id": 27
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1361,
+        "password": 220213,
+        "email": "dsoylu@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "EMİRHAN ÇAKIR",
+        "user_typename": "KIDEMLİ TEKNİSYEN",
+        "sicil": 1051,
+        "birim": [
+            {
+                "birim_id": 21
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1497,
+        "password": 123456,
+        "email": "ecakir@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "İSMAİL AVŞAR",
+        "user_typename": "YRD.UZMAN TEKNİSYEN",
+        "sicil": 1052,
+        "birim": [
+            {
+                "birim_id": 9
+            }
+        ],
+        "main_user": 1141,
+        "password": "::Beren58/",
+        "email": "iavsar@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "MESUT BALABAN",
+        "user_typename": "YRD.UZMAN TEKNİSYEN",
+        "sicil": 1055,
+        "birim": [
+            {
+                "birim_id": 11
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1117,
+        "password": "MeSUT123",
+        "email": "mbalaban@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "SERHAT ERTÜMEN",
+        "user_typename": "KIDEMLİ TEKNİSYEN",
+        "sicil": 1056,
+        "birim": [
+            {
+                "birim_id": 4
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1206,
+        "password": "ser123",
+        "email": "sertumen@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "VAHDETTİN EROL",
+        "user_typename": "KIDEMLİ TEKNİSYEN",
+        "sicil": 1058,
+        "birim": [
+            {
+                "birim_id": 11
+            }
+        ],
+        "user_type": 1,
+        "main_user": 1117,
+        "password": "230258*v",
+        "email": "verol@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "EMRE KAMA",
+        "user_typename": "KIDEMLİ TEKNİSYEN",
+        "sicil": 1062,
+        "birim": [
+            {
+                "birim_id": 14
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1439,
+        "password": "367EMR",
+        "email": "ekama@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "BEYZA BİNİCİ",
+        "user_typename": "TEKNİSYEN",
+        "sicil": 1063,
+        "birim": [
+            {
+                "birim_id": 12
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1459,
+        "password": "B2869",
+        "email": "bbinici@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "SÜMEYYE ÇAKAR",
+        "user_typename": "KIDEMLİ TEKNİSYEN",
+        "sicil": 1069,
+        "birim": [
+            {
+                "birim_id": 12
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1459,
+        "password": 14531992,
+        "email": "sarslan@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "MERT ETEM BAYGÜNEŞ",
+        "user_typename": "KIDEMLİ TEKNİSYEN",
+        "sicil": 1089,
+        "birim": [
+            {
+                "birim_id": 12
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1459,
+        "password": "Janbey941089",
+        "email": "mbaygunes@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "BUĞRA KARLI",
+        "user_typename": "KIDEMLİ TEKNİSYEN",
+        "sicil": 1091,
+        "birim": [
+            {
+                "birim_id": 11
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1117,
+        "password": 123456,
+        "email": "bkarli@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "YAVUZ HARDAL",
+        "user_typename": "YRD. UZMAN TEKNİSYEN",
+        "sicil": 1094,
+        "birim": [
+            {
+                "birim_id": 14
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1439,
+        "password": "525YAV",
+        "email": "yhardal@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "SEZAİ GÖĞKUŞ",
+        "user_typename": "KIDEMLİ TEKNİSYEN",
+        "sicil": 1099,
+        "birim": [
+            {
+                "birim_id": 27
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1361,
+        "password": 739245,
+        "email": "sgogkus@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "SÜLEYMAN ERASLAN",
+        "user_typename": "TEKNİSYEN",
+        "sicil": 1104,
+        "birim": [
+            {
+                "birim_id": 21
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1497,
+        "password": 123456,
+        "email": "seraslan@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "FATİH ASLANPENÇE",
+        "user_typename": "YRD.UZMAN TEKNİSYEN",
+        "sicil": 1109,
+        "birim": [
+            {
+                "birim_id": 14
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1439,
+        "password": "527FAT",
+        "email": "faslanpence@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "MERT IŞIK",
+        "user_typename": "KIDEMLİ TEKNİSYEN",
+        "sicil": 1110,
+        "birim": [
+            {
+                "birim_id": 21
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1497,
+        "password": 123456,
+        "email": "mert@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "SAFİYE ARSLAN",
+        "user_typename": "TEKNİSYEN",
+        "sicil": 1111,
+        "birim": [
+            {
+                "birim_id": 12
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1459,
+        "password": 78085858,
+        "email": "safiyearslan@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "İBRAHİM BOZKURT",
+        "user_typename": "YRD. UZMAN TEKNİSYEN",
+        "sicil": 1112,
+        "birim": [
+            {
+                "birim_id": 14
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1439,
+        "password": 581112,
+        "email": "ibozkurt@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "BÜNYAMİN GÜLEZ",
+        "user_typename": "KIDEMLİ TEKNİSYEN",
+        "sicil": 1114,
+        "birim": [
+            {
+                "birim_id": 13
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1427,
+        "password": 123456,
+        "email": "bgulez@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "YUNİS EMRE KUTLU",
+        "user_typename": "KIDEMLİ TEKNİSYEN",
+        "sicil": 1119,
+        "birim": [
+            {
+                "birim_id": 13
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1427,
+        "password": "karel123",
+        "email": "ykutlu@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "MERVE HAZAL KARACA",
+        "user_typename": "TEKNİSYEN",
+        "sicil": 1122,
+        "birim": [
+            {
+                "birim_id": 10
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1384,
+        "password": "376MER",
+        "email": "hkaraca@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "ÖMER ARSLAN",
+        "user_typename": "KIDEMLİ TEKNİSYEN",
+        "sicil": 1127,
+        "birim": [
+            {
+                "birim_id": 10
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1384,
+        "password": "420ÖME",
+        "email": "oarslan@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "MUSAB EMRE YILDIRIM",
+        "user_typename": "TEKNİSYEN",
+        "sicil": 1135,
+        "birim": [
+            {
+                "birim_id": 13
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1427,
+        "password": 123456,
+        "email": "myildirim@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "FURKAN SAM",
+        "user_typename": "TEKNİSYEN",
+        "sicil": 1144,
+        "birim": [
+            {
+                "birim_id": 10
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1384,
+        "password": 1444,
+        "email": "fsam@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "BAHADIRHAN ÇELİK",
+        "user_typename": "KIDEMLİ TEKNİSYEN",
+        "sicil": 1146,
+        "birim": [
+            {
+                "birim_id": 26
+            }
+        ],
+        "user_type": 1,
+        "main_user": 1519,
+        "password": 123456,
+        "email": "bcelik@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "DENİZ GÖLBAŞI",
+        "user_typename": "TEKNİSYEN",
+        "sicil": 1153,
+        "birim": [
+            {
+                "birim_id": 12
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1459,
+        "password": 20142022,
+        "email": "dgolbasi@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "KADİR KOTANCI",
+        "user_typename": "KIDEMLİ TEKNİSYEN",
+        "sicil": 1154,
+        "birim": [
+            {
+                "birim_id": 45
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1466,
+        "password": 695482,
+        "email": "kkotanci@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "AHMET TURAN KAYA",
+        "user_typename": "TEKNİSYEN",
+        "sicil": 1158,
+        "birim": [
+            {
+                "birim_id": 4
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1206,
+        "password": "951258atk",
+        "email": "atkaya@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "ÖMER FARUK BAŞPINAR",
+        "user_typename": "TEKNİSYEN",
+        "sicil": 1159,
+        "birim": [
+            {
+                "birim_id": 10
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1384,
+        "password": "268ÖME",
+        "email": "obaspinar@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "ÖMER BERKBAYRAK",
+        "user_typename": "TEKNİSYEN",
+        "sicil": 1163,
+        "birim": [
+            {
+                "birim_id": 11
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1117,
+        "password": 159358,
+        "email": "oberkbayrak@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "EMRE ACIPINAR",
+        "user_typename": "TEKNİSYEN",
+        "sicil": 1171,
+        "birim": [
+            {
+                "birim_id": 10
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1384,
+        "password": 91716,
+        "email": "eacipinar@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "ERSİN TULAY",
+        "user_typename": "TEKNİSYEN",
+        "sicil": 1172,
+        "birim": [
+            {
+                "birim_id": 13
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1427,
+        "password": 123456,
+        "email": "etulay@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "HASAN HÜSEYİN KESER",
+        "user_typename": "TEKNİSYEN",
+        "sicil": 1174,
+        "birim": [
+            {
+                "birim_id": 21
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1497,
+        "password": "H1101120",
+        "email": "hkeser@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "MAHMUT ULUÇAY",
+        "user_typename": "TEKNİSYEN",
+        "sicil": 1182,
+        "birim": [
+            {
+                "birim_id": 29
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1519,
+        "password": "Mu123*",
+        "email": "mulucay@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "SERTAN DEMİREL",
+        "user_typename": "TEKNİSYEN",
+        "sicil": 1183,
+        "birim": [
+            {
+                "birim_id": 7
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1117,
+        "password": 446158,
+        "email": "sdemirel@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "ÖZGÜR ÇAĞLAR",
+        "user_typename": "KIDEMLİ TEKNİSYEN",
+        "sicil": 1189,
+        "birim": [
+            {
+                "birim_id": 22
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1035,
+        "password": 2525,
+        "email": "ocaglar@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "BURAK ÇİMEN",
+        "user_typename": "TEKNİSYEN",
+        "sicil": 1195,
+        "birim": [
+            {
+                "birim_id": 21
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1497,
+        "password": "Bb123",
+        "email": "bcimen@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "İBRAHİM TOPAL",
+        "user_typename": "TEKNİSYEN",
+        "sicil": 1197,
+        "birim": [
+            {
+                "birim_id": 21
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1497,
+        "password": "Aslibo33",
+        "email": "itopal@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "ÇAĞRI ÖZKAYNAK",
+        "user_typename": "TEKNİSYEN",
+        "sicil": 1203,
+        "birim": [
+            {
+                "birim_id": 27
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1361,
+        "password": 1750,
+        "email": "cozkaynak@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "SÜMEYRA BÖLÜKBAŞI",
+        "user_typename": "TEKNİSYEN",
+        "sicil": 1213,
+        "birim": [
+            {
+                "birim_id": 21
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1497,
+        "password": "smyr5894",
+        "email": "sbolukbasi@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "BETÜL ÜÇİNKÜLÜĞ",
+        "user_typename": "TEKNİSYEN",
+        "sicil": 1214,
+        "birim": [
+            {
+                "birim_id": 13
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1427,
+        "password": 71601034,
+        "email": "bucinkulug@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "SEDAT AYDOĞDU",
+        "user_typename": "KIDEMLİ TEKNİSYEN",
+        "sicil": 1224,
+        "birim": [
+            {
+                "birim_id": 22
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1035,
+        "password": 2525,
+        "email": "saydogdu@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "AHMET ERDOĞAN",
+        "user_typename": "TEKNİSYEN",
+        "sicil": 1230,
+        "birim": [
+            {
+                "birim_id": 12
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1459,
+        "password": "Ahmet585858",
+        "email": "aerdogan@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "MAHMUT TALHA DENİZLİ",
+        "user_typename": "TEKNİSYEN",
+        "sicil": 1231,
+        "birim": [
+            {
+                "birim_id": 12
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1459,
+        "password": "199MAH",
+        "email": "tdenizli@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "SERKAN TOPKAYA",
+        "user_typename": "TEKNİSYEN",
+        "sicil": 1232,
+        "birim": [
+            {
+                "birim_id": 13
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1427,
+        "password": 123456,
+        "email": "stopkaya@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "BUĞRA DEMİRHAN",
+        "user_typename": "TEKNİSYEN",
+        "sicil": 1234,
+        "birim": [
+            {
+                "birim_id": 12
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1459,
+        "password": "Bugra1234",
+        "email": "bdemirhan@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "MUHAMMET YILDIRIM",
+        "user_typename": "TEKNİSYEN",
+        "sicil": 1235,
+        "birim": [
+            {
+                "birim_id": 13
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1427,
+        "password": 123456,
+        "email": "muhammetyildirim@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "HAŞİM ÖZTÜRK",
+        "user_typename": "KIDEMLİ TEKNİSYEN",
+        "sicil": 1239,
+        "birim": [
+            {
+                "birim_id": 10
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1384,
+        "password": "295HAŞ",
+        "email": "hozturk@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "KAAN GÜVEN",
+        "user_typename": "TEKNİSYEN",
+        "sicil": 1240,
+        "birim": [
+            {
+                "birim_id": 10
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1384,
+        "password": 5384961588,
+        "email": "kguven@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "MUHAMMED BERŞAN ÖZSÜRER",
+        "user_typename": "TEKNİSYEN",
+        "sicil": 1256,
+        "birim": [
+            {
+                "birim_id": 13
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1427,
+        "password": "gt8brsnjdq5",
+        "email": "mozsurer@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "SERKAN ÖZER",
+        "user_typename": "TEKNİSYEN",
+        "sicil": 1257,
+        "birim": [
+            {
+                "birim_id": 13
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1427,
+        "password": 123456,
+        "email": "sozer@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "TAYYİP CEYLAN",
+        "user_typename": "TEKNİSYEN",
+        "sicil": 1258,
+        "birim": [
+            {
+                "birim_id": 13
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1427,
+        "password": 123456,
+        "email": "tceylan@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "ONUR KAĞIZMANDERE",
+        "user_typename": "TEKNİSYEN",
+        "sicil": 1264,
+        "birim": [
+            {
+                "birim_id": 21
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1497,
+        "password": 123456,
+        "email": "okagizmandere@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "AYBİKE KARAİNCİ",
+        "user_typename": "TEKNİSYEN",
+        "sicil": 1294,
+        "birim": [
+            {
+                "birim_id": 23
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1004,
+        "password": "A129419.",
+        "email": "akarainci@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "İBRAHİM KARAÇALI",
+        "user_typename": "KIDEMLİ TEKNİSYEN",
+        "sicil": 1295,
+        "birim": [
+            {
+                "birim_id": 13
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1427,
+        "password": 123456,
+        "email": "ikaracali@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "BEKİR AĞIRKAYA",
+        "user_typename": "TEKNİSYEN",
+        "sicil": 1302,
+        "birim": [
+            {
+                "birim_id": 11
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1117,
+        "password": "021958Ba",
+        "email": "bagirkaya@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "FIRAT SONKUR",
+        "user_typename": "TEKNİSYEN",
+        "sicil": 1304,
+        "birim": [
+            {
+                "birim_id": 12
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1459,
+        "password": "fratsnkur.58",
+        "email": "fsonkur@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "VOLKAN YILMAZ",
+        "user_typename": "TEKNİSYEN",
+        "sicil": 1309,
+        "birim": [
+            {
+                "birim_id": 10
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1384,
+        "password": 864284,
+        "email": "vyilmaz@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "MUSTAFA KOÇ",
+        "user_typename": "TEKNİSYEN",
+        "sicil": 1310,
+        "birim": [
+            {
+                "birim_id": 7
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1117,
+        "password": "MUS1310",
+        "email": "mustafakoc@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "ŞÜKRÜ COŞKUN",
+        "user_typename": "TEKNİSYEN",
+        "sicil": 1311,
+        "birim": [
+            {
+                "birim_id": 10
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1384,
+        "password": 5874,
+        "email": "scoskun@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "HÜSAMETTİN ALTUN",
+        "user_typename": "TEKNİSYEN",
+        "sicil": 1313,
+        "birim": [
+            {
+                "birim_id": 10
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1384,
+        "password": "204HÜS",
+        "email": "haltun@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "SELAHATTİN DEMİRBAŞ",
+        "user_typename": "YRD. UZMAN TEKNİSYEN",
+        "sicil": 1317,
+        "birim": [
+            {
+                "birim_id": 22
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1035,
+        "password": 2525,
+        "email": "sdemirbas@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "ALPERENCAN TÜRKUĞUR",
+        "user_typename": "TEKNİSYEN",
+        "sicil": 1318,
+        "birim": [
+            {
+                "birim_id": 12
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1459,
+        "password": 190558,
+        "email": "aturkugur@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "AHMET TURAN DANIŞ",
+        "user_typename": "TEKNİSYEN",
+        "sicil": 1319,
+        "birim": [
+            {
+                "birim_id": 10
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1384,
+        "password": 963852,
+        "email": "adanis@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "MİKAİL GÜZEL",
+        "user_typename": "TEKNİSYEN",
+        "sicil": 1321,
+        "birim": [
+            {
+                "birim_id": 13
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1427,
+        "password": 123456,
+        "email": "mguzel@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "KADİR AKSAK",
+        "user_typename": "TEKNİSYEN",
+        "sicil": 1327,
+        "birim": [
+            {
+                "birim_id": 4
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1206,
+        "password": 30609,
+        "email": "kaksak@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "NECİP TEKE",
+        "user_typename": "TEKNİSYEN",
+        "sicil": 1329,
+        "birim": [
+            {
+                "birim_id": 14
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1439,
+        "password": "167NEC",
+        "email": "nteke@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "YUNUS EMRE CÜCEN",
+        "user_typename": "TEKNİSYEN",
+        "sicil": 1333,
+        "birim": [
+            {
+                "birim_id": 14
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1439,
+        "password": "362YUN",
+        "email": "ycuce@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "İLHAN AKBULUT",
+        "user_typename": "TEKNİSYEN",
+        "sicil": 1335,
+        "birim": [
+            {
+                "birim_id": 9
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1141,
+        "password": 3825,
+        "email": "iakbulut@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "EMRE BALCILAR",
+        "user_typename": "TEKNİSYEN",
+        "sicil": 1343,
+        "birim": [
+            {
+                "birim_id": 13
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1427,
+        "password": "328EMR",
+        "email": "ebalcilar@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "AYŞENUR POLAT",
+        "user_typename": "TEKNİSYEN",
+        "sicil": 1347,
+        "birim": [
+            {
+                "birim_id": 21
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1497,
+        "password": "262AYŞ",
+        "email": "apolat@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "MUHAMMED MUSTAFA GÜLEÇ",
+        "user_typename": "TEKNİSYEN",
+        "sicil": 1348,
+        "birim": [
+            {
+                "birim_id": 21
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1497,
+        "password": 8477,
+        "email": "mgulec@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "NURDAN DOĞAN",
+        "user_typename": "TEKNİSYEN",
+        "sicil": 1349,
+        "birim": [
+            {
+                "birim_id": 21
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1497,
+        "password": "nrdn58",
+        "email": "ndogan@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "ŞİFANUR ERORHAN",
+        "user_typename": "TEKNİSYEN",
+        "sicil": 1350,
+        "birim": [
+            {
+                "birim_id": 10
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1384,
+        "password": 40823,
+        "email": "sozdogan@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "TURAN ALP",
+        "user_typename": "TEKNİSYEN",
+        "sicil": 1351,
+        "birim": [
+            {
+                "birim_id": 10
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1384,
+        "password": "MLTDCCHONAR1",
+        "email": "tfil@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "BATUHAN BEKİN",
+        "user_typename": "YRD.TEKNİSYEN",
+        "sicil": 1366,
+        "birim": [
+            {
+                "birim_id": 11
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1117,
+        "password": "Bb321654",
+        "email": "bbekin@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "YUSUF BUDAMA",
+        "user_typename": "KIDEMLİ TEKNİSYEN",
+        "sicil": 1167,
+        "birim": [
+            {
+                "birim_id": 27
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1361,
+        "password": 987833,
+        "email": "ybudama@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "İBRAHİM YILDIRIM",
+        "user_typename": "TEKNİSYEN",
+        "sicil": 1081,
+        "birim": [
+            {
+                "birim_id": 27
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1361,
+        "password": 4254,
+        "email": "iyildirim@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "MURAT ERORHAN",
+        "user_typename": "TEKNİSYEN",
+        "sicil": 1132,
+        "birim": [
+            {
+                "birim_id": 10
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1384,
+        "password": 585858,
+        "email": "merorhan@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "NEVZAT GENDİGELEN",
+        "user_typename": "TEKNİSYEN",
+        "sicil": 1223,
+        "birim": [
+            {
+                "birim_id": 14
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1439,
+        "password": "283NEV",
+        "email": "ngendigelen@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "RAMAZAN BİNİCİ",
+        "user_typename": "KIDEMLİ TEKNİSYEN",
+        "sicil": 1060,
+        "birim": [
+            {
+                "birim_id": 21
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1497,
+        "password": 123456,
+        "email": "rbinici@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "İLYAS ERTÜMEN",
+        "user_typename": "TEKNİSYEN",
+        "sicil": 1102,
+        "birim": [
+            {
+                "birim_id": 10
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1384,
+        "password": "Tokuslu-58",
+        "email": "iertumen@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "MEHMET İLHAN",
+        "user_typename": "TEKNİSYEN",
+        "sicil": 1123,
+        "birim": [
+            {
+                "birim_id": 10
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1384,
+        "password": "245MEH",
+        "email": "milhan@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "AHMET FURKAN ALTUN",
+        "user_typename": "TEKNİSYEN",
+        "sicil": 1161,
+        "birim": [
+            {
+                "birim_id": 11
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1117,
+        "password": "AFA517",
+        "email": "aaltun@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "MEHMET FATİH HALİS",
+        "user_typename": "TEKNİSYEN",
+        "sicil": 1162,
+        "birim": [
+            {
+                "birim_id": 13
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1427,
+        "password": "Fatih58.",
+        "email": "mhalis@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "MUHARREM SAZLI",
+        "user_typename": "KIDEMLİ TEKNİSYEN",
+        "sicil": 1403,
+        "birim": [
+            {
+                "birim_id": 27
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1361,
+        "password": 47858,
+        "email": "msazli@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "AHMET MERT",
+        "user_typename": "TEKNİSYEN",
+        "sicil": 1188,
+        "birim": [
+            {
+                "birim_id": 14
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1439,
+        "password": 123456,
+        "email": "amert@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "MUSTAFA TEK",
+        "user_typename": "YRD.TEKNİSYEN",
+        "sicil": 1412,
+        "birim": [
+            {
+                "birim_id": 14
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1439,
+        "password": "159MUS",
+        "email": "mtek@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "BÜŞRA ÇAKMAK",
+        "user_typename": "TEKNİSYEN",
+        "sicil": 1418,
+        "birim": [
+            {
+                "birim_id": 13
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1427,
+        "password": "5qz8toaau",
+        "email": "bcakmak@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "FATİH KAYA",
+        "user_typename": "TEKNİSYEN",
+        "sicil": 1419,
+        "birim": [
+            {
+                "birim_id": 13
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1427,
+        "password": 123456,
+        "email": "fkaya@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "YAKUP YENER DOĞAN",
+        "user_typename": "YRD.TEKNİSYEN",
+        "sicil": 1420,
+        "birim": [
+            {
+                "birim_id": 10
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1384,
+        "password": 123456,
+        "email": "ydogan@aho.com",
+        "is_active": "false",
+        "is_delete": "true",
+        "password_status": 0
+    },
+    {
+        "user_name": "MUSA YÜCEYURT",
+        "user_typename": "TEKNİSYEN",
+        "sicil": 1425,
+        "birim": [
+            {
+                "birim_id": 31
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1207,
+        "password": 123456,
+        "email": "myuceyurt@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "NECMİ KOÇ",
+        "user_typename": "KIDEMLİ TEKNİSYEN",
+        "sicil": 1426,
+        "birim": [
+            {
+                "birim_id": 13
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1427,
+        "password": 123456,
+        "email": "nkoc@aho.com",
+        "is_active": "false",
+        "is_delete": "true",
+        "password_status": 0
+    },
+    {
+        "user_name": "MUHAMMED ENES AYDIN",
+        "user_typename": "YRD.TEKNİSYEN",
+        "sicil": 1428,
+        "birim": [
+            {
+                "birim_id": 13
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1427,
+        "password": 123456,
+        "email": "maydin@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "NAİM TOPKAYA",
+        "user_typename": "KIDEMLİ TEKNİSYEN",
+        "sicil": 1027,
+        "birim": [
+            {
+                "birim_id": 13
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1427,
+        "password": 123456,
+        "email": "ntopkaya@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "HAMDİ YİĞİT",
+        "user_typename": "TEKNİSYEN",
+        "sicil": 1430,
+        "birim": [
+            {
+                "birim_id": 22
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1035,
+        "password": 2525,
+        "email": "hyigit@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "MUHAMMET KARACA",
+        "user_typename": "KIDEMLİ TEKNİSYEN",
+        "sicil": 1048,
+        "birim": [
+            {
+                "birim_id": 10
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1384,
+        "password": "491MUH",
+        "email": "mkaraca@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "UĞUR EMEKSİZ",
+        "user_typename": "TEKNİSYEN",
+        "sicil": 1130,
+        "birim": [
+            {
+                "birim_id": 10
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1384,
+        "password": "Hangishi5811?",
+        "email": "uemeksiz@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "AHMET KAAN KONUK",
+        "user_typename": "YRD.TEKNİSYEN",
+        "sicil": 1431,
+        "birim": [
+            {
+                "birim_id": 12
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1459,
+        "password": "316AHM",
+        "email": "akonuk@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "SADIK TEKE",
+        "user_typename": "YRD.TEKNİSYEN",
+        "sicil": 1440,
+        "birim": [
+            {
+                "birim_id": 13
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1427,
+        "password": 123456,
+        "email": "steke@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "SERKAN TOPAL",
+        "user_typename": "YRD.TEKNİSYEN",
+        "sicil": 1441,
+        "birim": [
+            {
+                "birim_id": 13
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1427,
+        "password": 123456,
+        "email": "stopal@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "SEZER GÜL",
+        "user_typename": "TEKNİSYEN",
+        "sicil": 1246,
+        "birim": [
+            {
+                "birim_id": 10
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1384,
+        "password": "105SEZ",
+        "email": "sgul@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "MAHMUT YILMAZ",
+        "user_typename": "TEKNİSYEN",
+        "sicil": 1205,
+        "birim": [
+            {
+                "birim_id": 13
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1427,
+        "password": 123456,
+        "email": "mahmutyilmaz@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "MUHAMMET BURAK ÇEVİK",
+        "user_typename": "TEKNİSYEN",
+        "sicil": 1098,
+        "birim": [
+            {
+                "birim_id": 13
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1427,
+        "password": "M.burak58",
+        "email": "mcevik@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "MÜBECCEL ESRA YURTDAKAL",
+        "user_typename": "YRD.TEKNİSYEN",
+        "sicil": 1446,
+        "birim": [
+            {
+                "birim_id": 21
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1497,
+        "password": 123456,
+        "email": "eyurtdakal@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "UĞUR YILDIRIM",
+        "user_typename": "YRD.TEKNİSYEN",
+        "sicil": 1447,
+        "birim": [
+            {
+                "birim_id": 11
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1117,
+        "password": "UF170791",
+        "email": "uyildirim@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "RÜMEYSA YÜCETEPE",
+        "user_typename": "YRD.TEKNİSYEN",
+        "sicil": 1449,
+        "birim": [
+            {
+                "birim_id": 13
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1427,
+        "password": "suat1985",
+        "email": "ryucetepe@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "ASLIHAN ÇİÇEK",
+        "user_typename": "YRD.TEKNİSYEN",
+        "sicil": 1450,
+        "birim": [
+            {
+                "birim_id": 13
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1427,
+        "password": "517ASL",
+        "email": "acicek@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "MUSTAFA ERSAN UYLAR",
+        "user_typename": "TEKNİSYEN",
+        "sicil": 1451,
+        "birim": [
+            {
+                "birim_id": 13
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1427,
+        "password": 123456,
+        "email": "muylar@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "SAMED UZUNOĞLU",
+        "user_typename": "TEKNİSYEN",
+        "sicil": 1244,
+        "birim": [
+            {
+                "birim_id": 13
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1427,
+        "password": 123456,
+        "email": "suzunoglu@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "SERDAR URUN",
+        "user_typename": "YRD.TEKNİSYEN",
+        "sicil": 3118,
+        "birim": [
+            {
+                "birim_id": 13
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1427,
+        "password": 123456,
+        "email": "surun@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "SEFA SEMEOĞLU",
+        "user_typename": "TEKNİSYEN",
+        "sicil": 1166,
+        "birim": [
+            {
+                "birim_id": 43
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1117,
+        "password": "58TC324",
+        "email": "ssemeoglu@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "EMRE DURAKOĞLU",
+        "user_typename": "TEKNİSYEN",
+        "sicil": 1300,
+        "birim": [
+            {
+                "birim_id": 10
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1384,
+        "password": 585858,
+        "email": "edurakoglu@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "ŞÜKRÜ KILIÇ",
+        "user_typename": "TEKNİSYEN",
+        "sicil": 1464,
+        "birim": [
+            {
+                "birim_id": 22
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1035,
+        "password": 2525,
+        "email": "sukrukilic@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "AYDIN GÜRSÖZLÜ",
+        "user_typename": "TEKNİSYEN",
+        "sicil": 1173,
+        "birim": [
+            {
+                "birim_id": 10
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1384,
+        "password": 211095,
+        "email": "agursozlu@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "HÜSEYİN YÖRÜK",
+        "user_typename": "TEKNİSYEN",
+        "sicil": 1176,
+        "birim": [
+            {
+                "birim_id": 13
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1427,
+        "password": 123456,
+        "email": "hyoruk@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "FATİH ORHAN",
+        "user_typename": "KIDEMLİ TEKNİSYEN",
+        "sicil": 1468,
+        "birim": [
+            {
+                "birim_id": 10
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1384,
+        "password": 542542,
+        "email": "forhan@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "GÜRBÜZ UYGUNUÇARLAR",
+        "user_typename": "YRD.TEKNİSYEN (ENGELLİ)",
+        "sicil": 1469,
+        "birim": [
+            {
+                "birim_id": 11
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1117,
+        "password": "486GÜR",
+        "email": "guygunucarlar@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "İLYAS ÇALIŞKAN",
+        "user_typename": "YRD.TEKNİSYEN (ENGELLİ)",
+        "sicil": 1471,
+        "birim": [
+            {
+                "birim_id": 13
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1427,
+        "password": 123456,
+        "email": "icaliskan@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "TOLGAHAN YILDIRIM",
+        "user_typename": "TEKNİSYEN",
+        "sicil": 3037,
+        "birim": [
+            {
+                "birim_id": 4
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1206,
+        "password": 3294,
+        "email": "tyildirim@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "MUSTAFA ÖZER",
+        "user_typename": "TEKNİSYEN",
+        "sicil": 1036,
+        "birim": [
+            {
+                "birim_id": 10
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1384,
+        "password": 123456,
+        "email": "mozer@aho.com",
+        "is_active": "false",
+        "is_delete": "true",
+        "password_status": 0
+    },
+    {
+        "user_name": "ABDULLAH YÜCEYURT",
+        "user_typename": "TEKNİSYEN",
+        "sicil": 1338,
+        "birim": [
+            {
+                "birim_id": 26
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1146,
+        "password": 123456,
+        "email": "ayuceyurt@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "ERSİN TOY",
+        "user_typename": "YRD.TEKNİSYEN",
+        "sicil": 1475,
+        "birim": [
+            {
+                "birim_id": 13
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1427,
+        "password": 123456,
+        "email": "etoy@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "İREM TUĞÇE KILIÇ",
+        "user_typename": "YRD.TEKNİSYEN",
+        "sicil": 1476,
+        "birim": [
+            {
+                "birim_id": 10
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1384,
+        "password": 258369,
+        "email": "ikilic@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "CEBRAİL BOY",
+        "user_typename": "TEKNİSYEN",
+        "sicil": 1479,
+        "birim": [
+            {
+                "birim_id": 22
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1035,
+        "password": 2525,
+        "email": "cboy@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "MUHAMMET OSMANOĞLU",
+        "user_typename": "TEKNİSYEN",
+        "sicil": 1129,
+        "birim": [
+            {
+                "birim_id": 13
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1427,
+        "password": "Omermuko58",
+        "email": "mosmanoglu@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "SERHAT OLGAÇ",
+        "user_typename": "TEKNİSYEN",
+        "sicil": 1143,
+        "birim": [
+            {
+                "birim_id": 10
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1384,
+        "password": 585858,
+        "email": "solgac@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "AHMET METİNOĞLU",
+        "user_typename": "YRD.TEKNİSYEN",
+        "sicil": 1480,
+        "birim": [
+            {
+                "birim_id": 26
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1146,
+        "password": 123456,
+        "email": "ametinoglu@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "HASAN ÖNLER",
+        "user_typename": "YRD.TEKNİSYEN",
+        "sicil": 1481,
+        "birim": [
+            {
+                "birim_id": 11
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1117,
+        "password": 123456,
+        "email": "honler@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "OKAN DÖNMEZ",
+        "user_typename": "YRD.TEKNİSYEN",
+        "sicil": 1482,
+        "birim": [
+            {
+                "birim_id": 14
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1439,
+        "password": 190558,
+        "email": "odonmez@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "FATİH BAKIŞ",
+        "user_typename": "YRD.TEKNİSYEN",
+        "sicil": 1448,
+        "birim": [
+            {
+                "birim_id": 13
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1427,
+        "password": 123456,
+        "email": "fbakis@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "FAHRİ KESKİN",
+        "user_typename": "YRD.TEKNİSYEN",
+        "sicil": 1483,
+        "birim": [
+            {
+                "birim_id": 12
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1459,
+        "password": "456FAH",
+        "email": "fkeskin@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "KADİR KARAKOÇ",
+        "user_typename": "TEKNİSYEN",
+        "sicil": 1177,
+        "birim": [
+            {
+                "birim_id": 14
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1439,
+        "password": 161115,
+        "email": "kkarakoc@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "SEFA GÜLER",
+        "user_typename": "TEKNİSYEN",
+        "sicil": 1283,
+        "birim": [
+            {
+                "birim_id": 13
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1427,
+        "password": 123456,
+        "email": "sguler@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "EMRE YÜCEL",
+        "user_typename": "KIDEMLİ TEKNİSYEN",
+        "sicil": 1054,
+        "birim": [
+            {
+                "birim_id": 10
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1384,
+        "password": 190558,
+        "email": "eyucel@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "BEKİR ÇETİN",
+        "user_typename": "TEKNİSYEN",
+        "sicil": 1265,
+        "birim": [
+            {
+                "birim_id": 10
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1384,
+        "password": "206BEK",
+        "email": "bcetin@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "MUHAMMED HARUN TANER",
+        "user_typename": "TEKNİSYEN",
+        "sicil": 1285,
+        "birim": [
+            {
+                "birim_id": 13
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1427,
+        "password": 123456,
+        "email": "mtaner@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "AHAD ALPEREN BULUT",
+        "user_typename": "YRD.TEKNİSYEN",
+        "sicil": 3051,
+        "birim": [
+            {
+                "birim_id": 10
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1384,
+        "password": "Aab3051.",
+        "email": "abulut@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "EMRULLAH KAMA",
+        "user_typename": "TEKNİSYEN",
+        "sicil": 1169,
+        "birim": [
+            {
+                "birim_id": 21
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1497,
+        "password": "100623aek.",
+        "email": "ekama@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "SİNAN PAMUK",
+        "user_typename": "YRD.TEKNİSYEN",
+        "sicil": 1490,
+        "birim": [
+            {
+                "birim_id": 10
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1384,
+        "password": "123456*",
+        "email": "spamuk@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "AHMET EŞDEMİR",
+        "user_typename": "TEKNİSYEN",
+        "sicil": 1095,
+        "birim": [
+            {
+                "birim_id": 13
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1427,
+        "password": 123456,
+        "email": "aesdemir@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "ABDUL GAZİ GÖZÜKARA",
+        "user_typename": "TEKNİSYEN",
+        "sicil": 1178,
+        "birim": [
+            {
+                "birim_id": 14
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1439,
+        "password": "190ABD",
+        "email": "agozukara@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "RESUL EKREM BAHLACIBAŞI",
+        "user_typename": "TEKNİSYEN",
+        "sicil": 1160,
+        "birim": [
+            {
+                "birim_id": 4
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1206,
+        "password": "285RES",
+        "email": "rbalacibasi@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "HAKAN AKBAŞ",
+        "user_typename": "YRD.UZMAN TEKNİSYEN",
+        "sicil": 1491,
+        "birim": [
+            {
+                "birim_id": 26
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1146,
+        "password": 123456,
+        "email": "hakbas@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "FATİH ARIK",
+        "user_typename": "TEKNİSYEN",
+        "sicil": 1492,
+        "birim": [
+            {
+                "birim_id": 12
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1459,
+        "password": 123456,
+        "email": "farik@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "ALİ ALDAŞLI",
+        "user_typename": "YRD.TEKNİSYEN",
+        "sicil": 1495,
+        "birim": [
+            {
+                "birim_id": 13
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1427,
+        "password": "lasiodora848",
+        "email": "aaldasli@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "ALİ LALE",
+        "user_typename": "TEKNİSYEN",
+        "sicil": 1496,
+        "birim": [
+            {
+                "birim_id": 14
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1439,
+        "password": "123456*",
+        "email": "alale@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "İBRAHİM ÇİFCİ",
+        "user_typename": "YRD.TEKNİSYEN",
+        "sicil": 1498,
+        "birim": [
+            {
+                "birim_id": 14
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1439,
+        "password": "123456*",
+        "email": "icifci@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "UĞUR ÇANAK",
+        "user_typename": "TEKNİSYEN",
+        "sicil": 1499,
+        "birim": [
+            {
+                "birim_id": 14
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1439,
+        "password": "123456*",
+        "email": "ucanak@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "CELİL KAŞKAYA",
+        "user_typename": "YRD.TEKNİSYEN",
+        "sicil": 1500,
+        "birim": [
+            {
+                "birim_id": 26
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1146,
+        "password": 123456,
+        "email": "ckaskaya@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "AHMET EMİN POLAT",
+        "user_typename": "YRD.TEKNİSYEN",
+        "sicil": 1501,
+        "birim": [
+            {
+                "birim_id": 12
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1459,
+        "password": 270305,
+        "email": "aepolat@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "SAİD BERKEHAN KAYA",
+        "user_typename": "YRD.TEKNİSYEN",
+        "sicil": 1508,
+        "birim": [
+            {
+                "birim_id": 21
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1497,
+        "password": 123456,
+        "email": "sbkaya@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "AHMET ARSLAN",
+        "user_typename": "YRD.TEKNİSYEN",
+        "sicil": 1516,
+        "birim": [
+            {
+                "birim_id": 4
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1206,
+        "password": 123456,
+        "email": "aarslan@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "MEHMET KODAK",
+        "user_typename": "YRD.TEKNİSYEN",
+        "sicil": 1517,
+        "birim": [
+            {
+                "birim_id": 21
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1497,
+        "password": 123456,
+        "email": "mkodak@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "KAZIM ARSLAN",
+        "user_typename": "TEKNİSYEN",
+        "sicil": 1106,
+        "birim": [
+            {
+                "birim_id": 14
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1439,
+        "password": 51120,
+        "email": "karslan@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "KÜRŞAT KARAOĞLU",
+        "user_typename": "TEKNİSYEN",
+        "sicil": 1422,
+        "birim": [
+            {
+                "birim_id": 13
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1427,
+        "password": 123456,
+        "email": "kkaraoglu@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "İSMAİL FURKAN ALPAYAR",
+        "user_typename": "TEKNİSYEN",
+        "sicil": 3106,
+        "birim": [
+            {
+                "birim_id": 7
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1117,
+        "password": 123456,
+        "email": "ialpayar@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "MEHMET AKİF ŞAHİN",
+        "user_typename": "TEKNİSYEN",
+        "sicil": 1247,
+        "birim": [
+            {
+                "birim_id": 26
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1146,
+        "password": 123456,
+        "email": "masahin@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "HACI ADEM ÇINAR",
+        "user_typename": "YRD.TEKNİSYEN",
+        "sicil": 1452,
+        "birim": [
+            {
+                "birim_id": 11
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1117,
+        "password": "Aa5858**",
+        "email": "hcinar@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "YAKUP KILIÇOĞLU",
+        "user_typename": "TEKNİSYEN",
+        "sicil": 1218,
+        "birim": [
+            {
+                "birim_id": 7
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1117,
+        "password": "171YAK",
+        "email": "ykilicoglu@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "MEHMET ALPER PEKDİRİ",
+        "user_typename": "TEKNİSYEN",
+        "sicil": 1204,
+        "birim": [
+            {
+                "birim_id": 10
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1384,
+        "password": "207MEH",
+        "email": "mpekdiri@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "ERSİN BAŞKAYA",
+        "user_typename": "TEKNİSYEN",
+        "sicil": 1322,
+        "birim": [
+            {
+                "birim_id": 10
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1384,
+        "password": "133ERS",
+        "email": "ebaskaya@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "MURAT GÜRSÖZLÜ",
+        "user_typename": "TEKNİSYEN",
+        "sicil": 1242,
+        "birim": [
+            {
+                "birim_id": 10
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1384,
+        "password": "5858mg",
+        "email": "mgursozlu@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "FURKAN CEBECİ",
+        "user_typename": "YRD.TEKNİSYEN",
+        "sicil": 1526,
+        "birim": [
+            {
+                "birim_id": 10
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1384,
+        "password": 123456,
+        "email": "fcebeci@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "FURKAN KOÇYİĞİT",
+        "user_typename": "YRD.TEKNİSYEN",
+        "sicil": 1528,
+        "birim": [
+            {
+                "birim_id": 12
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1459,
+        "password": 123456,
+        "email": "fkocyigit@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "MUHAMMED AĞCA",
+        "user_typename": "KIDEMLİ TEKNİSYEN",
+        "sicil": 1529,
+        "birim": [
+            {
+                "birim_id": 14
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1439,
+        "password": 123456,
+        "email": "magca@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "HAKAN DÖNMEZ",
+        "user_typename": "YRD.TEKNİSYEN",
+        "sicil": 1530,
+        "birim": [
+            {
+                "birim_id": 14
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1439,
+        "password": 123456,
+        "email": "hdonmez@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "BURHAN ARIKAN",
+        "sicil": 1532,
+        "birim": [
+            {
+                "birim_id": 14
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1439,
+        "password": 123456,
+        "email": "barikan@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "İSMAİL CAN BAŞEĞMEZ",
+        "user_typename": "TEKNİSYEN",
+        "sicil": 3104,
+        "birim": [
+            {
+                "birim_id": 13
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1427,
+        "password": 123456,
+        "email": "ibasegmez@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "MUHAMMED SENCER TATLICAK",
+        "user_typename": "TEKNİSYEN",
+        "sicil": 3078,
+        "birim": [
+            {
+                "birim_id": 11
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1117,
+        "password": "Mm12345**",
+        "email": "mtatlicak@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "AHMET EREN AKAY",
+        "user_typename": "YRD.TEKNİSYEN",
+        "sicil": 3001,
+        "birim": [
+            {
+                "birim_id": 14
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1439,
+        "password": 145356,
+        "email": "aakay@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "ALİ ORUÇ",
+        "user_typename": "TEKNİSYEN",
+        "sicil": 3003,
+        "birim": [
+            {
+                "birim_id": 10
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1384,
+        "password": 546913,
+        "email": "aoruc@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "BAHADIR KONUKCUL",
+        "user_typename": "KIDEMLİ TEKNİSYEN",
+        "sicil": 3006,
+        "birim": [
+            {
+                "birim_id": 13
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1427,
+        "password": 123456,
+        "email": "bkonukcul@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "BETÜL UZUNOĞLU",
+        "user_typename": "YRD.TEKNİSYEN",
+        "sicil": 3008,
+        "birim": [
+            {
+                "birim_id": 10
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1384,
+        "password": 571632,
+        "email": "buzunoglu@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "CİHAD AVCI",
+        "user_typename": "YRD.TEKNİSYEN",
+        "sicil": 3009,
+        "birim": [
+            {
+                "birim_id": 13
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1427,
+        "password": "145CİH",
+        "email": "cavci@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "FATİH ÖNK",
+        "user_typename": "YRD.TEKNİSYEN",
+        "sicil": 3012,
+        "birim": [
+            {
+                "birim_id": 10
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1384,
+        "password": 359536,
+        "email": "fonk@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "FATMANUR ALTUNKILIÇ",
+        "user_typename": "YRD.TEKNİSYEN",
+        "sicil": 3013,
+        "birim": [
+            {
+                "birim_id": 10
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1384,
+        "password": "522FAT",
+        "email": "faltunkilic@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "GAMZE EMİROĞLU",
+        "user_typename": "TEKNİSYEN",
+        "sicil": 3015,
+        "birim": [
+            {
+                "birim_id": 10
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1384,
+        "password": "EDİZDENİZ1418",
+        "email": "gemiroglu@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "KÜBRA ÖZKAN",
+        "user_typename": "TEKNİSYEN",
+        "sicil": 3021,
+        "birim": [
+            {
+                "birim_id": 21
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1497,
+        "password": 123456,
+        "email": "kubraozkan@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "MAİDE ÖZER",
+        "user_typename": "YRD.TEKNİSYEN",
+        "sicil": 3022,
+        "birim": [
+            {
+                "birim_id": 10
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1384,
+        "password": "Maide1999",
+        "email": "mgulseven@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "MEHMET GÜNER YİĞİT",
+        "user_typename": "TEKNİSYEN",
+        "sicil": 3023,
+        "birim": [
+            {
+                "birim_id": 13
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1427,
+        "password": "233MEH",
+        "email": "myigit@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "MUHAMMED KÜRŞAT SOĞANCIOĞLU",
+        "user_typename": "TEKNİSYEN",
+        "sicil": 3026,
+        "birim": [
+            {
+                "birim_id": 10
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1384,
+        "password": "137MUH",
+        "email": "msogacioglu@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "MÜCAHİT TUNCA",
+        "user_typename": "YRD.TEKNİSYEN",
+        "sicil": 3028,
+        "birim": [
+            {
+                "birim_id": 13
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1427,
+        "password": 123456,
+        "email": "mtunca@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "OĞUZHAN KILIÇ",
+        "user_typename": "YRD.TEKNİSYEN",
+        "sicil": 3029,
+        "birim": [
+            {
+                "birim_id": 13
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1427,
+        "password": 123456,
+        "email": "oguzhankilic@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "OZAN UĞUR AKTAŞ",
+        "user_typename": "TEKNİSYEN",
+        "sicil": 3030,
+        "birim": [
+            {
+                "birim_id": 10
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1384,
+        "password": "Ou226100",
+        "email": "oaktas@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "SEFA KEPENEK",
+        "user_typename": "TEKNİSYEN",
+        "sicil": 3032,
+        "birim": [
+            {
+                "birim_id": 10
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1384,
+        "password": "Sk3032.",
+        "email": "skepenek@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "ŞÜKRÜ ÇELİKUS",
+        "user_typename": "TEKNİSYEN",
+        "sicil": 3036,
+        "birim": [
+            {
+                "birim_id": 4
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1206,
+        "password": 123456,
+        "email": "scelikus@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "YUSUF YANMAZ",
+        "user_typename": "TEKNİSYEN",
+        "sicil": 3040,
+        "birim": [
+            {
+                "birim_id": 12
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1459,
+        "password": "yusuf5858",
+        "email": "yyanmaz@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "ÖMER FARUK YILMAZ",
+        "user_typename": "YRD.TEKNİSYEN",
+        "sicil": 3044,
+        "birim": [
+            {
+                "birim_id": 11
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1117,
+        "password": "195ÖME",
+        "email": "ofyilmaz@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "ADEM SAVCUN",
+        "user_typename": "YRD.TEKNİSYEN",
+        "sicil": 3045,
+        "birim": [
+            {
+                "birim_id": 12
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1459,
+        "password": 123456,
+        "email": "asavcun@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "EBUBEKİR DEMİRTAŞ",
+        "user_typename": "TEKNİSYEN",
+        "sicil": 3048,
+        "birim": [
+            {
+                "birim_id": 23
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1004,
+        "password": 963852,
+        "email": "edemirtas@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "AHAD KEMER",
+        "user_typename": "YRD.TEKNİSYEN",
+        "sicil": 3052,
+        "birim": [
+            {
+                "birim_id": 10
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1384,
+        "password": 585858,
+        "email": "akemer@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "BEKİR OGAN KARGI",
+        "user_typename": "YRD.TEKNİSYEN",
+        "sicil": 3054,
+        "birim": [
+            {
+                "birim_id": 7
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1117,
+        "password": 123456,
+        "email": "bkargi@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "BÜNYAMİN BEKAR",
+        "user_typename": "YRD.TEKNİSYEN",
+        "sicil": 3057,
+        "birim": [
+            {
+                "birim_id": 10
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1384,
+        "password": 1453,
+        "email": "bbekar@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "CİHAN YİĞİTER",
+        "user_typename": "YRD.TEKNİSYEN",
+        "sicil": 3059,
+        "birim": [
+            {
+                "birim_id": 4
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1206,
+        "password": "Cc123**",
+        "email": "cyigiter@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "ENES IŞKIN",
+        "user_typename": "YRD.TEKNİSYEN",
+        "sicil": 3061,
+        "birim": [
+            {
+                "birim_id": 13
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1427,
+        "password": 20121968,
+        "email": "eiskin@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "ENGİN GÜLCAN",
+        "user_typename": "YRD.TEKNİSYEN",
+        "sicil": 3063,
+        "birim": [
+            {
+                "birim_id": 31
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1207,
+        "password": 135790,
+        "email": "egulcan@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "ERAY AKTAŞ",
+        "user_typename": "YRD.TEKNİSYEN",
+        "sicil": 3064,
+        "birim": [
+            {
+                "birim_id": 4
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1206,
+        "password": 147258,
+        "email": "eaktas@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "EREN KAYGUSUZ",
+        "user_typename": "TEKNİSYEN",
+        "sicil": 3065,
+        "birim": [
+            {
+                "birim_id": 10
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1384,
+        "password": "58BS251",
+        "email": "ekaygusuz@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "FÜRKAN GÜLSEVER",
+        "user_typename": "TEKNİSYEN",
+        "sicil": 3068,
+        "birim": [
+            {
+                "birim_id": 10
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1384,
+        "password": "Muf778009",
+        "email": "fgulsever@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "HASRET ŞANLI",
+        "user_typename": "YRD.TEKNİSYEN",
+        "sicil": 3070,
+        "birim": [
+            {
+                "birim_id": 10
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1384,
+        "password": "485HAS",
+        "email": "hsanli@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "MERVE HAN ÖZDEMİR",
+        "user_typename": "YRD.TEKNİSYEN",
+        "sicil": 3076,
+        "birim": [
+            {
+                "birim_id": 23
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1004,
+        "password": 12031203,
+        "email": "mozdemir@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "MUHAMMED VEYSEL YİĞİT",
+        "user_typename": "YRD.TEKNİSYEN",
+        "sicil": 3077,
+        "birim": [
+            {
+                "birim_id": 7
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1117,
+        "password": "119MUH",
+        "email": "vyigit@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "MUZAFFER CAN BAŞEĞMEZ",
+        "user_typename": "TEKNİSYEN",
+        "sicil": 3081,
+        "birim": [
+            {
+                "birim_id": 11
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1117,
+        "password": 123456,
+        "email": "mbasegmez@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "OĞUZHAN ALTINTAŞ",
+        "user_typename": "TEKNİSYEN",
+        "sicil": 3082,
+        "birim": [
+            {
+                "birim_id": 12
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1459,
+        "password": "Oo123123*",
+        "email": "oaltintas@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "RÜÇHAN GÖZDE KUŞAK",
+        "user_typename": "YRD.TEKNİSYEN",
+        "sicil": 3084,
+        "birim": [
+            {
+                "birim_id": 12
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1459,
+        "password": 586058,
+        "email": "rkusak@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "TOLGA YILDIZ",
+        "user_typename": "YRD.TEKNİSYEN",
+        "sicil": 3087,
+        "birim": [
+            {
+                "birim_id": 13
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1427,
+        "password": 123456,
+        "email": "tyildiz@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "ABDURRAHMAN ALPEREN AVCU",
+        "user_typename": "TEKNİSYEN",
+        "sicil": 3088,
+        "birim": [
+            {
+                "birim_id": 13
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1427,
+        "password": "197ABD",
+        "email": "aavcu@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "AYHAN KÜTÜK",
+        "user_typename": "KIDEMLİ TEKNİSYEN",
+        "sicil": 3091,
+        "birim": [
+            {
+                "birim_id": 22
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1035,
+        "password": 2525,
+        "email": "akutuk@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "CİHAN GÜNDOĞDU",
+        "user_typename": "YRD.TEKNİSYEN",
+        "sicil": 3095,
+        "birim": [
+            {
+                "birim_id": 13
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1427,
+        "password": 123456,
+        "email": "cgundogru@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "DİĞDEM KANGAL",
+        "user_typename": "YRD.TEKNİSYEN",
+        "sicil": 3096,
+        "birim": [
+            {
+                "birim_id": 23
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1004,
+        "password": 12121985,
+        "email": "dkangal@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "HASAN MERT",
+        "user_typename": "YRD.TEKNİSYEN",
+        "sicil": 3102,
+        "birim": [
+            {
+                "birim_id": 13
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1427,
+        "password": 123456,
+        "email": "hmert@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "MEHMET POLAT",
+        "user_typename": "KIDEMLİ TEKNİSYEN",
+        "sicil": 3107,
+        "birim": [
+            {
+                "birim_id": 13
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1427,
+        "password": 123456,
+        "email": "mpolat@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "MUHAMMED EMİN İNAN",
+        "user_typename": "YRD.TEKNİSYEN",
+        "sicil": 3109,
+        "birim": [
+            {
+                "birim_id": 13
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1427,
+        "password": 123456,
+        "email": "minan@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "MUSTAFA KAYA",
+        "user_typename": "TEKNİSYEN",
+        "sicil": 3110,
+        "birim": [
+            {
+                "birim_id": 13
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1427,
+        "password": 123456,
+        "email": "mkaya@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "OĞUZ KOÇ",
+        "user_typename": "YRD.TEKNİSYEN",
+        "sicil": 3111,
+        "birim": [
+            {
+                "birim_id": 13
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1427,
+        "password": 123456,
+        "email": "okoc@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "OKAN ZAFER",
+        "user_typename": "TEKNİSYEN",
+        "sicil": 3112,
+        "birim": [
+            {
+                "birim_id": 13
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1427,
+        "password": 123456,
+        "email": "ozafer@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "SILA SÜMEYYE SÜER",
+        "user_typename": "YRD.TEKNİSYEN",
+        "sicil": 3121,
+        "birim": [
+            {
+                "birim_id": 13
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1427,
+        "password": "475SIL",
+        "email": "ssuer@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "ŞABAN BAHADIR GÜLTEKİN",
+        "user_typename": "YRD.TEKNİSYEN",
+        "sicil": 3123,
+        "birim": [
+            {
+                "birim_id": 4
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1206,
+        "password": "581803*",
+        "email": "sgultekin@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "ZEKİ ATEŞ",
+        "user_typename": "KIDEMLİ TEKNİSYEN",
+        "sicil": 3125,
+        "birim": [
+            {
+                "birim_id": 13
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1427,
+        "password": 123456,
+        "email": "zates@aho.com",
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "MUHAMMED FERHAT YEL",
+        "user_typename": "STAJYER",
+        "sicil": 20002,
+        "birim": [
+            {
+                "birim_id": 14
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1519,
+        "password": 1234567,
+        "email": 0,
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "BARIŞ KARA",
+        "user_typename": "STAJYER",
+        "sicil": 20003,
+        "birim": [
+            {
+                "birim_id": 14
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1519,
+        "password": 1234567,
+        "email": 0,
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "NEBİ TOSUN",
+        "user_typename": "STAJYER",
+        "sicil": 20004,
+        "birim": [
+            {
+                "birim_id": 14
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1519,
+        "password": 1234567,
+        "email": 0,
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "MECNUN PEK",
+        "user_typename": "STAJYER",
+        "sicil": 20005,
+        "birim": [
+            {
+                "birim_id": 14
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1519,
+        "password": 1234567,
+        "email": 0,
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "ÇAĞRI PEK",
+        "user_typename": "STAJYER",
+        "sicil": 20006,
+        "birim": [
+            {
+                "birim_id": 14
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1519,
+        "password": 1234567,
+        "email": 0,
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "EMRULLAH YANCI",
+        "user_typename": "STAJYER",
+        "sicil": 20007,
+        "birim": [
+            {
+                "birim_id": 14
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1519,
+        "password": 1234567,
+        "email": 0,
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    },
+    {
+        "user_name": "MEHMET MELİK GÜZEL",
+        "user_typename": "STAJYER",
+        "sicil": 20008,
+        "birim": [
+            {
+                "birim_id": 14
+            }
+        ],
+        "user_type": 2,
+        "main_user": 1519,
+        "password": 1234567,
+        "email": 0,
+        "is_active": "true",
+        "is_delete": "false",
+        "password_status": 0
+    }
+]
