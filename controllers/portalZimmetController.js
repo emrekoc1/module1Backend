@@ -40,7 +40,7 @@ const getZimmetHiyerArsi = `SELECT
     main_user,
 	(SELECT json_agg(zimmetler) FROM (SELECT pzi.name as item_name,pzi.barcode, pzi.description, pzi.marka,pzi.model,pzi.specification ,pza.*
  FROM portal_zimmet_assigments pza 
-INNER JOIN portal_zimmet_items pzi ON pzi.id = pza.item_id WHERE user_id =pu.sicil AND iade_status !=2 AND pza.onay !=2) zimmetler )as zimmetler,
+INNER JOIN portal_zimmet_items pzi ON pzi.id = pza.item_id WHERE user_id =pu.sicil AND iade_status !=2 AND pza.onay !=2 WHERE pza.is_delete=false AND pza.is_active=true) zimmetler )as zimmetler,
     (SELECT json_agg(yetkiler) FROM (SELECT * FROM gk_yetkilendirme gky WHERE gky.user_id = pu.sicil )yetkiler)as yetkiler ,
     (SELECT json_agg(departman) 
      FROM
@@ -49,7 +49,7 @@ INNER JOIN portal_zimmet_items pzi ON pzi.id = pza.item_id WHERE user_id =pu.sic
           FROM portal_user_departman pud 
           WHERE pu.sicil = pud.user_id) AS departman) AS departman 
 FROM portal_user pu`
-const getUserItemZimmetControlQuery = `SELECT * FROM portal_zimmet_assigments WHERE item_id=$1 AND user_id = $2 AND departman_id = $3 AND status = true AND iade_status !=2`
+const getUserItemZimmetControlQuery = `SELECT * FROM portal_zimmet_assigments WHERE item_id=$1 AND user_id = $2 AND departman_id = $3 AND status = true AND iade_status !=2 AND is_delete=false AND is_active=true`
 const postItemsQuery = `INSERT INTO portal_zimmet_items(
 	 name, description,  marka, model, specification,miktar,is_active,categori_id,barcode,yer)
 	VALUES ($1, $2, $3, $4, $5,$6,$7,$8,$9,$10) RETURNING *`
@@ -62,40 +62,91 @@ const postZimmetQuery = `INSERT INTO portal_zimmet_assigments(
 const updateZimmetQuery = `Update portal_zimmet_assigments set
 	 status = $3, miktar= $4 , update_date = $5 , assigned_date= $6,departman_id = $7,departman_name = $8 ,user_name =$9,onay = $10,onay_date = $11,comments = $12,iade_status = $13, iade_date =$14 , is_active = $15 WHERE item_id = $1 AND user_id = $2
 	 RETURNING *`
-const getReportGenelQuery = `SELECT COUNT(DISTINCT item_id)as item_count,SUM(CASE WHEN iade_status = 1 THEN 1 ELSE 0 END) AS iade_count
-, COUNT( DISTINCT user_id)as  user_count,
-(SELECT json_agg(iadeList) FROM (SELECT * FROM portal_zimmet_assigments pza INNER JOIN portal_zimmet_items pzi ON pzi.id = pza.item_id WHERE iade_status != 0 AND pza.status=true)iadeList) iade_list,
-(SELECT json_agg(birim) FROM (SELECT pd.*,(SELECT json_agg(birimDetail) FROM(SELECT pzi.name as item_name, pzi.description,pzi.barcode, pzi.marka,pzi.model,pzi.specification,pza.* 
-																  FROM portal_zimmet_assigments pza
-																  INNER JOIN portal_zimmet_items pzi ON pzi.id = pza.item_id WHERE pza.departman_id = pd.id AND pza.status = true)birimDetail)as birimDetail,
-							  (SELECT SUM(miktar) FROM portal_zimmet_assigments WHERE departman_id = pd.id and status = true ) FROM portal_departman pd )birim) birim,
-(select json_agg(kategori) FROM ( SELECT pzc.*,(SELECT json_agg(kategoriDetail)
-												FROM (SELECT pzi.name as item_name,pzi.barcode, pzi.description, pzi.marka,pzi.model,pzi.specification,pza.*,pzcs.name as categori_name,
-													  (select name FROM portal_zimmet_categories pzc WHERE pzcs.categori_id = pzc.id ) as cat_name
-FROM portal_zimmet_categories_sub pzcs
-INNER JOIN portal_zimmet_items pzi ON pzcs.id = pzi.categori_id
-INNER JOIN portal_zimmet_assigments pza ON pzi.id = pza.item_id AND pza.status = true
-WHERE pzcs.categori_id = pzc.id)kategoriDetail)as kategoriDetail,
-       (SELECT COALESCE(SUM(item_count),0) 
+const getReportGenelQuery = `SELECT 
+    COUNT(DISTINCT item_id) as item_count,
+    SUM(CASE WHEN iade_status = 1 THEN 1 ELSE 0 END) AS iade_count,
+    COUNT(DISTINCT user_id) as user_count,
+    (SELECT json_agg(iadeList) FROM (
+        SELECT * 
+        FROM portal_zimmet_assigments pza 
+        INNER JOIN portal_zimmet_items pzi ON pzi.id = pza.item_id 
+        WHERE iade_status != 0 AND pza.status=true
+    ) iadeList
+) iade_list,
+    (SELECT json_agg(birim) FROM (
+        SELECT 
+            pd.*,
+            (SELECT json_agg(birimDetail) FROM (
+                SELECT 
+                    pzi.name as item_name, 
+                    pzi.description,
+                    pzi.barcode, 
+                    pzi.marka,
+                    pzi.model,
+                    pzi.specification,
+                    pza.* 
+                FROM portal_zimmet_assigments pza
+                INNER JOIN portal_zimmet_items pzi ON pzi.id = pza.item_id 
+                WHERE pza.is_delete=false 
+                AND pza.is_active=true 
+                AND pza.departman_id = pd.id 
+                AND pza.status = true
+            ) birimDetail
+        ) as birimDetail,
+        (SELECT SUM(miktar) FROM portal_zimmet_assigments WHERE departman_id = pd.id and status = true) 
+        FROM portal_departman pd
+    ) birim
+) birim,
+    (SELECT json_agg(kategori) FROM (
+        SELECT 
+            pzc.*,
+            (SELECT json_agg(kategoriDetail) FROM (
+                SELECT 
+                    pzi.name as item_name,
+                    pzi.barcode, 
+                    pzi.description, 
+                    pzi.marka,
+                    pzi.model,
+                    pzi.specification,
+                    pza.*,
+                    pzcs.name as categori_name,
+                    (SELECT name FROM portal_zimmet_categories pzc WHERE pzcs.categori_id = pzc.id) as cat_name
+                FROM portal_zimmet_categories_sub pzcs
+                INNER JOIN portal_zimmet_items pzi ON pzcs.id = pzi.categori_id
+                INNER JOIN portal_zimmet_assigments pza ON pzi.id = pza.item_id 
+                    AND pza.status = true 
+                    AND pza.is_delete=false 
+                    AND pza.is_active=true
+                WHERE pzcs.categori_id = pzc.id
+            ) kategoriDetail
+        ) as kategoriDetail,
+        (SELECT COALESCE(SUM(item_count),0) 
         FROM (
             SELECT SUM(pza.miktar) AS item_count
             FROM portal_zimmet_items pzi
-            INNER JOIN portal_zimmet_assigments pza ON pza.item_id = pzi.id AND pza.status = true
+            INNER JOIN portal_zimmet_assigments pza ON pza.item_id = pzi.id 
+                AND pza.status = true 
+                AND pza.is_delete=false 
+                AND pza.is_active=true
             INNER JOIN portal_zimmet_categories_sub pzcs ON pzcs.id = pzi.categori_id
             WHERE pzcs.categori_id = pzc.id
         ) AS subquery
        ) AS total_item_count
-FROM portal_zimmet_categories pzc) kategori
+        FROM portal_zimmet_categories pzc
+    ) kategori
 ) kategori
-FROM portal_zimmet_assigments where status = true
+FROM portal_zimmet_assigments pza 
+WHERE pza.status = true 
+AND pza.is_delete=false 
+AND pza.is_active=true
 `
 const putItemsQuery = `UPDATE portal_zimmet_items SET
 	 name = $1, description = $2,  marka=$3, model=$4, specification=$5,miktar = $6,is_active = $7 , yer =$9,barcode = $10
 	WHERE id = $8 RETURNING *`
 const getZimmetUserByQuery = `SELECT pzi.name as item_name,pzi.barcode, pzi.description, pzi.marka,pzi.model,pzi.specification ,pza.*
  FROM portal_zimmet_assigments pza 
-INNER JOIN portal_zimmet_items pzi ON pzi.id = pza.item_id WHERE user_id =$1 AND iade_status !=2 AND pza.onay !=2`
-const getZimmetOnayRaporQuery = `select * from portal_zimmet_assigments pza INNER JOIN portal_zimmet_items pzi ON pza.item_id = pzi.id WHERE pza.onay !=1 AND pza.status = true `
+INNER JOIN portal_zimmet_items pzi ON pzi.id = pza.item_id WHERE user_id =$1 AND iade_status !=2 AND pza.onay !=2 AND  pza.is_delete=false AND pza.is_active=true`
+const getZimmetOnayRaporQuery = `select * from portal_zimmet_assigments pza INNER JOIN portal_zimmet_items pzi ON pza.item_id = pzi.id WHERE pza.onay !=1 AND pza.status = true AND  pza.is_delete=false AND pza.is_active=true`
 exports.postItemZimmet = async (req, res) => {
     const { name, description, marka, model, specification, miktar, is_active, categori_id, barcode, yer } = req.body
     try {
@@ -249,7 +300,7 @@ exports.getItemZimmet = async (req, res) => {
     try {
         const { sorgu } = req.body
         const getItemsQuery = `SELECT pzi.*,pzc.name as categori_name , pzcs.name as categori_sub_name,
-COALESCE((SELECT SUM(pza.miktar) as zimmetli FROM portal_zimmet_assigments pza WHERE pzi.id = pza.item_id AND pza.status = true ),0) as zimmetli,
+COALESCE((SELECT SUM(pza.miktar) as zimmetli FROM portal_zimmet_assigments pza WHERE pzi.id = pza.item_id AND pza.status = true and pza.is_delete=false AND pza.is_active=true ),0) as zimmetli,
 (SELECT json_agg(zimmetler) FROM
  (SELECT * FROM portal_zimmet_assigments pza WHERE pzi.id = pza.item_id AND pza.status = true)zimmetler) as zimmetler 
  FROM portal_zimmet_items pzi 
@@ -259,6 +310,16 @@ COALESCE((SELECT SUM(pza.miktar) as zimmetli FROM portal_zimmet_assigments pza W
         const totalVeri = await pool.query(`SELECT COUNT(*) FROM portal_zimmet_items`)
         const result = await pool.query(getItemsQuery);
         res.status(200).json({ status: 200, data: result.rows, totalVeri:totalVeri.rows[0].count });
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+};
+exports.getItemZimmetlerDetail = async (req, res) => {
+    try {
+        const { item_id } = req.body
+        const getItemsQuery = `SELECT * FROM portal_zimmet_assigments pza WHERE $1 = pza.item_id AND pza.status = true AND pza.is_active=true AND pza.is_delete=false`
+        const result = await pool.query(getItemsQuery,[item_id]);
+        res.status(200).json({ status: 200, data: result.rows });
     } catch (error) {
         res.status(400).json({ message: error.message });
     }

@@ -3,7 +3,8 @@ const pool = require('../db');
 const path = require('path');
 const ffmpeg = require('fluent-ffmpeg');
 const fs = require('fs');
-
+// const { sql, poolPromise } = require('../../msPortalDb'); // MSSQL yapılandırması
+const { sql, poolPromise } = require('./../msPortalDB');
 const transliteration = require('transliteration');
 const multer = require('multer');
 const req = require('express/lib/request');
@@ -236,7 +237,7 @@ exports.updateEgitimDokuman = [uploadDocs.array('files'), async (req, res) => {
       is_deleted,
       is_active,
       connected_id
-    ]); asdasd
+    ]); 
 
     if (file_type.startsWith('video')) {
       // İlk çözünürlük: 640x?
@@ -362,6 +363,58 @@ exports.updateEgitimVideo = async (req, res) => {
     res.status(200).json({
       status: 200,
       data: query.rows
+    })
+  } catch (error) {
+    console.error(error)
+    res.status(400).json({
+      status: 200,
+      data: error
+    })
+  }
+
+}
+
+exports.updateExSQL = async (req, res) => {
+  
+  try {
+    const mssqlPool = await poolPromise; 
+    const poolRequest = mssqlPool.request();
+    const egitimler = await poolRequest.query(`SELECT * FROM egitim`);
+    if(egitimler.rowsAffected>0){
+      for(let data of egitimler.recordsets[0]){
+        const egitimKatalogVarMi=await pool.query(`SELECT * FROM portal_egitim WHERE name = ${data.Name}`)
+        if(egitimKatalogVarMi.rowCount>0){
+
+        }else{
+          const insertEgitim=await pool.query(`INSERT INTO portal_egitim (name,creator_id,url) VALUES($1,$2,$3) RETURNING *`,[data.Name,1385,data.Video])
+          const insertEgitimID = insertEgitim.rows[0].id
+          const videolar = await poolRequest.query(`SELECT * FROM egitimDetail WHERE Eğitim_id = $1`,[data.id]);
+          if(videolar.rowsAffected>0){
+            for(let egitim of videolar.recordsets[0]){
+                const videoVarmi= await pool.query(`SELECT * FROM portal_egitim_video WHERE egitim_id=$1 AND name = $2`,[insertEgitimID,egitim.Name])
+                if(videoVarmi.rowCount==0){
+                  const insertEgitimVideo= await pool.query(`INSERT INTO portal_egitim_video (egitim_id, name, creator_id, is_deleted, is_active) VALUES ($1,$2,1385,false,true) RETUNING * `,[insertEgitimID,egitim.Name])
+                  if(insertEgitimVideo.rowCount>0){
+                    const uzanti = egitim.Video.split('.').pop();
+                    const type = uzanti === 'mp4' ?2 : 
+                                uzanti === 'jpg' ? 1 : 1;
+                    const file_type = uzanti === 'mp4' ?'video/mp4' : 
+                                uzanti === 'jpg' ? 'image/jpg' : 
+                                uzanti === 'png' ? 'image/png' :  uzanti === 'jpeg' ? 'image/jpeg' : uzanti === 'pdf' ? 'doc/pdf' :  '';
+                   const egitimVideoKaydet= await pool.query(`INSERT INTO portal_egitim_files( type, url, file_type, file_boyut, file_uzunluk, is_deleted, is_active, connected_id)
+                     VALUES ($1,$2,$3,$4,$5,$6,$7,$8) RETURNING*`,[type,egitim.Video,file_type,0,egitim.video_uzunluk,false,true,1385])   
+                  }
+                }
+            }
+          }
+
+        }
+      }
+    }
+
+    res.status(200).json({
+      status: 200,
+      // data: query.rows
     })
   } catch (error) {
     console.error(error)

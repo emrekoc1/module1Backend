@@ -37,6 +37,7 @@ router.post('/getGenelDepartmanOrganizasyonFonk',portalUserController.getGenelDe
 router.post('/personelDagit',portalUserController.personelDagit)
 router.post('/insertUserEgitim',portalUserController.insertUserEgitim)
 router.post('/getAllSkills',portalUserController.getAllSkills)
+router.post('/userMachMsql',portalUserController.userMachMsql)
 router.post('/insertAllSkill',portalUserController.insertAllSkill)
 module.exports = router;
 

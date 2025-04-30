@@ -22,6 +22,7 @@ router.post('/postMailZimmetReplay', portalZimmetController.postMailZimmetReplay
 router.post('/geciciEnvanterGiris', portalZimmetController.geciciEnvanterGiris);
 router.post('/geiciMail', portalZimmetController.geciciMailOkuma);
 router.post('/birimAltZimmet', portalZimmetController.getGenelHiyerArsiAll);
+router.post('/getItemZimmetlerDetail', portalZimmetController.getItemZimmetlerDetail);
 
 
 

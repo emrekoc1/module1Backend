@@ -7,7 +7,8 @@ const { sqls, poolPromises } = require('../portal_Tiger_db');
 const multer = require('multer');
 const express = require('express');
 const router = express.Router();
-
+const fs = require('fs');
+const xlsx = require('xlsx');
 const cors = require('cors');
 router.use(cors());
 const indexSearch = `SELECT (SELECT aylik_index as index FROM maliyet_enflansyon_index 
@@ -29,11 +30,9 @@ exports.depoCekMaliyet = async (req, res) => {
         const mssqlPool = await poolPromises; // MSSQL bağlantısı
         const tigerCariOku = mssqlPool.request();
 
-        // const tigerSql = `
-        // SELECT  ITM.CODE AS kodu  FROM LG_224_ITEMS ITM
-     
-        //     `;
-
+        //         const tigerSql = `
+        //         SELECT  ITM.CODE AS kodu  FROM LG_224_ITEMS ITM
+        //    `;
         const tigerSql = `
           SELECT ITM.CODE AS kodu, 
             (SELECT TOP 1 linee.DATE_ 
@@ -187,39 +186,7 @@ exports.depoCekMaliyet = async (req, res) => {
                 }
             }
         }
-        // const bomuOlanUrunler = await pool.query(`SELECT DISTINCT ana_urun FROM maliyet_bom `);
-        // for (let { ana_urun } of bomuOlanUrunler.rows) {
 
-        //     await getBirimFiyatRecursive(ana_urun, ana_urun);
-
-        //     // 2. Hesaplanan birim_fiyat'ı bom_fiyat olarak ata
-        //     await pool.query(`
-        //       UPDATE maliyet_urun_birim_fiyat 
-        //       SET bom_fiyat = birim_fiyat 
-        //       WHERE urun_kodu = $1
-        //     `, [ana_urun]);
-
-
-        // }
-        // for (let { ana_urun } of bomuOlanUrunler.rows) {
-        //     // 3. Satın alma verilerine göre ortalama birim fiyat hesapla ve ata
-        //     const siparisGetir = await pool.query(`SELECT 
-        //             CASE 
-        //               WHEN SUM(sas_miktar) = 0 OR SUM(sas_miktar) IS NULL THEN 0
-        //               ELSE SUM(sas_miktar * birim_fiyat) / SUM(sas_miktar)
-        //             END
-        //           FROM maliyet_satin_alma_siparis
-        //           WHERE urun_kod = $1`, [ana_urun])
-        //     if (siparisGetir.rows[0].case > 0) {
-        //         await pool.query(`
-        //         UPDATE maliyet_urun_birim_fiyat
-        //         SET birim_fiyat = $2
-        //         WHERE urun_kodu = $1
-        //       `, [ana_urun, siparisGetir.rows[0].case]);
-        //     }
-
-
-        // }
         res.status(200).json({ status: 200 });
     } catch (error) {
         console.error("Error in depoCekMaliyet function:", error);
@@ -421,7 +388,7 @@ exports.getGenelStokVeriLimits = async (req, res) => {
     try {
         const { sirala, search, haricTutulacakDepolar, limit, offset } = req.body;
         // Geçerli kolonları belirleyelim
-        const allowedColumns = ['urun_kodu', 'urun_aciklama', 'toplam_miktar', 'birim_fiyat', 'toplam_fiyat', 'son_hareket'];
+        const allowedColumns = ['urun_kodu', 'urun_aciklama', 'toplam_miktar', 'birim_fiyat', 'toplam_fiyat', 'bom_fiyat', 'islem_suresi', 'son_hareket'];
         const siralamaKriterleri = sirala
             ? sirala.split(', ')
                 .map(k => k.split(' '))
@@ -460,8 +427,7 @@ exports.getGenelStokVeriLimits = async (req, res) => {
           depo.urun_kodu, 
           depo.urun_aciklama,
            depo.son_hareket,
-            depo.bom_fiyat,
-              depo.islem_suresi,
+COALESCE(depo.bom_fiyat, 0) AS bom_fiyat ,depo.islem_suresi,
               depo.islem_miktar
       FROM (
           SELECT 
@@ -507,63 +473,360 @@ exports.getGenelStokVeriLimits = async (req, res) => {
         res.status(400).json({ error: error.message });
     }
 }
-const getBirimFiyatRecursive = async (urunKodu, ana_urun, anaUrun = null, ustKod = null, visited = new Set()) => {
-    const key = `${urunKodu}_${ana_urun || 'null'}_${ustKod || 'null'}`;
-    if (visited.has(key)) {
-        return 0; // Sonsuz döngüyü engelle
-    }
+const getBirimFiyatRecursive = async (urunKodu, anaUrun, ustKod = null, visited = new Set()) => {
+    const key = `${urunKodu}_${anaUrun || 'null'}_${ustKod || 'null'}`;
+    if (visited.has(key)) return { maliyet: 0, agac: {} };
+
     visited.add(key);
-    // İlk olarak direkt birim fiyat var mı diye bakalım
-    const birimFiyatQuery = await pool.query(
-        `SELECT birim_fiyat,bom_fiyat FROM maliyet_urun_birim_fiyat WHERE urun_kodu = $1`,
-        [urunKodu]
-    );
-    const mevcutFiyat = birimFiyatQuery.rows[0]?.birim_fiyat;
-    console.log(mevcutFiyat)
-    if (mevcutFiyat !== null && mevcutFiyat !== undefined) {
-        const altBOMQuery = await pool.query(
-            `SELECT kod FROM maliyet_bom WHERE ust_kod = $1 AND ana_urun=$2 `,
-            [urunKodu, ana_urun]
-        );
-        if (altBOMQuery.rows.length === 0) {
-            return parseFloat(mevcutFiyat);
-        }
+
+    // Önce birim fiyatı çek
+    const fiyatQuery = await pool.query(`
+        SELECT birim_fiyat, bom_fiyat 
+        FROM maliyet_urun_birim_fiyat 
+        WHERE urun_kodu = $1
+    `, [urunKodu]);
+
+    const satir = fiyatQuery.rows[0];
+    let mevcutFiyat = satir?.birim_fiyat;
+    let bomFiyat = satir?.bom_fiyat;
+
+    // Eğer bu kodun alt parçası yoksa, doğrudan fiyatı dön
+    const altParcaQuery = await pool.query(`
+        SELECT kod, miktar, ust_kod, ana_urun 
+        FROM maliyet_bom 
+        WHERE ust_kod = $1 AND ana_urun = $2
+    `, [urunKodu, anaUrun]);
+
+    if ((mevcutFiyat ?? null) !== null && altParcaQuery.rowCount === 0) {
+        return { maliyet: parseFloat(mevcutFiyat), agac: { [urunKodu]: mevcutFiyat } };
     }
 
-    // Eğer birim fiyat yoksa, BOM'u var mı?
-    const altBOMQuery = await pool.query(
-        `SELECT kod, miktar, ana_urun, ust_kod FROM maliyet_bom WHERE ana_urun = $1 AND ust_kod = $2`,
-        [ana_urun, urunKodu]
-    );
+    // Alt parçaları al ve rekürsif maliyet hesapla
+    let toplamMaliyet = 0;
+    const agac = { [urunKodu]: {} };
 
-    const altKodlar = altBOMQuery.rows;
-
-    if (altKodlar.length === 0) {
-        // BOM yok, fiyat da yok → 0 döneriz
-        return 0;
+    for (const { kod, miktar, ust_kod, ana_urun: altAnaUrun } of altParcaQuery.rows) {
+        const miktarDegeri = miktar || 1;
+        const { maliyet: altMaliyet, agac: altAgac } = await getBirimFiyatRecursive(kod, altAnaUrun, ust_kod, visited);
+        toplamMaliyet += altMaliyet * miktarDegeri;
+        agac[urunKodu][kod] = {
+            miktar: miktarDegeri,
+            maliyet: altMaliyet,
+            alt: altAgac[kod] || {},
+        };
     }
 
-    // Alt kodların fiyatlarını topla
-    let toplam = 0;
-    for (const { kod, miktar, ana_urun: altAnaUrun, ust_kod } of altKodlar) {
-        const altFiyat = await getBirimFiyatRecursive(kod, ana_urun, altAnaUrun, ust_kod, visited);
-        toplam += altFiyat * (miktar || 1);
-    }
+    // Bu kodun maliyetini veritabanına yaz (bom_fiyat)
+    await pool.query(`
+        INSERT INTO maliyet_urun_birim_fiyat (urun_kodu, bom_fiyat)
+        VALUES ($1, $2)
+        ON CONFLICT (urun_kodu) DO UPDATE SET bom_fiyat = EXCLUDED.bom_fiyat
+    `, [urunKodu, toplamMaliyet]);
 
-    // Ana ürünün fiyatını güncelle
-    await pool.query(
-        `INSERT INTO maliyet_urun_birim_fiyat (urun_kodu, birim_fiyat)
-       VALUES ($1, $2)
-       ON CONFLICT (urun_kodu) DO UPDATE SET birim_fiyat = EXCLUDED.birim_fiyat`,
-        [urunKodu, toplam]
-    );
-
-    return toplam;
+    return { maliyet: toplamMaliyet, agac };
 };
+
+
+exports.bomGenelToplam = async (req, res) => {
+    try {
+
+        const { urun_kodu, haricTutulacakDepolar, search } = req.body
+        let depoFilter = '';
+        let depoParams = [];
+        let paramIndex = urun_kodu ? 2 : 1
+        if (haricTutulacakDepolar && haricTutulacakDepolar.length > 0) {
+            const depoPlaceholders = haricTutulacakDepolar.map((_, i) => `$${paramIndex + i}`).join(', ');
+            depoFilter = `AND depo.depo IN (${depoPlaceholders})`;
+            depoParams = haricTutulacakDepolar;
+        }
+
+        const anaUrunBomQuery = `
+SELECT SUM(toplam_maliyet) as toplam_maliyet FROM( SELECT 
+  SUM(depo.depo_miktar) AS toplam_miktar,
+  depo.urun_kodu,
+  depo.urun_aciklama,
+  fiyat.birim_fiyat,
+  fiyat.bom_fiyat,
+  bom.seviye,
+  bom.ust_kod,
+  bom.miktar,
+  SUM(depo.depo_miktar * 
+      COALESCE(fiyat.birim_fiyat, fiyat.bom_fiyat, 0)
+     ) AS toplam_maliyet
+FROM maliyet_urun_depo depo 
+INNER JOIN maliyet_urun_birim_fiyat fiyat ON fiyat.urun_kodu = depo.urun_kodu
+INNER JOIN maliyet_bom bom ON bom.kod = depo.urun_kodu
+WHERE bom.ana_urun=$1 ${depoFilter}
+GROUP BY 
+  depo.urun_kodu,
+  depo.urun_aciklama,
+  fiyat.birim_fiyat,
+  fiyat.bom_fiyat,
+  bom.seviye,
+  bom.ust_kod,
+  bom.miktar
+) toplam
+`;
+
+
+        let result;
+        if (depoParams.length === 0) {
+            result = await pool.query(anaUrunBomQuery, [urun_kodu]);
+
+        } else {
+            result = await pool.query(anaUrunBomQuery, [urun_kodu, ...depoParams]);
+
+
+        }
+
+        res.status(200).json({ status: 200, data: result.rows });
+    } catch (error) {
+        console.error("Error in depoCekMaliyet function:", error);
+        res.status(400).json({ error: error.message });
+    }
+}
+function buildBOMTree(rows, rootKod) {
+    const items = {};
+
+    // 1. Ürünleri oluştur
+    rows.forEach(row => {
+        if (!items[row.alt_urun_kodu]) {
+            items[row.alt_urun_kodu] = {
+                kod: row.alt_urun_kodu,
+                urun_aciklama: row.urun_aciklama,
+                miktar: row.alt_urun_miktar,
+                seviye: row.seviye,
+
+                depo_miktar: row.depo_miktar || 0,
+                birim_fiyat: row.birim_fiyat,
+                bom_fiyat: row.bom_fiyat,
+                children: []
+            };
+        }
+    });
+
+    // 2. Alt ürünleri üst ürünlere bağla
+    rows.forEach(row => {
+        if (!row.ust_urun_kodu || row.ust_urun_kodu === row.alt_urun_kodu) return;
+
+        if (!items[row.ust_urun_kodu]) {
+            items[row.ust_urun_kodu] = {
+                kod: row.ust_urun_kodu,
+                miktar: 1,
+                children: []
+            };
+        }
+
+        items[row.ust_urun_kodu].children.push(items[row.alt_urun_kodu]);
+    });
+
+    // 3. Root item'ı bul (ana ürünün kendisi olan satır)
+    const rootData = rows.find(row => row.alt_urun_kodu === rootKod && row.ust_urun_kodu === null);
+
+    // 4. Ana ürünün alt bileşenlerini bul
+    const rootChildren = rows
+        .filter(row => row.ust_urun_kodu === rootKod && row.alt_urun_kodu !== rootKod)
+        .map(row => items[row.alt_urun_kodu]);
+
+    if (!rootData && rootChildren.length === 0) return null;
+
+    const root = {
+        kod: rootKod,
+        miktar: rootData?.alt_urun_miktar ?? 1,
+        urun_aciklama: rootData?.urun_aciklama ?? "",
+        depo_miktar: rootData?.depo_miktar ?? 0,
+        birim_fiyat: rootData?.birim_fiyat ?? null,
+        bom_fiyat: rootData?.bom_fiyat ?? null,
+        seviye: rootData?.seviye,
+
+        children: rootChildren
+    };
+
+    return root;
+}
+
+function calculateCost(node) {
+    if (!node.children || node.children.length === 0) {
+        const price = node.birim_fiyat ?? node.bom_fiyat ?? 0;
+        const miktar = node.depo_miktar ?? 0;
+        return node.miktar * price;
+
+    }
+
+    let cost = 0;
+    for (const child of node.children) {
+        cost += calculateCost(child);
+    }
+
+    return node.miktar * cost;
+}
+exports.bomMaliyet = async (req, res) => {
+    try {
+        const { urun_kodu, haricTutulacakDepolar } = req.body;
+        let depoFilter = '';
+        let depoParams = [];
+        let paramIndex = urun_kodu ? 2 : 1;
+
+        if (haricTutulacakDepolar && haricTutulacakDepolar.length > 0) {
+            const depoPlaceholders = haricTutulacakDepolar.map((_, i) => `$${paramIndex + i}`).join(', ');
+            depoFilter = `AND depo.depo IN (${depoPlaceholders})`;
+            depoParams = haricTutulacakDepolar;
+        }
+
+        const anaUrunBomQuery = `
+        SELECT 
+          bom.kod AS alt_urun_kodu,
+          bom.ust_kod AS ust_urun_kodu,
+          bom.miktar AS alt_urun_miktar,
+          fiyat.birim_fiyat,
+          bom.seviye,
+          depo.urun_aciklama,
+          SUM(depo.depo_miktar) AS depo_miktar,
+          fiyat.bom_fiyat
+        FROM maliyet_bom bom
+        LEFT JOIN maliyet_urun_birim_fiyat fiyat ON fiyat.urun_kodu = bom.kod
+        LEFT JOIN maliyet_urun_depo depo ON depo.urun_kodu = bom.kod ${depoFilter}
+        WHERE bom.ana_urun = $1
+        GROUP BY bom.kod, bom.ust_kod,bom.seviye, bom.miktar, fiyat.birim_fiyat, fiyat.bom_fiyat,depo.urun_aciklama
+      `;
+
+        const anaUrunQuery = `
+        SELECT 
+          depo.urun_aciklama,
+          depo.urun_kodu,
+          SUM(depo.depo_miktar) AS depo_miktar,
+          fiyat.birim_fiyat,
+          fiyat.bom_fiyat
+        FROM maliyet_urun_depo depo 
+        INNER JOIN maliyet_urun_birim_fiyat fiyat ON fiyat.urun_kodu = depo.urun_kodu 
+        WHERE depo.urun_kodu = $1 ${depoFilter}
+        GROUP BY depo.urun_aciklama, depo.urun_kodu, fiyat.birim_fiyat, fiyat.bom_fiyat
+      `;
+
+        let result, anaUrunGetir;
+
+        if (depoParams.length === 0) {
+            result = await pool.query(anaUrunBomQuery, [urun_kodu]);
+            anaUrunGetir = await pool.query(anaUrunQuery, [urun_kodu]);
+
+            if (anaUrunGetir.rows.length > 0) {
+                result.rows.push({
+                    alt_urun_kodu: anaUrunGetir.rows[0].urun_kodu,
+                    ust_urun_kodu: null,
+                    urun_aciklama: anaUrunGetir.rows[0].urun_aciklama,
+                    alt_urun_miktar: 1,
+                    seviye: 0,
+                    birim_fiyat: anaUrunGetir.rows[0].birim_fiyat,
+                    depo_miktar: anaUrunGetir.rows[0].depo_miktar,
+                    bom_fiyat: anaUrunGetir.rows[0].bom_fiyat
+                });
+            }
+
+        } else {
+            result = await pool.query(anaUrunBomQuery, [urun_kodu, ...depoParams]);
+            anaUrunGetir = await pool.query(anaUrunQuery, [urun_kodu, ...depoParams]);
+
+            if (anaUrunGetir.rows.length > 0) {
+                result.rows.push({
+                    alt_urun_kodu: anaUrunGetir.rows[0].urun_kodu,
+                    ust_urun_kodu: null,
+                    urun_aciklama: anaUrunGetir.rows[0].urun_aciklama,
+                    seviye: 0,
+
+                    alt_urun_miktar: 1,
+                    birim_fiyat: anaUrunGetir.rows[0].birim_fiyat,
+                    depo_miktar: anaUrunGetir.rows[0].depo_miktar,
+                    bom_fiyat: anaUrunGetir.rows[0].bom_fiyat
+                });
+            }
+        }
+
+        const root = buildBOMTree(result.rows, urun_kodu);
+
+        if (!root) {
+            return res.status(404).json({
+                status: 404,
+                message: `BOM ağacı kökü (${urun_kodu}) bulunamadı veya hiç alt bileşeni yok.`
+            });
+        }
+
+        const totalCost = calculateCost(root);
+        root.bom_fiyat = totalCost
+
+        res.status(200).json({ status: 200, data: totalCost, root });
+    } catch (error) {
+        console.error("Error in depoCekMaliyet function:", error);
+        res.status(400).json({ error: error.message });
+    }
+};
+exports.sasCekDeneme = async (req, res) => {
+    try {
+        const result = await pool.query(`SELECT * FROM maliyet_urun_birim_fiyat WHERE birim_fiyat is null`)
+        // for (let data of result.rows) {
+        //     await sasCekMaliyet(225, data.urun_kodu);
+        //     // await bomCek(data.urun_kodu, 224);
+
+        // }
+
+        // 2. Sadece birim fiyatı olmayan ana ürünleri çek}
+            const bomuOlanUrunler = await pool.query(`
+            SELECT DISTINCT ana_urun 
+            FROM maliyet_bom
+
+          `);
+
+        for (let { ana_urun } of bomuOlanUrunler.rows) {
+
+            const { maliyet, agac } = await getBirimFiyatRecursive(ana_urun, ana_urun);
+            function flattenBOM(data, parentKey = '', path = '') {
+                let rows = [];
+
+                // for (const key in data) {
+                //   const value = data[key];
+                //   const miktar = value.miktar ?? '';
+                //   const maliyet = value.maliyet ?? '';
+                //   const newPath = path ? `${path} > ${key}` : key;
+
+                //   rows.push({
+                //     'Üst Ürün Kodu': parentKey,
+                //     'Ürün Kodu': key,
+                //     'Miktar': miktar,
+                //     'Maliyet': maliyet,
+                //     'Yol (Hiyerarşi)': newPath
+                //   });
+
+                //   const alt = value.alt;
+                //   if (alt && typeof alt === 'object') {
+                //     rows = rows.concat(flattenBOM(alt, key, newPath));
+                //   }
+                // }
+
+                return rows;
+              }
+
+            //   // Excel dosyasına yaz
+            //   const rows = flattenBOM(agac);
+            //   const worksheet = xlsx.utils.json_to_sheet(rows);
+            //   const workbook = xlsx.utils.book_new();
+            //   xlsx.utils.book_append_sheet(workbook, worksheet, 'BOM');
+
+            //   xlsx.writeFile(workbook, 'bom_hiyerarsi.xlsx');
+
+            //   console.log('Excel dosyası oluşturuldu: bom_hiyerarsi.xlsx');
+        }
+
+        res.status(200).json({ status: 200, message: "BOM maliyetleri hesaplandı" });
+    } catch (error) {
+        console.error("Error in depoCekMaliyet function:", error);
+        res.status(400).json({ error: error.message });
+    }
+}
 exports.bomMaliyetCalistir = async (req, res) => {
     try {
         const result = await pool.query(`SELECT * FROM maliyet_urun_birim_fiyat`)
         for (let data of result.rows) {
+            // await sasCekMaliyet(225, data.urun_kodu);
+            // await bomCek(data.urun_kodu, 224);
             const ortalamaBirimFiyatHesapla = await pool.query(`UPDATE maliyet_urun_birim_fiyat
                 SET birim_fiyat = (
                     SELECT CASE
@@ -578,85 +841,86 @@ exports.bomMaliyetCalistir = async (req, res) => {
                 )
                 WHERE urun_kodu ='${data.urun_kodu}'`)
         }
-        // 2. Sadece birim fiyatı olmayan ana ürünleri çek}
         const bomuOlanUrunler = await pool.query(`
-        SELECT DISTINCT ana_urun 
-        FROM maliyet_bom 
-        WHERE ana_urun NOT IN (
-          SELECT urun_kodu FROM maliyet_urun_birim_fiyat WHERE birim_fiyat > 0
-        )
-      `);
+            SELECT DISTINCT ana_urun 
+            FROM maliyet_bom 
+            
+          `);
 
         for (let { ana_urun } of bomuOlanUrunler.rows) {
             await pool.query(`
-           WITH kodlar_ustte_gecenler AS (
-    SELECT DISTINCT ust_kod FROM public.maliyet_bom WHERE ust_kod IS NOT NULL
-  ),
-  birim_fiyatli_kodlar AS (
-    SELECT urun_kodu FROM maliyet_urun_birim_fiyat WHERE birim_fiyat IS NOT NULL AND birim_fiyat > 0
-  ),
-  filtrelenmis_yapraklar AS (
-    SELECT bom.*
-    FROM public.maliyet_bom bom
-    LEFT JOIN kodlar_ustte_gecenler k ON bom.kod = k.ust_kod
-    LEFT JOIN birim_fiyatli_kodlar b ON bom.kod = b.urun_kodu
-    WHERE k.ust_kod IS NULL OR b.urun_kodu IS NULL
-  ),
-  hesaplama AS (
-    SELECT 
-      bom.ana_urun, 
-      SUM(fiyat.birim_fiyat * bom.miktar) AS toplam_maliyet
-    FROM 
-      filtrelenmis_yapraklar bom
-    JOIN 
-      maliyet_urun_birim_fiyat fiyat 
-    ON 
-      bom.kod = fiyat.urun_kodu
-    WHERE 
-      bom.ana_urun = $1
-    GROUP BY 
-      bom.ana_urun
-  )
-  UPDATE maliyet_urun_birim_fiyat 
-  SET bom_fiyat = hesaplama.toplam_maliyet
-  FROM hesaplama
-  WHERE maliyet_urun_birim_fiyat.urun_kodu = hesaplama.ana_urun
-        `, [ana_urun]);
+                WITH hesaplama AS (
+          SELECT 
+            ana_urun, 
+            SUM(fiyat.birim_fiyat * miktar) AS toplam_maliyet
+          FROM 
+            public.maliyet_bom bom
+          JOIN 
+            maliyet_urun_birim_fiyat fiyat 
+          ON 
+            bom.kod = fiyat.urun_kodu
+          WHERE 
+            bom.kod NOT IN (
+              SELECT DISTINCT ust_kod 
+              FROM public.maliyet_bom 
+              WHERE ust_kod IS NOT NULL
+            )
+            AND ana_urun = $1
+          GROUP BY ana_urun
+        )
+        UPDATE maliyet_urun_birim_fiyat 
+        SET bom_fiyat = hesaplama.toplam_maliyet
+        FROM hesaplama
+        WHERE maliyet_urun_birim_fiyat.urun_kodu = hesaplama.ana_urun
+             `, [ana_urun]);
         }
-        // const bomuOlanUrunler = await pool.query(`SELECT DISTINCT ana_urun FROM maliyet_bom `);
+        // 2. Sadece birim fiyatı olmayan ana ürünleri çek}
+        //     const bomuOlanUrunler = await pool.query(`
+        //     SELECT DISTINCT ana_urun 
+        //     FROM maliyet_bom
+
+        //   `);
 
         // for (let { ana_urun } of bomuOlanUrunler.rows) {
 
-        //     await getBirimFiyatRecursive(ana_urun, ana_urun);
+        //     const { maliyet, agac } = await getBirimFiyatRecursive(ana_urun, ana_urun);
+        //     function flattenBOM(data, parentKey = '', path = '') {
+        //         let rows = [];
 
-        //     // 2. Hesaplanan birim_fiyat'ı bom_fiyat olarak ata
-        //     await pool.query(`
-        //       UPDATE maliyet_urun_birim_fiyat 
-        //       SET bom_fiyat = birim_fiyat 
-        //       WHERE urun_kodu = $1
-        //     `, [ana_urun]);
+        //         // for (const key in data) {
+        //         //   const value = data[key];
+        //         //   const miktar = value.miktar ?? '';
+        //         //   const maliyet = value.maliyet ?? '';
+        //         //   const newPath = path ? `${path} > ${key}` : key;
 
+        //         //   rows.push({
+        //         //     'Üst Ürün Kodu': parentKey,
+        //         //     'Ürün Kodu': key,
+        //         //     'Miktar': miktar,
+        //         //     'Maliyet': maliyet,
+        //         //     'Yol (Hiyerarşi)': newPath
+        //         //   });
 
+        //         //   const alt = value.alt;
+        //         //   if (alt && typeof alt === 'object') {
+        //         //     rows = rows.concat(flattenBOM(alt, key, newPath));
+        //         //   }
+        //         // }
+
+        //         return rows;
+        //       }
+
+        //     //   // Excel dosyasına yaz
+        //     //   const rows = flattenBOM(agac);
+        //     //   const worksheet = xlsx.utils.json_to_sheet(rows);
+        //     //   const workbook = xlsx.utils.book_new();
+        //     //   xlsx.utils.book_append_sheet(workbook, worksheet, 'BOM');
+
+        //     //   xlsx.writeFile(workbook, 'bom_hiyerarsi.xlsx');
+
+        //     //   console.log('Excel dosyası oluşturuldu: bom_hiyerarsi.xlsx');
         // }
-        // for (let { ana_urun } of bomuOlanUrunler.rows) {
-        //     // 3. Satın alma verilerine göre ortalama birim fiyat hesapla ve ata
-        //     const siparisGetir = await pool.query(`SELECT 
-        //             CASE 
-        //               WHEN SUM(sas_miktar) = 0 OR SUM(sas_miktar) IS NULL THEN 0
-        //               ELSE SUM(sas_miktar * birim_fiyat) / SUM(sas_miktar)
-        //             END
-        //           FROM maliyet_satin_alma_siparis
-        //           WHERE urun_kod = $1`, [ana_urun])
-        //     if (siparisGetir.rows[0].case > 0) {
-        //         await pool.query(`
-        //         UPDATE maliyet_urun_birim_fiyat
-        //         SET birim_fiyat = $2
-        //         WHERE urun_kodu = $1
-        //       `, [ana_urun, siparisGetir.rows[0].case]);
-        //     }
 
-
-        // }
         res.status(200).json({ status: 200, message: "BOM maliyetleri hesaplandı" });
     } catch (error) {
         console.error("Error in depoCekMaliyet function:", error);
@@ -718,9 +982,9 @@ async function sasCekMaliyet(cari_yil, urun_kodu) {
     try {
         const mssqlPool = await poolPromises; // MSSQL connection
         const tigerCariOku = mssqlPool.request();
+      
         const siparisCek = await tigerCariOku.query(
-            `  SELECT
-                                CONVERT(nvarchar, ORF.DATE_, 104) AS tarih,    ORF.DOCODE AS [siparis_kodu], 
+            `  SELECT CONVERT(nvarchar, ORF.DATE_, 104) AS tarih,    ORF.DOCODE AS [siparis_kodu], 
 								PR.CODE AS [proje_kod],    ITM.CODE AS KOD,    ITM.NAME AS MALZEME,    SUM(ORL.AMOUNT) AS siparis_adet, 
 								SUM(ORL.SHIPPEDAMOUNT) AS [karsilanan_siparis],
                                 SUM(ORL.AMOUNT - ORL.SHIPPEDAMOUNT) AS [acik_siparis],  
@@ -738,7 +1002,10 @@ async function sasCekMaliyet(cari_yil, urun_kodu) {
                                     FULL OUTER JOIN LG_${cari_yil}_PAYPLANS AS PY ON ORL.PAYDEFREF = PY.LOGICALREF
                             WHERE
                                 (ORL.LINETYPE = 0)     AND (ORL.TRCODE = 2)     AND ORF.CANCELLED = 0     AND ORL.CLOSED = 0     AND ORF.STATUS = 4    
-								AND ITM.CODE LIKE '${urun_kodu}%'	AND ORL.PRICE>0
+								AND ITM.CODE LIKE '${urun_kodu}%'	AND ORL.PRICE>0  AND (
+                                                                                            CHARINDEX('-', ORF.DOCODE) = 0
+                                                                                            OR LEN(ORF.DOCODE) - CHARINDEX('-', ORF.DOCODE) <= 3
+                                                                                        )
                             GROUP BY
                                 ORF.DOCODE,
                                 CONVERT(nvarchar, ORF.DATE_, 104),
@@ -765,7 +1032,10 @@ async function sasCekMaliyet(cari_yil, urun_kodu) {
                                 FULL OUTER JOIN LG_${cari_yil}_PAYPLANS AS PY ON ORL.PAYDEFREF = PY.LOGICALREF
                             WHERE
                                 (ORL.LINETYPE = 4)     AND (ORL.TRCODE = 2)     AND ORF.CANCELLED = 0     AND ORL.CLOSED = 0   
-								AND ORF.STATUS = 4     AND ITM.CODE LIKE '${urun_kodu}%'	AND ORL.PRICE>0
+								AND ORF.STATUS = 4     AND ITM.CODE LIKE '${urun_kodu}%'	AND ORL.PRICE>0  AND (
+                                                                                                                    CHARINDEX('-', ORF.DOCODE) = 0
+                                                                                                                    OR LEN(ORF.DOCODE) - CHARINDEX('-', ORF.DOCODE) <= 3
+                                                                                                                )
                                 GROUP BY
                                 ORF.DOCODE,    CONVERT(nvarchar, ORF.DATE_, 104),  	ORL.USREF,
 									ORL.UOMREF,ITM.LOGICALREF,  PR.CODE,    ITM.CODE,    ITM.DEFINITION_,     PY.CODE,    ORL.PRICE,    ORL.TRCURR,    ORF.TRCURR,    ORL.TRRATE,    ORF.GROSSTOTAL,    ORF.TOTALVAT,    ORF.NETTOTAL
@@ -813,24 +1083,23 @@ async function sasCekMaliyet(cari_yil, urun_kodu) {
         }
 
         let siparisSayisi = await pool.query(`SELECT COUNT(urun_kod) as say FROM  maliyet_satin_alma_siparis WHERE urun_kod =$1`, [urun_kodu]);
-        let cariKodlar = [225, 224, 223, 220, 219];
+        let cariKodlar = [225, 224, 223, 220, 219, '018', '017'];
         let kacinci = cariKodlar.findIndex(s => s == cari_yil);
 
-        if (kacinci > -1) {
+        if (kacinci > -1 && kacinci < cariKodlar.length - 1) {
             let sonrakiCariKod = cariKodlar[kacinci + 1];
-            if (sonrakiCariKod > 220) {
-                if (siparisSayisi.rows[0].say <= 5 && sonrakiCariKod >= 220) {
+            
+            if (kacinci <= 3) {
+                // İlk 4 cari kod için (225,224,223,220)
+                if (siparisSayisi.rows[0].say <= 5) {
                     sasCekMaliyet(sonrakiCariKod, urun_kodu);
-                } else {
-                    return;
                 }
             } else {
-                if (siparisSayisi.rows[0].say == 0 && sonrakiCariKod >= 220) {
+                // Son 3 cari kod için (219,'018','017')
+                if (siparisSayisi.rows[0].say == 0) {
                     sasCekMaliyet(sonrakiCariKod, urun_kodu);
                 }
             }
-        } else {
-            return;
         }
 
     } catch (error) {
@@ -884,27 +1153,41 @@ WHERE item.CODE ='${kod}'
             }
             // const operasyonRef = bomQuery.recordset[0].OPERATIONREF;
             // Operasyon bilgileri
-            for (let don of operasyonID) {
-                const timeQuery = await tigerCariOku.query(`
-                    SELECT worksta.NAME as istasyonname, worksta.CODE as istasyonkod,
-                           opq.FIXEDSETUPTIME as hazirlik, opq.RUNTIME as islemzaman, opq.BATCHQUANTITY as islem_miktari,
-                           opq.WAITBATCHTIME as makinazamani, opq.WAITBATCHQTY as makinapartimiktari, opq.HEADTIME as oponcesibekleme 
-                    FROM LG_${yil}_OPRTREQ opq 
-                    INNER JOIN LG_${yil}_WORKSTAT worksta ON worksta.LOGICALREF = opq.WSREF 
-                    WHERE opq.OPERATIONREF = ${don}
+            const opIDsString = operasyonID.join(',');
+
+            const timeQuery = await tigerCariOku.query(`
+                    
+
+SELECT 
+    worksta.NAME AS istasyonname, 
+    worksta.CODE AS istasyonkod,
+ (
+        COALESCE(SUM(opq.HEADTIME), 0) +
+        COALESCE(SUM(opq.WAITBATCHTIME / NULLIF(opq.WAITBATCHQTY, 0)), 0) +
+        COALESCE(SUM(opq.FIXEDSETUPTIME), 0) +
+        COALESCE(SUM(opq.RUNTIME / NULLIF(opq.BATCHQUANTITY, 0)), 0)
+    ) AS islemzaman   FROM 
+    LG_${yil}_OPRTREQ opq 
+INNER JOIN 
+    LG_${yil}_WORKSTAT worksta 
+    ON worksta.LOGICALREF = opq.WSREF 
+WHERE 
+    opq.OPERATIONREF IN (${opIDsString})
+GROUP BY 
+    worksta.NAME,     worksta.CODE
                 `);
 
-                if (timeQuery.rowsAffected > 0 && timeQuery.recordset.length > 0) {
-                    const op = timeQuery.recordset[0];
-                    await insertOrUpdate(`
-                        UPDATE maliyet_urun_birim_fiyat 
-                        SET istasyon = $2, islem_suresi = $3+islem_suresi, islem_miktar = $4 
-                        WHERE urun_kodu = $1
-                    `, [kod, op.istasyonname, op.islemzaman, op.islem_miktari]);
-                }
+            if (timeQuery.rowsAffected > 0 && timeQuery.recordset.length > 0) {
+                const op = timeQuery.recordset[0];
+                await insertOrUpdate(`
+    INSERT INTO maliyet_urun_birim_fiyat (urun_kodu, istasyon, islem_suresi)
+    VALUES ($1, $2, $3)
+    ON CONFLICT (urun_kodu) DO UPDATE
+    SET islem_suresi = EXCLUDED.islem_suresi,
+        islem_miktar = EXCLUDED.islem_miktar,
+        istasyon = EXCLUDED.istasyon
+`, [kod, op.istasyonname, op.islemzaman]);
             }
-
-
             // BOM ürünleri
             for (let element of bomQuery.recordset) {
 

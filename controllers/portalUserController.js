@@ -6,6 +6,7 @@ const multer = require('multer');
 const nodemailer = require("nodemailer");
 const fs = require("fs");
 const xlsx = require('xlsx');
+const { sql, poolPromise } = require('./../msPortalDB');
 
 const storage = multer.diskStorage({
     destination: (req, file, callBack) => {
@@ -1582,11 +1583,35 @@ exports.getGenelHiyerArsiAll = async (req, res) => {
 exports.updatePaswordUser = async (req, res) => {
     try {
         const { password, sicil } = req.body
+        const mssqlPool = await poolPromise; 
+        const poolRequest = mssqlPool.request();
         const result = await pool.query(updateUserPaswordQuery, [sicil, password, false])
+        const msqlRslt = await poolRequest.query(`UPDATE users SET password_status = 1,password_='${password}' WHERE sicil = '${sicil}'`);
+
         const hierarchy = buildHierarchy(result.rows);
         res.status(200).json(
             {
                 data: hierarchy,
+                status: 200
+            }
+        )
+    } catch (error) {
+        console.error('Depo çekme sırasında hata:', error);
+        res.status(500).json({ message: 'Depo bilgilerini çekerken bir hata oluştu.' });
+    }
+}
+exports.userMachMsql = async (req, res) => {
+    try {
+        const { password, sicil } = req.body
+        const mssqlPool = await poolPromise; 
+    const poolRequest = mssqlPool.request();
+    const egitimler = await poolRequest.query(`SELECT * FROM users `);
+    for(let data of egitimler.recordset){
+        const updateUser = await pool.query(`UPDATE portal_user SET password = $1 WHERE sicil = $2`,[data.password_,data.sicil])
+    }
+        res.status(200).json(
+            {
+                data: egitimler,
                 status: 200
             }
         )

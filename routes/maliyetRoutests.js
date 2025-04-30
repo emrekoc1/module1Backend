@@ -12,5 +12,8 @@ router.post("/headerBomGetir", portalMaliyetControl2.headerBomGetir)
 router.post("/headerDigerGetir", portalMaliyetControl2.headerDigerGetir)
 router.post("/getGenelStokVeriLimits", portalMaliyetControl2.getGenelStokVeriLimits)
 router.post("/bomMaliyetCalistir", portalMaliyetControl2.bomMaliyetCalistir)
+router.post("/bomGenelToplam", portalMaliyetControl2.bomGenelToplam)
+router.post("/bomMaliyet", portalMaliyetControl2.bomMaliyet)
+router.post("/sasCekDeneme", portalMaliyetControl2.sasCekDeneme)
 
 module.exports = router;
