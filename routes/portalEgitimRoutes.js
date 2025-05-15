@@ -6,6 +6,13 @@ router.use(cors());
 const portalEgitimController = require('../controllers/portalEgitimController');
 
 // router.post("/egitim", portalEgitimController.createAnket)
+router.post("/egitim/orgunEgitimSearch", portalEgitimController.orgunEgitimSearch)
+router.post("/egitim/tumEgitimlerRapor", portalEgitimController.tumEgitimlerRapor)
+router.post("/egitim/videoListGet", portalEgitimController.videoListGet)
+router.post("/egitim/videoListTopluInsert", portalEgitimController.videoListTopluInsert)
+router.post("/egitim/tumEgitimlerRaporSicil", portalEgitimController.tumEgitimlerRaporSicil)
+router.post("/egitim/videoEgitimRapor", portalEgitimController.videoEgitimRapor)
+router.post("/egitim/ahoEgitimRapor", portalEgitimController.ahoEgitimRapor)
 router.post("/egitim/updateExSQL", portalEgitimController.updateExSQL)
 router.post("/egitim/egitimAdminGet", portalEgitimController.getEgitimAdmin)
 router.post("/egitim/createdEgitimAdmin", portalEgitimController.createdEgitim)

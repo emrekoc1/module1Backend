@@ -11,13 +11,13 @@ const fs = require('fs');
 const xlsx = require('xlsx');
 const cors = require('cors');
 router.use(cors());
-const indexSearch = `SELECT (SELECT aylik_index as index FROM maliyet_enflansyon_index 
+const indexSearch = `SELECT (SELECT aylik_index as index FROM maliyet_enflansyon_index
 WHERE (yil, ay) = (
-    SELECT yil, ay 
-    FROM maliyet_enflansyon_index 
-    ORDER BY yil DESC, ay DESC 
+    SELECT yil, ay
+    FROM maliyet_enflansyon_index
+    ORDER BY yil DESC, ay DESC
     LIMIT 1
-))/aylik_index as index FROM maliyet_enflansyon_index 
+))/aylik_index as index FROM maliyet_enflansyon_index
 WHERE yil = $1 AND ay=$2`
 
 
@@ -30,31 +30,38 @@ exports.depoCekMaliyet = async (req, res) => {
         const mssqlPool = await poolPromises; // MSSQL bağlantısı
         const tigerCariOku = mssqlPool.request();
 
-        //         const tigerSql = `
-        //         SELECT  ITM.CODE AS kodu  FROM LG_224_ITEMS ITM
-        //    `;
         const tigerSql = `
-          SELECT ITM.CODE AS kodu, 
-            (SELECT TOP 1 linee.DATE_ 
-            FROM dbo.LG_225_01_STLINE linee  
-            WHERE ITM.LOGICALREF = linee.STOCKREF 
-            AND (linee.TRCODE = 12 OR linee.TRCODE = 13)  
+
+SELECT DISTINCT(CODE) as kodu FROM(
+SELECT DISTINCT CODE FROM LG_224_ITEMS WHERE ACTIVE = 0 AND CARDTYPE !=4
+UNION
+SELECT DISTINCT CODE FROM LG_225_ITEMS WHERE ACTIVE = 0 AND CARDTYPE !=4
+) XX
+
+           `;
+        const tigerSqlDepo = `
+          SELECT ITM.CODE AS kodu,
+            (SELECT TOP 1 linee.DATE_
+            FROM dbo.LG_225_01_STLINE linee
+            WHERE ITM.LOGICALREF = linee.STOCKREF
+            AND (linee.TRCODE = 12 OR linee.TRCODE = 13)
             AND linee.PLNAMOUNT = 0
-            ORDER BY linee.DATE_ DESC) AS SON_ALIM_TARIHI, 
-            ITM.NAME AS urun_aciklama, DP.NAME AS depo, 
+            ORDER BY linee.DATE_ DESC) AS SON_ALIM_TARIHI,
+            ITM.NAME AS urun_aciklama, DP.NAME AS depo,
             ROUND(SUM(ST.ONHAND), 1) AS miktar, UNI.NAME AS BİRİM
             FROM dbo.LV_${cari_yil}_01_STINVTOT AS ST WITH (NOLOCK)
             INNER JOIN dbo.LG_${cari_yil}_ITEMS AS ITM WITH (NOLOCK) ON ST.STOCKREF = ITM.LOGICALREF
             INNER JOIN dbo.L_CAPIWHOUSE AS DP WITH (NOLOCK) ON ST.INVENNO = DP.NR
             INNER JOIN dbo.LG_${cari_yil}_UNITSETF AS UNI WITH (NOLOCK) ON ITM.UNITSETREF = UNI.LOGICALREF
             WHERE ITM.ACTIVE = 0 AND DP.FIRMNR = ${cari_yil} AND ITM.CODE NOT LIKE 'S%' AND ST.ONHAND > 0
-            GROUP BY ITM.CODE, ITM.NAME, DP.NAME, ST.INVENNO, UNI.NAME , ITM.LOGICALREF 
+            GROUP BY ITM.CODE, ITM.NAME, DP.NAME, ST.INVENNO, UNI.NAME , ITM.LOGICALREF
             ORDER BY ITM.CODE
             `;
 
-        let depoAdetResult;
+        let itemResult, depoAdetResult;
         try {
-            depoAdetResult = await tigerCariOku.query(tigerSql);
+            itemResult = await tigerCariOku.query(tigerSql);
+            depoAdetResult = await tigerCariOku.query(tigerSqlDepo);
         } catch (error) {
             console.error("Error executing SQL query for depoAdetResult:", error);
             return res.status(400).json({ error: "Error fetching depo data" });
@@ -65,9 +72,9 @@ exports.depoCekMaliyet = async (req, res) => {
 
             try {
                 await pool.query(`DELETE FROM maliyet_urun_depo`);
-                // await pool.query(`DELETE FROM maliyet_urun_birim_fiyat`);
-                // await pool.query(`DELETE FROM maliyet_bom`);
-                // await pool.query(`DELETE FROM maliyet_satin_alma_siparis`);
+                await pool.query(`DELETE FROM maliyet_urun_birim_fiyat`);
+                await pool.query(`DELETE FROM maliyet_bom`);
+                await pool.query(`DELETE FROM maliyet_satin_alma_siparis`);
             } catch (error) {
                 console.error("Error clearing old data from maliyet_urun_depo and maliyet_urun_birim_fiyat:", error);
                 return res.status(400).json({ error: "Error clearing old data" });
@@ -110,53 +117,17 @@ exports.depoCekMaliyet = async (req, res) => {
                     } catch (error) {
                         console.error("Error inserting new depo data:", error);
                     }
-                    const eskiVeriBirimFiyatQuery = `SELECT * FROM maliyet_urun_birim_fiyat WHERE urun_kodu = '${item.kodu}' `;
-                    let eskiVeriBirimFiyatRequest;
-                    try {
-                        eskiVeriBirimFiyatRequest = await pool.query(eskiVeriBirimFiyatQuery);
-                    } catch (error) {
-                        console.error("Error checking for existing birim fiyat data:", error);
-                    }
-                    if (eskiVeriBirimFiyatRequest.rowCount == 0) {
-                        const urunTekilInsert = `INSERT INTO maliyet_urun_birim_fiyat (urun_kodu) VALUES($1)`;
-                        try {
-                            await pool.query(urunTekilInsert, [item.kodu]);
-                        } catch (error) {
-                            console.error("Error inserting new birim fiyat:", error);
-                        }
-                        await sasCekMaliyet(cari_yil, item.kodu);
-                    }
-                    if (!/(100\.%|800\.%|200\.%|300\.|400\.|500\.|600|700|53\*\*-)/.test(item.kodu)) {
-                        const bomVar = await pool.query(`SELECT * FROM maliyet_bom WHERE ana_urun ='${item.kodu}'`);
-                        if (bomVar.rowCount == 0) {
-                            veri = await bomCek(item.kodu, cari_yil);
-                            const bomVarMi = await pool.query(`select bom.*,birim.birim_fiyat 
-                                 FROM maliyet_bom bom INNER JOIN maliyet_urun_birim_fiyat birim ON bom.kod = birim.urun_kodu WHERE ana_urun ='${item.kodu}'`)
-                            if (bomVarMi.rowCount > 0) {
-                                for (let data of bomVarMi.rows) {
-                                    let filterBom = bomVarMi.rows.filter((i) => {
-                                        return i.ust_kod == data.kod
-                                    })
-                                    if (filterBom.length > 0) {
-                                        for (let data2 of filterBom) {
-                                            data.bom_fiyat += data2.birim_fiyat ? data2.birim_fiyat : data2.bom_fiyat
-                                        }
-                                        data.bom_fiyat = data.bom_fiyat ? data.bom_fiyat : 0
-                                        const updateDepo = await pool.query(
-                                            `UPDATE maliyet_urun_birim_fiyat SET bom_fiyat=${data.bom_fiyat} WHERE urun_kodu='${data.kod}'`)
-                                    }
-                                }
-                            }
-                        }
-                    }
+
                 } catch (error) {
                     console.error("Error processing each item in tigerDepo:", error);
                 }
             }
 
-            let siparisUrunler = await pool.query(`SELECT urun_kodu as kodu,urun_aciklama FROM maliyet_satis_urun`)
-            if (siparisUrunler.rowCount > 0) {
-                for (let item of siparisUrunler.rows) {
+            if (itemResult.rowsAffected > 0) {
+                let itemTotal = itemResult.recordsets[0];
+                for (let item of itemTotal) {
+
+                    await satisSiparisCek(item.kodu)
                     const eskiVeriBirimFiyatQuery = `SELECT * FROM maliyet_urun_birim_fiyat WHERE urun_kodu = '${item.kodu}' `;
                     let eskiVeriBirimFiyatRequest;
                     try {
@@ -164,7 +135,6 @@ exports.depoCekMaliyet = async (req, res) => {
                     } catch (error) {
                         console.error("Error checking for existing birim fiyat data:", error);
                     }
-
                     if (eskiVeriBirimFiyatRequest.rowCount == 0) {
                         const urunTekilInsert = `INSERT INTO maliyet_urun_birim_fiyat (urun_kodu) VALUES($1)`;
                         try {
@@ -173,18 +143,66 @@ exports.depoCekMaliyet = async (req, res) => {
                             console.error("Error inserting new birim fiyat:", error);
                         }
                         await sasCekMaliyet(cari_yil, item.kodu);
+                    } else {
+
+                        await sasCekMaliyet(cari_yil, item.kodu);
                     }
                     if (!/(100\.%|800\.%|200\.%|300\.|400\.|500\.|600|700|53\*\*-)/.test(item.kodu)) {
                         const bomVar = await pool.query(`SELECT * FROM maliyet_bom WHERE ana_urun ='${item.kodu}'`);
-
                         if (bomVar.rowCount == 0) {
-
                             veri = await bomCek(item.kodu, cari_yil);
-
+                            const bomVarMi = await pool.query(`select bom.*,birim.birim_fiyat
+                             FROM maliyet_bom bom INNER JOIN maliyet_urun_birim_fiyat birim ON bom.kod = birim.urun_kodu WHERE ana_urun ='${item.kodu}'`)
+                            // if (bomVarMi.rowCount > 0) {
+                            //     for (let data of bomVarMi.rows) {
+                            //         let filterBom = bomVarMi.rows.filter((i) => {
+                            //             return i.ust_kod == data.kod
+                            //         })
+                            //         if (filterBom.length > 0) {
+                            //             for (let data2 of filterBom) {
+                            //                 data.bom_fiyat += data2.birim_fiyat ? data2.birim_fiyat : data2.bom_fiyat
+                            //             }
+                            //             data.bom_fiyat = data.bom_fiyat ? data.bom_fiyat : 0
+                            //             const updateDepo = await pool.query(
+                            //                 `UPDATE maliyet_urun_birim_fiyat SET bom_fiyat=${data.bom_fiyat} WHERE urun_kodu='${data.kod}'`)
+                            //         }
+                            //     }
+                            // }
                         }
                     }
                 }
             }
+            // let siparisUrunler = await pool.query(`SELECT urun_kodu as kodu,urun_aciklama FROM maliyet_satis_urun`)
+            // if (siparisUrunler.rowCount > 0) {
+            //     for (let item of siparisUrunler.rows) {
+            //         const eskiVeriBirimFiyatQuery = `SELECT * FROM maliyet_urun_birim_fiyat WHERE urun_kodu = '${item.kodu}' `;
+            //         let eskiVeriBirimFiyatRequest;
+            //         try {
+            //             eskiVeriBirimFiyatRequest = await pool.query(eskiVeriBirimFiyatQuery);
+            //         } catch (error) {
+            //             console.error("Error checking for existing birim fiyat data:", error);
+            //         }
+
+            //         if (eskiVeriBirimFiyatRequest.rowCount == 0) {
+            //             const urunTekilInsert = `INSERT INTO maliyet_urun_birim_fiyat (urun_kodu) VALUES($1)`;
+            //             try {
+            //                 await pool.query(urunTekilInsert, [item.kodu]);
+            //             } catch (error) {
+            //                 console.error("Error inserting new birim fiyat:", error);
+            //             }
+            //             await sasCekMaliyet(cari_yil, item.kodu);
+            //         }
+            //         if (!/(100\.%|800\.%|200\.%|300\.|400\.|500\.|600|700|53\*\*-)/.test(item.kodu)) {
+            //             const bomVar = await pool.query(`SELECT * FROM maliyet_bom WHERE ana_urun ='${item.kodu}'`);
+
+            //             if (bomVar.rowCount == 0) {
+
+            //                 veri = await bomCek(item.kodu, cari_yil);
+
+            //             }
+            //         }
+            //     }
+            // }
         }
 
         res.status(200).json({ status: 200 });
@@ -285,14 +303,14 @@ exports.headerBomGetir = async (req, res) => {
 
         const dataSql = `SELECT SUM(toplam_miktar*birim_fiyat) as toplam
         FROM (
-            SELECT 
+            SELECT
                 SUM(depo.depo_miktar) AS toplam_miktar,
                 depo.urun_kodu,
-                CASE 
-                    WHEN EXISTS (SELECT 1 FROM maliyet_bom bom WHERE bom.kod = depo.urun_kodu) 
+                CASE
+                    WHEN EXISTS (SELECT 1 FROM maliyet_bom bom WHERE bom.kod = depo.urun_kodu)
                     THEN ROUND(CAST((
-                        SELECT fiyat.birim_fiyat 
-                        FROM maliyet_urun_birim_fiyat fiyat 
+                        SELECT fiyat.birim_fiyat
+                        FROM maliyet_urun_birim_fiyat fiyat
                         WHERE fiyat.urun_kodu = depo.urun_kodu
                     ) AS NUMERIC), 2)
                     ELSE NULL
@@ -355,14 +373,14 @@ exports.headerDigerGetir = async (req, res) => {
 
 
         const dataSql = `SELECT SUM(sum) as toplam FROM(
-            SELECT                
+            SELECT
                 depo.urun_kodu,
 				SUM(depo.depo_miktar*birim.birim_fiyat),
-                EXISTS (SELECT 1 FROM maliyet_bom bom WHERE bom.kod = depo.urun_kodu)      
+                EXISTS (SELECT 1 FROM maliyet_bom bom WHERE bom.kod = depo.urun_kodu)
             FROM maliyet_urun_depo depo
 			INNER JOIN maliyet_urun_birim_fiyat birim ON depo.urun_kodu = birim.urun_kodu
             WHERE depo.urun_kodu NOT LIKE 'S%' ${searchQuery} ${depoFilter}
-            GROUP BY depo.urun_kodu 
+            GROUP BY depo.urun_kodu
      ) depo WHERE exists=false `
 
         let result;
@@ -419,28 +437,32 @@ exports.getGenelStokVeriLimits = async (req, res) => {
 
         const dataSql = `
          SELECT CASE
-              WHEN EXISTS (SELECT 1 FROM maliyet_bom WHERE urun_kodu = ana_urun) THEN 1 ELSE 0 
+              WHEN EXISTS (SELECT 1 FROM maliyet_bom WHERE urun_kodu = ana_urun) THEN 1 ELSE 0
           END AS bom_var,
-          SUM(ROUND(CAST(depo.toplam_miktar * depo.birim_fiyat AS NUMERIC), 2)) AS toplam_fiyat, 
-          depo.birim_fiyat, 
-          depo.toplam_miktar, 
-          depo.urun_kodu, 
+          SUM(ROUND(CAST(depo.toplam_miktar * depo.birim_fiyat AS NUMERIC), 2)) AS toplam_fiyat,
+          depo.birim_fiyat,
+          depo.toplam_miktar,
+          depo.urun_kodu,
+         (SELECT json_agg(sas) FROM (SELECT * FROM maliyet_satin_alma_siparis msas WHERE depo.urun_kodu = msas.urun_kod)sas) sas,
+         (SELECT json_agg(sas) FROM (SELECT * FROM maliyet_satis_siparis msas WHERE depo.urun_kodu = msas.urun_kodu)sas) satis,
+         (SELECT json_agg(sas) FROM (SELECT * FROM maliyet_urun_depo msas WHERE depo.urun_kodu = msas.urun_kodu)sas) depo,
+
           depo.urun_aciklama,
            depo.son_hareket,
 COALESCE(depo.bom_fiyat, 0) AS bom_fiyat ,depo.islem_suresi,
               depo.islem_miktar
       FROM (
-          SELECT 
+          SELECT
               SUM(depo.depo_miktar) AS toplam_miktar,
               depo.urun_kodu,
               depo.urun_aciklama,
-              depo.son_hareket,										
+              depo.son_hareket,
               ROUND(CAST(COALESCE(fiyat.birim_fiyat, 0) AS NUMERIC), 2) AS birim_fiyat,
               fiyat.bom_fiyat,
               fiyat.islem_suresi,
               fiyat.islem_miktar
           FROM maliyet_urun_depo depo
-          LEFT JOIN maliyet_urun_birim_fiyat fiyat 
+          LEFT JOIN maliyet_urun_birim_fiyat fiyat
               ON fiyat.urun_kodu = depo.urun_kodu
           WHERE depo.urun_kodu NOT LIKE 'S%' ${searchQuery} ${depoFilter}
           GROUP BY depo.urun_kodu, fiyat.birim_fiyat, depo.son_hareket, depo.urun_aciklama,fiyat.bom_fiyat,
@@ -450,7 +472,7 @@ COALESCE(depo.bom_fiyat, 0) AS bom_fiyat ,depo.islem_suresi,
       GROUP BY depo.urun_kodu, depo.son_hareket, depo.urun_aciklama, depo.birim_fiyat, depo.toplam_miktar,  depo.bom_fiyat,
               depo.islem_suresi,
               depo.islem_miktar
-      HAVING SUM(depo.toplam_miktar * depo.birim_fiyat) > 0  
+      HAVING SUM(depo.toplam_miktar * depo.birim_fiyat) > 0
      ORDER BY ${siralamaKriterleri.join(', ')} LIMIT ${limit} OFFSET ${offset}
 
          `
@@ -481,8 +503,8 @@ const getBirimFiyatRecursive = async (urunKodu, anaUrun, ustKod = null, visited 
 
     // Önce birim fiyatı çek
     const fiyatQuery = await pool.query(`
-        SELECT birim_fiyat, bom_fiyat 
-        FROM maliyet_urun_birim_fiyat 
+        SELECT birim_fiyat, bom_fiyat
+        FROM maliyet_urun_birim_fiyat
         WHERE urun_kodu = $1
     `, [urunKodu]);
 
@@ -492,8 +514,8 @@ const getBirimFiyatRecursive = async (urunKodu, anaUrun, ustKod = null, visited 
 
     // Eğer bu kodun alt parçası yoksa, doğrudan fiyatı dön
     const altParcaQuery = await pool.query(`
-        SELECT kod, miktar, ust_kod, ana_urun 
-        FROM maliyet_bom 
+        SELECT kod, miktar, ust_kod, ana_urun
+        FROM maliyet_bom
         WHERE ust_kod = $1 AND ana_urun = $2
     `, [urunKodu, anaUrun]);
 
@@ -541,7 +563,7 @@ exports.bomGenelToplam = async (req, res) => {
         }
 
         const anaUrunBomQuery = `
-SELECT SUM(toplam_maliyet) as toplam_maliyet FROM( SELECT 
+SELECT SUM(toplam_maliyet) as toplam_maliyet FROM( SELECT
   SUM(depo.depo_miktar) AS toplam_miktar,
   depo.urun_kodu,
   depo.urun_aciklama,
@@ -550,14 +572,14 @@ SELECT SUM(toplam_maliyet) as toplam_maliyet FROM( SELECT
   bom.seviye,
   bom.ust_kod,
   bom.miktar,
-  SUM(depo.depo_miktar * 
+  SUM(depo.depo_miktar *
       COALESCE(fiyat.birim_fiyat, fiyat.bom_fiyat, 0)
      ) AS toplam_maliyet
-FROM maliyet_urun_depo depo 
+FROM maliyet_urun_depo depo
 INNER JOIN maliyet_urun_birim_fiyat fiyat ON fiyat.urun_kodu = depo.urun_kodu
 INNER JOIN maliyet_bom bom ON bom.kod = depo.urun_kodu
 WHERE bom.ana_urun=$1 ${depoFilter}
-GROUP BY 
+GROUP BY
   depo.urun_kodu,
   depo.urun_aciklama,
   fiyat.birim_fiyat,
@@ -645,17 +667,23 @@ function buildBOMTree(rows, rootKod) {
     return root;
 }
 
-function calculateCost(node) {
+function calculateCost(node, visited = new Set()) {
+    
+    if (visited.has(node.kod)) {
+        console.warn(`Döngüsel BOM yapısı tespit edildi: ${node.kod}`);
+        return 0; // Döngü varsa o kolu yok say
+    }
+
+    visited.add(node.kod);
+
     if (!node.children || node.children.length === 0) {
         const price = node.birim_fiyat ?? node.bom_fiyat ?? 0;
-        const miktar = node.depo_miktar ?? 0;
         return node.miktar * price;
-
     }
 
     let cost = 0;
     for (const child of node.children) {
-        cost += calculateCost(child);
+        cost += calculateCost(child, new Set(visited)); // Her child'a ayrı set gönder
     }
 
     return node.miktar * cost;
@@ -674,7 +702,7 @@ exports.bomMaliyet = async (req, res) => {
         }
 
         const anaUrunBomQuery = `
-        SELECT 
+        SELECT
           bom.kod AS alt_urun_kodu,
           bom.ust_kod AS ust_urun_kodu,
           bom.miktar AS alt_urun_miktar,
@@ -691,14 +719,14 @@ exports.bomMaliyet = async (req, res) => {
       `;
 
         const anaUrunQuery = `
-        SELECT 
+        SELECT
           depo.urun_aciklama,
           depo.urun_kodu,
           SUM(depo.depo_miktar) AS depo_miktar,
           fiyat.birim_fiyat,
           fiyat.bom_fiyat
-        FROM maliyet_urun_depo depo 
-        INNER JOIN maliyet_urun_birim_fiyat fiyat ON fiyat.urun_kodu = depo.urun_kodu 
+        FROM maliyet_urun_depo depo
+        INNER JOIN maliyet_urun_birim_fiyat fiyat ON fiyat.urun_kodu = depo.urun_kodu
         WHERE depo.urun_kodu = $1 ${depoFilter}
         GROUP BY depo.urun_aciklama, depo.urun_kodu, fiyat.birim_fiyat, fiyat.bom_fiyat
       `;
@@ -769,8 +797,8 @@ exports.sasCekDeneme = async (req, res) => {
         // }
 
         // 2. Sadece birim fiyatı olmayan ana ürünleri çek}
-            const bomuOlanUrunler = await pool.query(`
-            SELECT DISTINCT ana_urun 
+        const bomuOlanUrunler = await pool.query(`
+            SELECT DISTINCT ana_urun
             FROM maliyet_bom
 
           `);
@@ -802,7 +830,7 @@ exports.sasCekDeneme = async (req, res) => {
                 // }
 
                 return rows;
-              }
+            }
 
             //   // Excel dosyasına yaz
             //   const rows = flattenBOM(agac);
@@ -823,10 +851,13 @@ exports.sasCekDeneme = async (req, res) => {
 }
 exports.bomMaliyetCalistir = async (req, res) => {
     try {
-        const result = await pool.query(`SELECT * FROM maliyet_urun_birim_fiyat`)
-        for (let data of result.rows) {
-            // await sasCekMaliyet(225, data.urun_kodu);
-            // await bomCek(data.urun_kodu, 224);
+        // Tüm ürünlerin listesini çek
+        const allProducts = await pool.query(`SELECT urun_kodu FROM maliyet_urun_birim_fiyat`);
+        // await pool.query(`DELETE FROM maliyet_satin_alma_siparis`)
+        // for (let { urun_kodu } of allProducts.rows) {
+        //     await sasCekMaliyet(225, urun_kodu);
+        // }
+        for (let data of allProducts.rows) {
             const ortalamaBirimFiyatHesapla = await pool.query(`UPDATE maliyet_urun_birim_fiyat
                 SET birim_fiyat = (
                     SELECT CASE
@@ -841,92 +872,72 @@ exports.bomMaliyetCalistir = async (req, res) => {
                 )
                 WHERE urun_kodu ='${data.urun_kodu}'`)
         }
-        const bomuOlanUrunler = await pool.query(`
-            SELECT DISTINCT ana_urun 
-            FROM maliyet_bom 
-            
-          `);
+        for (let { urun_kodu } of allProducts.rows) {
+            // Ürün için BOM var mı kontrol et
+            const bomRows = await pool.query(`
+                SELECT
+                    bom.kod AS alt_urun_kodu,
+                    bom.ust_kod AS ust_urun_kodu,
+                    bom.miktar AS alt_urun_miktar,
+                    fiyat.birim_fiyat,
+                    bom.seviye,
+                    depo.urun_aciklama,
+                    SUM(depo.depo_miktar) AS depo_miktar,
+                    fiyat.bom_fiyat
+                FROM maliyet_bom bom
+                LEFT JOIN maliyet_urun_birim_fiyat fiyat ON fiyat.urun_kodu = bom.kod
+                LEFT JOIN maliyet_urun_depo depo ON depo.urun_kodu = bom.kod
+                WHERE bom.ana_urun = $1
+                GROUP BY bom.kod, bom.ust_kod, bom.seviye, bom.miktar, fiyat.birim_fiyat, fiyat.bom_fiyat, depo.urun_aciklama
+            `, [urun_kodu]);
 
-        for (let { ana_urun } of bomuOlanUrunler.rows) {
-            await pool.query(`
-                WITH hesaplama AS (
-          SELECT 
-            ana_urun, 
-            SUM(fiyat.birim_fiyat * miktar) AS toplam_maliyet
-          FROM 
-            public.maliyet_bom bom
-          JOIN 
-            maliyet_urun_birim_fiyat fiyat 
-          ON 
-            bom.kod = fiyat.urun_kodu
-          WHERE 
-            bom.kod NOT IN (
-              SELECT DISTINCT ust_kod 
-              FROM public.maliyet_bom 
-              WHERE ust_kod IS NOT NULL
-            )
-            AND ana_urun = $1
-          GROUP BY ana_urun
-        )
-        UPDATE maliyet_urun_birim_fiyat 
-        SET bom_fiyat = hesaplama.toplam_maliyet
-        FROM hesaplama
-        WHERE maliyet_urun_birim_fiyat.urun_kodu = hesaplama.ana_urun
-             `, [ana_urun]);
+            // Ana ürün bilgilerini çek
+            const anaUrun = await pool.query(`
+                SELECT
+                    depo.urun_aciklama,
+                    depo.urun_kodu,
+                    SUM(depo.depo_miktar) AS depo_miktar,
+                    fiyat.birim_fiyat,
+                    fiyat.bom_fiyat
+                FROM maliyet_urun_depo depo
+                INNER JOIN maliyet_urun_birim_fiyat fiyat ON fiyat.urun_kodu = depo.urun_kodu
+                WHERE depo.urun_kodu = $1
+                GROUP BY depo.urun_aciklama, depo.urun_kodu, fiyat.birim_fiyat, fiyat.bom_fiyat
+            `, [urun_kodu]);
+
+            // Eğer hem ana ürün hem de bom varsa, hesapla
+            if (bomRows.rowCount > 0 || anaUrun.rowCount > 0) {
+                if (anaUrun.rowCount > 0) {
+                    bomRows.rows.push({
+                        alt_urun_kodu: anaUrun.rows[0].urun_kodu,
+                        ust_urun_kodu: null,
+                        urun_aciklama: anaUrun.rows[0].urun_aciklama,
+                        seviye: 0,
+                        alt_urun_miktar: 1,
+                        birim_fiyat: anaUrun.rows[0].birim_fiyat,
+                        depo_miktar: anaUrun.rows[0].depo_miktar,
+                        bom_fiyat: anaUrun.rows[0].bom_fiyat
+                    });
+                }
+
+                const root = buildBOMTree(bomRows.rows, urun_kodu);
+                const totalCost = calculateCost(root);
+
+                // Güncelle
+                await pool.query(`UPDATE maliyet_urun_birim_fiyat SET bom_fiyat = $1 WHERE urun_kodu = $2`, [totalCost, urun_kodu]);
+            } else {
+                // BOM ve depo yoksa sıfırla
+                await pool.query(`UPDATE maliyet_urun_birim_fiyat SET bom_fiyat = $1 WHERE urun_kodu = $2`, [0, urun_kodu]);
+            }
         }
-        // 2. Sadece birim fiyatı olmayan ana ürünleri çek}
-        //     const bomuOlanUrunler = await pool.query(`
-        //     SELECT DISTINCT ana_urun 
-        //     FROM maliyet_bom
 
-        //   `);
-
-        // for (let { ana_urun } of bomuOlanUrunler.rows) {
-
-        //     const { maliyet, agac } = await getBirimFiyatRecursive(ana_urun, ana_urun);
-        //     function flattenBOM(data, parentKey = '', path = '') {
-        //         let rows = [];
-
-        //         // for (const key in data) {
-        //         //   const value = data[key];
-        //         //   const miktar = value.miktar ?? '';
-        //         //   const maliyet = value.maliyet ?? '';
-        //         //   const newPath = path ? `${path} > ${key}` : key;
-
-        //         //   rows.push({
-        //         //     'Üst Ürün Kodu': parentKey,
-        //         //     'Ürün Kodu': key,
-        //         //     'Miktar': miktar,
-        //         //     'Maliyet': maliyet,
-        //         //     'Yol (Hiyerarşi)': newPath
-        //         //   });
-
-        //         //   const alt = value.alt;
-        //         //   if (alt && typeof alt === 'object') {
-        //         //     rows = rows.concat(flattenBOM(alt, key, newPath));
-        //         //   }
-        //         // }
-
-        //         return rows;
-        //       }
-
-        //     //   // Excel dosyasına yaz
-        //     //   const rows = flattenBOM(agac);
-        //     //   const worksheet = xlsx.utils.json_to_sheet(rows);
-        //     //   const workbook = xlsx.utils.book_new();
-        //     //   xlsx.utils.book_append_sheet(workbook, worksheet, 'BOM');
-
-        //     //   xlsx.writeFile(workbook, 'bom_hiyerarsi.xlsx');
-
-        //     //   console.log('Excel dosyası oluşturuldu: bom_hiyerarsi.xlsx');
-        // }
-
-        res.status(200).json({ status: 200, message: "BOM maliyetleri hesaplandı" });
+        res.status(200).json({ status: 200, message: "Tüm ürünler için BOM maliyetleri başarıyla hesaplandı." });
     } catch (error) {
-        console.error("Error in depoCekMaliyet function:", error);
+        console.error("Error in bomMaliyetCalistir:", error);
         res.status(400).json({ error: error.message });
     }
-}
+};
+
 async function sonHareketBul(cari_yil, urun_kodu) {
     try {
         const mssqlPool = await poolPromises; // MSSQL bağlantısı
@@ -935,9 +946,9 @@ async function sonHareketBul(cari_yil, urun_kodu) {
         if (cari_yil) {
             const hareketQuery = await tigerCariOku.query(
                 `
-           SELECT TOP 1 linee.DATE_ 
-         FROM dbo.LG_${cari_yil}_01_STLINE linee  
-         WHERE (SELECT LOGICALREF FROM LG_${cari_yil}_ITEMS WHERE CODE ='${urun_kodu}') = linee.STOCKREF 
+           SELECT TOP 1 linee.DATE_
+         FROM dbo.LG_${cari_yil}_01_STLINE linee
+         WHERE (SELECT LOGICALREF FROM LG_${cari_yil}_ITEMS WHERE CODE ='${urun_kodu}') = linee.STOCKREF
          AND (linee.TRCODE = 12 OR linee.TRCODE=13)  AND linee.PLNAMOUNT =0
          ORDER BY linee.DATE_ DESC `
             )
@@ -982,9 +993,9 @@ async function sasCekMaliyet(cari_yil, urun_kodu) {
     try {
         const mssqlPool = await poolPromises; // MSSQL connection
         const tigerCariOku = mssqlPool.request();
-      
         const siparisCek = await tigerCariOku.query(
-            `  SELECT CONVERT(nvarchar, ORF.DATE_, 104) AS tarih,    ORF.DOCODE AS [siparis_kodu], 
+            `  SELECT
+                                CONVERT(nvarchar, ORF.DATE_, 104) AS tarih,    ORF.DOCODE AS [siparis_kodu], 
 								PR.CODE AS [proje_kod],    ITM.CODE AS KOD,    ITM.NAME AS MALZEME,    SUM(ORL.AMOUNT) AS siparis_adet, 
 								SUM(ORL.SHIPPEDAMOUNT) AS [karsilanan_siparis],
                                 SUM(ORL.AMOUNT - ORL.SHIPPEDAMOUNT) AS [acik_siparis],  
@@ -1002,10 +1013,7 @@ async function sasCekMaliyet(cari_yil, urun_kodu) {
                                     FULL OUTER JOIN LG_${cari_yil}_PAYPLANS AS PY ON ORL.PAYDEFREF = PY.LOGICALREF
                             WHERE
                                 (ORL.LINETYPE = 0)     AND (ORL.TRCODE = 2)     AND ORF.CANCELLED = 0     AND ORL.CLOSED = 0     AND ORF.STATUS = 4    
-								AND ITM.CODE LIKE '${urun_kodu}%'	AND ORL.PRICE>0  AND (
-                                                                                            CHARINDEX('-', ORF.DOCODE) = 0
-                                                                                            OR LEN(ORF.DOCODE) - CHARINDEX('-', ORF.DOCODE) <= 3
-                                                                                        )
+								AND ITM.CODE LIKE '${urun_kodu}%'	AND ORL.PRICE>0
                             GROUP BY
                                 ORF.DOCODE,
                                 CONVERT(nvarchar, ORF.DATE_, 104),
@@ -1032,10 +1040,7 @@ async function sasCekMaliyet(cari_yil, urun_kodu) {
                                 FULL OUTER JOIN LG_${cari_yil}_PAYPLANS AS PY ON ORL.PAYDEFREF = PY.LOGICALREF
                             WHERE
                                 (ORL.LINETYPE = 4)     AND (ORL.TRCODE = 2)     AND ORF.CANCELLED = 0     AND ORL.CLOSED = 0   
-								AND ORF.STATUS = 4     AND ITM.CODE LIKE '${urun_kodu}%'	AND ORL.PRICE>0  AND (
-                                                                                                                    CHARINDEX('-', ORF.DOCODE) = 0
-                                                                                                                    OR LEN(ORF.DOCODE) - CHARINDEX('-', ORF.DOCODE) <= 3
-                                                                                                                )
+								AND ORF.STATUS = 4     AND ITM.CODE LIKE '${urun_kodu}%'	AND ORL.PRICE>0
                                 GROUP BY
                                 ORF.DOCODE,    CONVERT(nvarchar, ORF.DATE_, 104),  	ORL.USREF,
 									ORL.UOMREF,ITM.LOGICALREF,  PR.CODE,    ITM.CODE,    ITM.DEFINITION_,     PY.CODE,    ORL.PRICE,    ORL.TRCURR,    ORF.TRCURR,    ORL.TRRATE,    ORF.GROSSTOTAL,    ORF.TOTALVAT,    ORF.NETTOTAL
@@ -1083,24 +1088,1233 @@ async function sasCekMaliyet(cari_yil, urun_kodu) {
         }
 
         let siparisSayisi = await pool.query(`SELECT COUNT(urun_kod) as say FROM  maliyet_satin_alma_siparis WHERE urun_kod =$1`, [urun_kodu]);
-        let cariKodlar = [225, 224, 223, 220, 219, '018', '017'];
+        let cariKodlar = [225, 224, 223, 220, 219,'018','017'];
         let kacinci = cariKodlar.findIndex(s => s == cari_yil);
 
-        if (kacinci > -1 && kacinci < cariKodlar.length - 1) {
+        if (kacinci > -1) {
             let sonrakiCariKod = cariKodlar[kacinci + 1];
-            
-            if (kacinci <= 3) {
-                // İlk 4 cari kod için (225,224,223,220)
+            if (kacinci<3) {
                 if (siparisSayisi.rows[0].say <= 5) {
                     sasCekMaliyet(sonrakiCariKod, urun_kodu);
+                } else {
+                    return;
                 }
             } else {
-                // Son 3 cari kod için (219,'018','017')
-                if (siparisSayisi.rows[0].say == 0) {
+                if (siparisSayisi.rows[0].say == 0 && kacinci > 3) {
                     sasCekMaliyet(sonrakiCariKod, urun_kodu);
                 }
             }
+        } else {
+            return;
         }
+
+    } catch (error) {
+        console.error(error);
+    }
+//     try {
+//         const mssqlPool = await poolPromises; // MSSQL connection
+//         const tigerCariOku = mssqlPool.request();
+
+//         const siparisCek = await tigerCariOku.query(
+//             ` SELECT TOP 5 * FROM (SELECT CONVERT(nvarchar, ORF.DATE_, 104) AS tarih,    ORF.DOCODE AS [siparis_kodu],
+// 								PR.CODE AS [proje_kod],    ITM.CODE AS KOD,    ITM.NAME AS MALZEME,    SUM(ORL.AMOUNT) AS siparis_adet,
+// 								SUM(ORL.SHIPPEDAMOUNT) AS [karsilanan_siparis],
+//                                 SUM(ORL.AMOUNT - ORL.SHIPPEDAMOUNT) AS [acik_siparis],
+// 								 (ORL.PRICE*(unt.CONVFACT1/unt.CONVFACT2)) AS birim_fiyat,
+//                                     ORL.TRRATE AS 'KUR',
+// 									ORL.USREF,
+// 									ORL.UOMREF,
+// 									ITM.LOGICALREF
+//                                     FROM
+//                                     LG_225_01_ORFLINE AS ORL
+//                                     INNER JOIN LG_225_01_ORFICHE AS ORF ON ORL.ORDFICHEREF = ORF.LOGICALREF
+//                                     INNER JOIN LG_225_ITEMS AS ITM ON ORL.STOCKREF = ITM.LOGICALREF
+//                                     INNER JOIN LG_225_ITMUNITA AS unt ON unt.ITEMREF = ITM.LOGICALREF AND unt.UNITLINEREF = ORL.UOMREF
+//                                     INNER JOIN LG_225_PROJECT AS PR ON ORL.PROJECTREF = PR.LOGICALREF
+//                                     FULL OUTER JOIN LG_225_PAYPLANS AS PY ON ORL.PAYDEFREF = PY.LOGICALREF
+//                             WHERE
+//                                 (ORL.LINETYPE = 0)     AND (ORL.TRCODE = 2)     AND ORF.CANCELLED = 0     AND ORL.CLOSED = 0     AND ORF.STATUS = 4
+// 								AND ITM.CODE LIKE '${urun_kodu}'	AND ORL.PRICE>0  AND (
+//                                                                                             CHARINDEX('-', ORF.DOCODE) = 0
+//                                                                                             OR LEN(ORF.DOCODE) - CHARINDEX('-', ORF.DOCODE) <= 3
+//                                                                                         )
+//                             GROUP BY
+//                                 ORF.DOCODE,
+//                                 CONVERT(nvarchar, ORF.DATE_, 104),
+//                                 PR.CODE,    ITM.CODE,  ITM.LOGICALREF,  ITM.NAME,  	ORL.USREF,
+// 									ORL.UOMREF,unt.CONVFACT1,unt.CONVFACT2 ,  PY.CODE,    ORL.PRICE,    ORL.TRCURR,    ORF.TRCURR,    ORL.TRRATE,    ORF.GROSSTOTAL,    ORF.TOTALVAT,    ORF.NETTOTAL
+
+//                             UNION ALL
+
+//                             SELECT
+//                                 CONVERT(nvarchar, ORF.DATE_, 104) AS tarih,     ORF.DOCODE AS [siparis_kodu],     PR.CODE AS [proje_kod],     ITM.CODE AS KOD,
+// 								ITM.DEFINITION_ AS MALZEME,     SUM(ORL.AMOUNT) AS [SİPARİŞ ADETİ],     SUM(ORL.SHIPPEDAMOUNT) AS [karsilanan_siparis],
+// 								SUM(ORL.AMOUNT - ORL.SHIPPEDAMOUNT) AS [acik_siparis],
+// 								ORL.PRICE AS birim_fiyat,
+
+//                                 ORL.TRRATE AS 'KUR',
+// 									ORL.USREF,
+// 									ORL.UOMREF,
+// 									ITM.LOGICALREF
+//                             FROM
+//                                 LG_225_01_ORFLINE AS ORL
+//                                 INNER JOIN LG_225_01_ORFICHE AS ORF ON ORL.ORDFICHEREF = ORF.LOGICALREF
+//                                 INNER JOIN LG_225_SRVCARD AS ITM ON ORL.STOCKREF = ITM.LOGICALREF
+//                                 INNER JOIN LG_225_PROJECT AS PR ON ORL.PROJECTREF = PR.LOGICALREF
+//                                 FULL OUTER JOIN LG_225_PAYPLANS AS PY ON ORL.PAYDEFREF = PY.LOGICALREF
+//                             WHERE
+//                                 (ORL.LINETYPE = 4)     AND (ORL.TRCODE = 2)     AND ORF.CANCELLED = 0     AND ORL.CLOSED = 0
+// 								AND ORF.STATUS = 4     AND ITM.CODE LIKE '${urun_kodu}'	AND ORL.PRICE>0  AND (
+//                                                                                                                     CHARINDEX('-', ORF.DOCODE) = 0
+//                                                                                                                     OR LEN(ORF.DOCODE) - CHARINDEX('-', ORF.DOCODE) <= 3
+//                                                                                                                 )
+//                                 GROUP BY
+//                                 ORF.DOCODE,    CONVERT(nvarchar, ORF.DATE_, 104),  	ORL.USREF,
+// 									ORL.UOMREF,ITM.LOGICALREF,  PR.CODE,    ITM.CODE,    ITM.DEFINITION_,     PY.CODE,    ORL.PRICE,    ORL.TRCURR,    ORF.TRCURR,    ORL.TRRATE,    ORF.GROSSTOTAL,    ORF.TOTALVAT,    ORF.NETTOTAL
+
+
+// UNION ALL
+
+// SELECT CONVERT(nvarchar, ORF.DATE_, 104) AS tarih,    ORF.DOCODE AS [siparis_kodu],
+// 								PR.CODE AS [proje_kod],    ITM.CODE AS KOD,    ITM.NAME AS MALZEME,    SUM(ORL.AMOUNT) AS siparis_adet,
+// 								SUM(ORL.SHIPPEDAMOUNT) AS [karsilanan_siparis],
+//                                 SUM(ORL.AMOUNT - ORL.SHIPPEDAMOUNT) AS [acik_siparis],
+// 								 (ORL.PRICE*(unt.CONVFACT1/unt.CONVFACT2)) AS birim_fiyat,
+//                                     ORL.TRRATE AS 'KUR',
+// 									ORL.USREF,
+// 									ORL.UOMREF,
+// 									ITM.LOGICALREF
+//                                     FROM
+//                                     LG_224_01_ORFLINE AS ORL
+//                                     INNER JOIN LG_224_01_ORFICHE AS ORF ON ORL.ORDFICHEREF = ORF.LOGICALREF
+//                                     INNER JOIN LG_224_ITEMS AS ITM ON ORL.STOCKREF = ITM.LOGICALREF
+//                                     INNER JOIN LG_224_ITMUNITA AS unt ON unt.ITEMREF = ITM.LOGICALREF AND unt.UNITLINEREF = ORL.UOMREF
+//                                     INNER JOIN LG_224_PROJECT AS PR ON ORL.PROJECTREF = PR.LOGICALREF
+//                                     FULL OUTER JOIN LG_224_PAYPLANS AS PY ON ORL.PAYDEFREF = PY.LOGICALREF
+//                             WHERE
+//                                 (ORL.LINETYPE = 0)     AND (ORL.TRCODE = 2)     AND ORF.CANCELLED = 0     AND ORL.CLOSED = 0     AND ORF.STATUS = 4
+// 								AND ITM.CODE LIKE '${urun_kodu}'	AND ORL.PRICE>0  AND (
+//                                                                                             CHARINDEX('-', ORF.DOCODE) = 0
+//                                                                                             OR LEN(ORF.DOCODE) - CHARINDEX('-', ORF.DOCODE) <= 3
+//                                                                                         )
+//                             GROUP BY
+//                                 ORF.DOCODE,
+//                                 CONVERT(nvarchar, ORF.DATE_, 104),
+//                                 PR.CODE,    ITM.CODE,  ITM.LOGICALREF,  ITM.NAME,  	ORL.USREF,
+// 									ORL.UOMREF,unt.CONVFACT1,unt.CONVFACT2 ,  PY.CODE,    ORL.PRICE,    ORL.TRCURR,    ORF.TRCURR,    ORL.TRRATE,    ORF.GROSSTOTAL,    ORF.TOTALVAT,    ORF.NETTOTAL
+
+//                             UNION ALL
+
+//                             SELECT
+//                                 CONVERT(nvarchar, ORF.DATE_, 104) AS tarih,     ORF.DOCODE AS [siparis_kodu],     PR.CODE AS [proje_kod],     ITM.CODE AS KOD,
+// 								ITM.DEFINITION_ AS MALZEME,     SUM(ORL.AMOUNT) AS [SİPARİŞ ADETİ],     SUM(ORL.SHIPPEDAMOUNT) AS [karsilanan_siparis],
+// 								SUM(ORL.AMOUNT - ORL.SHIPPEDAMOUNT) AS [acik_siparis],
+// 								ORL.PRICE AS birim_fiyat,
+
+//                                 ORL.TRRATE AS 'KUR',
+// 									ORL.USREF,
+// 									ORL.UOMREF,
+// 									ITM.LOGICALREF
+//                             FROM
+//                                 LG_224_01_ORFLINE AS ORL
+//                                 INNER JOIN LG_224_01_ORFICHE AS ORF ON ORL.ORDFICHEREF = ORF.LOGICALREF
+//                                 INNER JOIN LG_224_SRVCARD AS ITM ON ORL.STOCKREF = ITM.LOGICALREF
+//                                 INNER JOIN LG_224_PROJECT AS PR ON ORL.PROJECTREF = PR.LOGICALREF
+//                                 FULL OUTER JOIN LG_224_PAYPLANS AS PY ON ORL.PAYDEFREF = PY.LOGICALREF
+//                             WHERE
+//                                 (ORL.LINETYPE = 4)     AND (ORL.TRCODE = 2)     AND ORF.CANCELLED = 0     AND ORL.CLOSED = 0
+// 								AND ORF.STATUS = 4     AND ITM.CODE LIKE '${urun_kodu}'	AND ORL.PRICE>0  AND (
+//                                                                                                                     CHARINDEX('-', ORF.DOCODE) = 0
+//                                                                                                                     OR LEN(ORF.DOCODE) - CHARINDEX('-', ORF.DOCODE) <= 3
+//                                                                                                                 )
+//                                 GROUP BY
+//                                 ORF.DOCODE,    CONVERT(nvarchar, ORF.DATE_, 104),  	ORL.USREF,
+// 									ORL.UOMREF,ITM.LOGICALREF,  PR.CODE,    ITM.CODE,    ITM.DEFINITION_,     PY.CODE,    ORL.PRICE,    ORL.TRCURR,    ORF.TRCURR,    ORL.TRRATE,    ORF.GROSSTOTAL,    ORF.TOTALVAT,    ORF.NETTOTAL
+
+// UNION ALL
+
+// SELECT CONVERT(nvarchar, ORF.DATE_, 104) AS tarih,    ORF.DOCODE AS [siparis_kodu],
+// 								PR.CODE AS [proje_kod],    ITM.CODE AS KOD,    ITM.NAME AS MALZEME,    SUM(ORL.AMOUNT) AS siparis_adet,
+// 								SUM(ORL.SHIPPEDAMOUNT) AS [karsilanan_siparis],
+//                                 SUM(ORL.AMOUNT - ORL.SHIPPEDAMOUNT) AS [acik_siparis],
+// 								 (ORL.PRICE*(unt.CONVFACT1/unt.CONVFACT2)) AS birim_fiyat,
+//                                     ORL.TRRATE AS 'KUR',
+// 									ORL.USREF,
+// 									ORL.UOMREF,
+// 									ITM.LOGICALREF
+//                                     FROM
+//                                     LG_223_01_ORFLINE AS ORL
+//                                     INNER JOIN LG_223_01_ORFICHE AS ORF ON ORL.ORDFICHEREF = ORF.LOGICALREF
+//                                     INNER JOIN LG_223_ITEMS AS ITM ON ORL.STOCKREF = ITM.LOGICALREF
+//                                     INNER JOIN LG_223_ITMUNITA AS unt ON unt.ITEMREF = ITM.LOGICALREF AND unt.UNITLINEREF = ORL.UOMREF
+//                                     INNER JOIN LG_223_PROJECT AS PR ON ORL.PROJECTREF = PR.LOGICALREF
+//                                     FULL OUTER JOIN LG_223_PAYPLANS AS PY ON ORL.PAYDEFREF = PY.LOGICALREF
+//                             WHERE
+//                                 (ORL.LINETYPE = 0)     AND (ORL.TRCODE = 2)     AND ORF.CANCELLED = 0     AND ORL.CLOSED = 0     AND ORF.STATUS = 4
+// 								AND ITM.CODE LIKE '${urun_kodu}'	AND ORL.PRICE>0  AND (
+//                                                                                             CHARINDEX('-', ORF.DOCODE) = 0
+//                                                                                             OR LEN(ORF.DOCODE) - CHARINDEX('-', ORF.DOCODE) <= 3
+//                                                                                         )
+//                             GROUP BY
+//                                 ORF.DOCODE,
+//                                 CONVERT(nvarchar, ORF.DATE_, 104),
+//                                 PR.CODE,    ITM.CODE,  ITM.LOGICALREF,  ITM.NAME,  	ORL.USREF,
+// 									ORL.UOMREF,unt.CONVFACT1,unt.CONVFACT2 ,  PY.CODE,    ORL.PRICE,    ORL.TRCURR,    ORF.TRCURR,    ORL.TRRATE,    ORF.GROSSTOTAL,    ORF.TOTALVAT,    ORF.NETTOTAL
+
+//                             UNION ALL
+
+//                             SELECT
+//                                 CONVERT(nvarchar, ORF.DATE_, 104) AS tarih,     ORF.DOCODE AS [siparis_kodu],     PR.CODE AS [proje_kod],     ITM.CODE AS KOD,
+// 								ITM.DEFINITION_ AS MALZEME,     SUM(ORL.AMOUNT) AS [SİPARİŞ ADETİ],     SUM(ORL.SHIPPEDAMOUNT) AS [karsilanan_siparis],
+// 								SUM(ORL.AMOUNT - ORL.SHIPPEDAMOUNT) AS [acik_siparis],
+// 								ORL.PRICE AS birim_fiyat,
+
+//                                 ORL.TRRATE AS 'KUR',
+// 									ORL.USREF,
+// 									ORL.UOMREF,
+// 									ITM.LOGICALREF
+//                             FROM
+//                                 LG_223_01_ORFLINE AS ORL
+//                                 INNER JOIN LG_223_01_ORFICHE AS ORF ON ORL.ORDFICHEREF = ORF.LOGICALREF
+//                                 INNER JOIN LG_223_SRVCARD AS ITM ON ORL.STOCKREF = ITM.LOGICALREF
+//                                 INNER JOIN LG_223_PROJECT AS PR ON ORL.PROJECTREF = PR.LOGICALREF
+//                                 FULL OUTER JOIN LG_223_PAYPLANS AS PY ON ORL.PAYDEFREF = PY.LOGICALREF
+//                             WHERE
+//                                 (ORL.LINETYPE = 4)     AND (ORL.TRCODE = 2)     AND ORF.CANCELLED = 0     AND ORL.CLOSED = 0
+// 								AND ORF.STATUS = 4     AND ITM.CODE LIKE '${urun_kodu}'	AND ORL.PRICE>0  AND (
+//                                                                                                                     CHARINDEX('-', ORF.DOCODE) = 0
+//                                                                                                                     OR LEN(ORF.DOCODE) - CHARINDEX('-', ORF.DOCODE) <= 3
+//                                                                                                                 )
+//                                 GROUP BY
+//                                 ORF.DOCODE,    CONVERT(nvarchar, ORF.DATE_, 104),  	ORL.USREF,
+// 									ORL.UOMREF,ITM.LOGICALREF,  PR.CODE,    ITM.CODE,    ITM.DEFINITION_,     PY.CODE,    ORL.PRICE,    ORL.TRCURR,    ORF.TRCURR,    ORL.TRRATE,    ORF.GROSSTOTAL,    ORF.TOTALVAT,    ORF.NETTOTAL
+//    UNION ALL
+
+// SELECT CONVERT(nvarchar, ORF.DATE_, 104) AS tarih,    ORF.DOCODE AS [siparis_kodu],
+// 								PR.CODE AS [proje_kod],    ITM.CODE AS KOD,    ITM.NAME AS MALZEME,    SUM(ORL.AMOUNT) AS siparis_adet,
+// 								SUM(ORL.SHIPPEDAMOUNT) AS [karsilanan_siparis],
+//                                 SUM(ORL.AMOUNT - ORL.SHIPPEDAMOUNT) AS [acik_siparis],
+// 								 (ORL.PRICE*(unt.CONVFACT1/unt.CONVFACT2)) AS birim_fiyat,
+//                                     ORL.TRRATE AS 'KUR',
+// 									ORL.USREF,
+// 									ORL.UOMREF,
+// 									ITM.LOGICALREF
+//                                     FROM
+//                                     LG_220_01_ORFLINE AS ORL
+//                                     INNER JOIN LG_220_01_ORFICHE AS ORF ON ORL.ORDFICHEREF = ORF.LOGICALREF
+//                                     INNER JOIN LG_220_ITEMS AS ITM ON ORL.STOCKREF = ITM.LOGICALREF
+//                                     INNER JOIN LG_220_ITMUNITA AS unt ON unt.ITEMREF = ITM.LOGICALREF AND unt.UNITLINEREF = ORL.UOMREF
+//                                     INNER JOIN LG_220_PROJECT AS PR ON ORL.PROJECTREF = PR.LOGICALREF
+//                                     FULL OUTER JOIN LG_220_PAYPLANS AS PY ON ORL.PAYDEFREF = PY.LOGICALREF
+//                             WHERE
+//                                 (ORL.LINETYPE = 0)     AND (ORL.TRCODE = 2)     AND ORF.CANCELLED = 0     AND ORL.CLOSED = 0     AND ORF.STATUS = 4
+// 								AND ITM.CODE LIKE '${urun_kodu}'	AND ORL.PRICE>0  AND (
+//                                                                                             CHARINDEX('-', ORF.DOCODE) = 0
+//                                                                                             OR LEN(ORF.DOCODE) - CHARINDEX('-', ORF.DOCODE) <= 3
+//                                                                                         )
+//                             GROUP BY
+//                                 ORF.DOCODE,
+//                                 CONVERT(nvarchar, ORF.DATE_, 104),
+//                                 PR.CODE,    ITM.CODE,  ITM.LOGICALREF,  ITM.NAME,  	ORL.USREF,
+// 									ORL.UOMREF,unt.CONVFACT1,unt.CONVFACT2 ,  PY.CODE,    ORL.PRICE,    ORL.TRCURR,    ORF.TRCURR,    ORL.TRRATE,    ORF.GROSSTOTAL,    ORF.TOTALVAT,    ORF.NETTOTAL
+
+//                             UNION ALL
+
+//                             SELECT
+//                                 CONVERT(nvarchar, ORF.DATE_, 104) AS tarih,     ORF.DOCODE AS [siparis_kodu],     PR.CODE AS [proje_kod],     ITM.CODE AS KOD,
+// 								ITM.DEFINITION_ AS MALZEME,     SUM(ORL.AMOUNT) AS [SİPARİŞ ADETİ],     SUM(ORL.SHIPPEDAMOUNT) AS [karsilanan_siparis],
+// 								SUM(ORL.AMOUNT - ORL.SHIPPEDAMOUNT) AS [acik_siparis],
+// 								ORL.PRICE AS birim_fiyat,
+
+//                                 ORL.TRRATE AS 'KUR',
+// 									ORL.USREF,
+// 									ORL.UOMREF,
+// 									ITM.LOGICALREF
+//                             FROM
+//                                 LG_220_01_ORFLINE AS ORL
+//                                 INNER JOIN LG_220_01_ORFICHE AS ORF ON ORL.ORDFICHEREF = ORF.LOGICALREF
+//                                 INNER JOIN LG_220_SRVCARD AS ITM ON ORL.STOCKREF = ITM.LOGICALREF
+//                                 INNER JOIN LG_220_PROJECT AS PR ON ORL.PROJECTREF = PR.LOGICALREF
+//                                 FULL OUTER JOIN LG_220_PAYPLANS AS PY ON ORL.PAYDEFREF = PY.LOGICALREF
+//                             WHERE
+//                                 (ORL.LINETYPE = 4)     AND (ORL.TRCODE = 2)     AND ORF.CANCELLED = 0     AND ORL.CLOSED = 0
+// 								AND ORF.STATUS = 4     AND ITM.CODE LIKE '${urun_kodu}'	AND ORL.PRICE>0  AND (
+//                                                                                                                     CHARINDEX('-', ORF.DOCODE) = 0
+//                                                                                                                     OR LEN(ORF.DOCODE) - CHARINDEX('-', ORF.DOCODE) <= 3
+//                                                                                                                 )
+//                                 GROUP BY
+//                                 ORF.DOCODE,    CONVERT(nvarchar, ORF.DATE_, 104),  	ORL.USREF,
+// 									ORL.UOMREF,ITM.LOGICALREF,  PR.CODE,    ITM.CODE,    ITM.DEFINITION_,     PY.CODE,    ORL.PRICE,    ORL.TRCURR,    ORF.TRCURR,    ORL.TRRATE,    ORF.GROSSTOTAL,    ORF.TOTALVAT,    ORF.NETTOTAL
+//     UNION ALL
+
+// SELECT CONVERT(nvarchar, ORF.DATE_, 104) AS tarih,    ORF.DOCODE AS [siparis_kodu],
+// 								PR.CODE AS [proje_kod],    ITM.CODE AS KOD,    ITM.NAME AS MALZEME,    SUM(ORL.AMOUNT) AS siparis_adet,
+// 								SUM(ORL.SHIPPEDAMOUNT) AS [karsilanan_siparis],
+//                                 SUM(ORL.AMOUNT - ORL.SHIPPEDAMOUNT) AS [acik_siparis],
+// 								 (ORL.PRICE*(unt.CONVFACT1/unt.CONVFACT2)) AS birim_fiyat,
+//                                     ORL.TRRATE AS 'KUR',
+// 									ORL.USREF,
+// 									ORL.UOMREF,
+// 									ITM.LOGICALREF
+//                                     FROM
+//                                     LG_219_01_ORFLINE AS ORL
+//                                     INNER JOIN LG_219_01_ORFICHE AS ORF ON ORL.ORDFICHEREF = ORF.LOGICALREF
+//                                     INNER JOIN LG_219_ITEMS AS ITM ON ORL.STOCKREF = ITM.LOGICALREF
+//                                     INNER JOIN LG_219_ITMUNITA AS unt ON unt.ITEMREF = ITM.LOGICALREF AND unt.UNITLINEREF = ORL.UOMREF
+//                                     INNER JOIN LG_219_PROJECT AS PR ON ORL.PROJECTREF = PR.LOGICALREF
+//                                     FULL OUTER JOIN LG_219_PAYPLANS AS PY ON ORL.PAYDEFREF = PY.LOGICALREF
+//                             WHERE
+//                                 (ORL.LINETYPE = 0)     AND (ORL.TRCODE = 2)     AND ORF.CANCELLED = 0     AND ORL.CLOSED = 0     AND ORF.STATUS = 4
+// 								AND ITM.CODE LIKE '${urun_kodu}'	AND ORL.PRICE>0  AND (
+//                                                                                             CHARINDEX('-', ORF.DOCODE) = 0
+//                                                                                             OR LEN(ORF.DOCODE) - CHARINDEX('-', ORF.DOCODE) <= 3
+//                                                                                         )
+//                             GROUP BY
+//                                 ORF.DOCODE,
+//                                 CONVERT(nvarchar, ORF.DATE_, 104),
+//                                 PR.CODE,    ITM.CODE,  ITM.LOGICALREF,  ITM.NAME,  	ORL.USREF,
+// 									ORL.UOMREF,unt.CONVFACT1,unt.CONVFACT2 ,  PY.CODE,    ORL.PRICE,    ORL.TRCURR,    ORF.TRCURR,    ORL.TRRATE,    ORF.GROSSTOTAL,    ORF.TOTALVAT,    ORF.NETTOTAL
+
+//                             UNION ALL
+
+//                             SELECT
+//                                 CONVERT(nvarchar, ORF.DATE_, 104) AS tarih,     ORF.DOCODE AS [siparis_kodu],     PR.CODE AS [proje_kod],     ITM.CODE AS KOD,
+// 								ITM.DEFINITION_ AS MALZEME,     SUM(ORL.AMOUNT) AS [SİPARİŞ ADETİ],     SUM(ORL.SHIPPEDAMOUNT) AS [karsilanan_siparis],
+// 								SUM(ORL.AMOUNT - ORL.SHIPPEDAMOUNT) AS [acik_siparis],
+// 								ORL.PRICE AS birim_fiyat,
+
+//                                 ORL.TRRATE AS 'KUR',
+// 									ORL.USREF,
+// 									ORL.UOMREF,
+// 									ITM.LOGICALREF
+//                             FROM
+//                                 LG_219_01_ORFLINE AS ORL
+//                                 INNER JOIN LG_219_01_ORFICHE AS ORF ON ORL.ORDFICHEREF = ORF.LOGICALREF
+//                                 INNER JOIN LG_219_SRVCARD AS ITM ON ORL.STOCKREF = ITM.LOGICALREF
+//                                 INNER JOIN LG_219_PROJECT AS PR ON ORL.PROJECTREF = PR.LOGICALREF
+//                                 FULL OUTER JOIN LG_219_PAYPLANS AS PY ON ORL.PAYDEFREF = PY.LOGICALREF
+//                             WHERE
+//                                 (ORL.LINETYPE = 4)     AND (ORL.TRCODE = 2)     AND ORF.CANCELLED = 0     AND ORL.CLOSED = 0
+// 								AND ORF.STATUS = 4     AND ITM.CODE LIKE '${urun_kodu}'	AND ORL.PRICE>0  AND (
+//                                                                                                                     CHARINDEX('-', ORF.DOCODE) = 0
+//                                                                                                                     OR LEN(ORF.DOCODE) - CHARINDEX('-', ORF.DOCODE) <= 3
+//                                                                                                                 )
+//                                 GROUP BY
+//                                 ORF.DOCODE,    CONVERT(nvarchar, ORF.DATE_, 104),  	ORL.USREF,
+// 									ORL.UOMREF,ITM.LOGICALREF,  PR.CODE,    ITM.CODE,    ITM.DEFINITION_,     PY.CODE,    ORL.PRICE,    ORL.TRCURR,    ORF.TRCURR,    ORL.TRRATE,    ORF.GROSSTOTAL,    ORF.TOTALVAT,    ORF.NETTOTAL
+//   UNION ALL
+
+// SELECT CONVERT(nvarchar, ORF.DATE_, 104) AS tarih,    ORF.DOCODE AS [siparis_kodu],
+// 								PR.CODE AS [proje_kod],    ITM.CODE AS KOD,    ITM.NAME AS MALZEME,    SUM(ORL.AMOUNT) AS siparis_adet,
+// 								SUM(ORL.SHIPPEDAMOUNT) AS [karsilanan_siparis],
+//                                 SUM(ORL.AMOUNT - ORL.SHIPPEDAMOUNT) AS [acik_siparis],
+// 								 (ORL.PRICE*(unt.CONVFACT1/unt.CONVFACT2)) AS birim_fiyat,
+//                                     ORL.TRRATE AS 'KUR',
+// 									ORL.USREF,
+// 									ORL.UOMREF,
+// 									ITM.LOGICALREF
+//                                     FROM
+//                                     LG_018_01_ORFLINE AS ORL
+//                                     INNER JOIN LG_018_01_ORFICHE AS ORF ON ORL.ORDFICHEREF = ORF.LOGICALREF
+//                                     INNER JOIN LG_018_ITEMS AS ITM ON ORL.STOCKREF = ITM.LOGICALREF
+//                                     INNER JOIN LG_018_ITMUNITA AS unt ON unt.ITEMREF = ITM.LOGICALREF AND unt.UNITLINEREF = ORL.UOMREF
+//                                     INNER JOIN LG_018_PROJECT AS PR ON ORL.PROJECTREF = PR.LOGICALREF
+//                                     FULL OUTER JOIN LG_018_PAYPLANS AS PY ON ORL.PAYDEFREF = PY.LOGICALREF
+//                             WHERE
+//                                 (ORL.LINETYPE = 0)     AND (ORL.TRCODE = 2)     AND ORF.CANCELLED = 0     AND ORL.CLOSED = 0     AND ORF.STATUS = 4
+// 								AND ITM.CODE LIKE '${urun_kodu}'	AND ORL.PRICE>0  AND (
+//                                                                                             CHARINDEX('-', ORF.DOCODE) = 0
+//                                                                                             OR LEN(ORF.DOCODE) - CHARINDEX('-', ORF.DOCODE) <= 3
+//                                                                                         )
+//                             GROUP BY
+//                                 ORF.DOCODE,
+//                                 CONVERT(nvarchar, ORF.DATE_, 104),
+//                                 PR.CODE,    ITM.CODE,  ITM.LOGICALREF,  ITM.NAME,  	ORL.USREF,
+// 									ORL.UOMREF,unt.CONVFACT1,unt.CONVFACT2 ,  PY.CODE,    ORL.PRICE,    ORL.TRCURR,    ORF.TRCURR,    ORL.TRRATE,    ORF.GROSSTOTAL,    ORF.TOTALVAT,    ORF.NETTOTAL
+
+//                             UNION ALL
+
+//                             SELECT
+//                                 CONVERT(nvarchar, ORF.DATE_, 104) AS tarih,     ORF.DOCODE AS [siparis_kodu],     PR.CODE AS [proje_kod],     ITM.CODE AS KOD,
+// 								ITM.DEFINITION_ AS MALZEME,     SUM(ORL.AMOUNT) AS [SİPARİŞ ADETİ],     SUM(ORL.SHIPPEDAMOUNT) AS [karsilanan_siparis],
+// 								SUM(ORL.AMOUNT - ORL.SHIPPEDAMOUNT) AS [acik_siparis],
+// 								ORL.PRICE AS birim_fiyat,
+
+//                                 ORL.TRRATE AS 'KUR',
+// 									ORL.USREF,
+// 									ORL.UOMREF,
+// 									ITM.LOGICALREF
+//                             FROM
+//                                 LG_018_01_ORFLINE AS ORL
+//                                 INNER JOIN LG_018_01_ORFICHE AS ORF ON ORL.ORDFICHEREF = ORF.LOGICALREF
+//                                 INNER JOIN LG_018_SRVCARD AS ITM ON ORL.STOCKREF = ITM.LOGICALREF
+//                                 INNER JOIN LG_018_PROJECT AS PR ON ORL.PROJECTREF = PR.LOGICALREF
+//                                 FULL OUTER JOIN LG_018_PAYPLANS AS PY ON ORL.PAYDEFREF = PY.LOGICALREF
+//                             WHERE
+//                                 (ORL.LINETYPE = 4)     AND (ORL.TRCODE = 2)     AND ORF.CANCELLED = 0     AND ORL.CLOSED = 0
+// 								AND ORF.STATUS = 4     AND ITM.CODE LIKE '${urun_kodu}'	AND ORL.PRICE>0  AND (
+//                                                                                                                     CHARINDEX('-', ORF.DOCODE) = 0
+//                                                                                                                     OR LEN(ORF.DOCODE) - CHARINDEX('-', ORF.DOCODE) <= 3
+//                                                                                                                 )
+//                                 GROUP BY
+//                                 ORF.DOCODE,    CONVERT(nvarchar, ORF.DATE_, 104),  	ORL.USREF,
+// 									ORL.UOMREF,ITM.LOGICALREF,  PR.CODE,    ITM.CODE,    ITM.DEFINITION_,     PY.CODE,    ORL.PRICE,    ORL.TRCURR,    ORF.TRCURR,    ORL.TRRATE,    ORF.GROSSTOTAL,    ORF.TOTALVAT,    ORF.NETTOTAL
+//  UNION ALL
+
+// SELECT CONVERT(nvarchar, ORF.DATE_, 104) AS tarih,    ORF.DOCODE AS [siparis_kodu],
+// 								PR.CODE AS [proje_kod],    ITM.CODE AS KOD,    ITM.NAME AS MALZEME,    SUM(ORL.AMOUNT) AS siparis_adet,
+// 								SUM(ORL.SHIPPEDAMOUNT) AS [karsilanan_siparis],
+//                                 SUM(ORL.AMOUNT - ORL.SHIPPEDAMOUNT) AS [acik_siparis],
+// 								 (ORL.PRICE*(unt.CONVFACT1/unt.CONVFACT2)) AS birim_fiyat,
+//                                     ORL.TRRATE AS 'KUR',
+// 									ORL.USREF,
+// 									ORL.UOMREF,
+// 									ITM.LOGICALREF
+//                                     FROM
+//                                     LG_017_01_ORFLINE AS ORL
+//                                     INNER JOIN LG_017_01_ORFICHE AS ORF ON ORL.ORDFICHEREF = ORF.LOGICALREF
+//                                     INNER JOIN LG_017_ITEMS AS ITM ON ORL.STOCKREF = ITM.LOGICALREF
+//                                     INNER JOIN LG_017_ITMUNITA AS unt ON unt.ITEMREF = ITM.LOGICALREF AND unt.UNITLINEREF = ORL.UOMREF
+//                                     INNER JOIN LG_017_PROJECT AS PR ON ORL.PROJECTREF = PR.LOGICALREF
+//                                     FULL OUTER JOIN LG_017_PAYPLANS AS PY ON ORL.PAYDEFREF = PY.LOGICALREF
+//                             WHERE
+//                                 (ORL.LINETYPE = 0)     AND (ORL.TRCODE = 2)     AND ORF.CANCELLED = 0     AND ORL.CLOSED = 0     AND ORF.STATUS = 4
+// 								AND ITM.CODE LIKE '${urun_kodu}'	AND ORL.PRICE>0  AND (
+//                                                                                             CHARINDEX('-', ORF.DOCODE) = 0
+//                                                                                             OR LEN(ORF.DOCODE) - CHARINDEX('-', ORF.DOCODE) <= 3
+//                                                                                         )
+//                             GROUP BY
+//                                 ORF.DOCODE,
+//                                 CONVERT(nvarchar, ORF.DATE_, 104),
+//                                 PR.CODE,    ITM.CODE,  ITM.LOGICALREF,  ITM.NAME,  	ORL.USREF,
+// 									ORL.UOMREF,unt.CONVFACT1,unt.CONVFACT2 ,  PY.CODE,    ORL.PRICE,    ORL.TRCURR,    ORF.TRCURR,    ORL.TRRATE,    ORF.GROSSTOTAL,    ORF.TOTALVAT,    ORF.NETTOTAL
+
+//                             UNION ALL
+
+//                             SELECT
+//                                 CONVERT(nvarchar, ORF.DATE_, 104) AS tarih,     ORF.DOCODE AS [siparis_kodu],     PR.CODE AS [proje_kod],     ITM.CODE AS KOD,
+// 								ITM.DEFINITION_ AS MALZEME,     SUM(ORL.AMOUNT) AS [SİPARİŞ ADETİ],     SUM(ORL.SHIPPEDAMOUNT) AS [karsilanan_siparis],
+// 								SUM(ORL.AMOUNT - ORL.SHIPPEDAMOUNT) AS [acik_siparis],
+// 								ORL.PRICE AS birim_fiyat,
+
+//                                 ORL.TRRATE AS 'KUR',
+// 									ORL.USREF,
+// 									ORL.UOMREF,
+// 									ITM.LOGICALREF
+//                             FROM
+//                                 LG_017_01_ORFLINE AS ORL
+//                                 INNER JOIN LG_017_01_ORFICHE AS ORF ON ORL.ORDFICHEREF = ORF.LOGICALREF
+//                                 INNER JOIN LG_017_SRVCARD AS ITM ON ORL.STOCKREF = ITM.LOGICALREF
+//                                 INNER JOIN LG_017_PROJECT AS PR ON ORL.PROJECTREF = PR.LOGICALREF
+//                                 FULL OUTER JOIN LG_017_PAYPLANS AS PY ON ORL.PAYDEFREF = PY.LOGICALREF
+//                             WHERE
+//                                 (ORL.LINETYPE = 4)     AND (ORL.TRCODE = 2)     AND ORF.CANCELLED = 0     AND ORL.CLOSED = 0
+// 								AND ORF.STATUS = 4     AND ITM.CODE LIKE '${urun_kodu}'	AND ORL.PRICE>0  AND (
+//                                                                                                                     CHARINDEX('-', ORF.DOCODE) = 0
+//                                                                                                                     OR LEN(ORF.DOCODE) - CHARINDEX('-', ORF.DOCODE) <= 3
+//                                                                                                                 )
+//                                 GROUP BY
+//                                 ORF.DOCODE,    CONVERT(nvarchar, ORF.DATE_, 104),  	ORL.USREF,
+// 									ORL.UOMREF,ITM.LOGICALREF,  PR.CODE,    ITM.CODE,    ITM.DEFINITION_,     PY.CODE,    ORL.PRICE,    ORL.TRCURR,    ORF.TRCURR,    ORL.TRRATE,    ORF.GROSSTOTAL,    ORF.TOTALVAT,    ORF.NETTOTAL
+// ) datas  ORDER BY tarih DESC
+// `
+//         )
+
+//         if (siparisCek.recordset && siparisCek.rowsAffected > 0) {
+
+//             const siparisler  = siparisCek.recordsets[0];
+//             const groupedByYear = {};
+//             for (let row of siparisler) {
+//                 const year = parseInt(row.tarih.split(".")[2], 10);
+//                 if (!groupedByYear[year]) groupedByYear[year] = [];
+//                 groupedByYear[year].push(row);
+//             }
+//             const yearPriority = [2025, 2024, 2023];
+
+//             let filteredSiparisler = [];
+
+//             for (let year of yearPriority) {
+//                 if (groupedByYear[year] && groupedByYear[year].length > 0) {
+//                     filteredSiparisler = groupedByYear[year];
+//                     break;
+//                 }
+//             }
+//             if (filteredSiparisler.length === 0) {
+//                 // Diğer tüm yılları topla (öncelikli yıllar dışında kalanlar)
+//                 const otherYears = Object.keys(groupedByYear)
+//                     .map(y => parseInt(y, 10))
+//                     .filter(y => !yearPriority.includes(y));
+
+//                 for (let y of otherYears.sort((a, b) => b - a)) { // en yeni eski verileri önce al
+//                     if (groupedByYear[y] && groupedByYear[y].length > 0) {
+//                         filteredSiparisler = groupedByYear[y];
+//                         break;
+//                     }
+//                 }
+//             }
+//             for (let data of filteredSiparisler) {
+//                 const parts = data.tarih.split(".");
+//                 const month = parseInt(parts[1], 10);
+//                 const year = parseInt(parts[2], 10);
+//                 const indexCarpanResult = await pool.query(indexSearch, [year, month]);
+
+//                 const siparisSayisi = await pool.query(`SELECT * FROM  maliyet_satin_alma_siparis WHERE urun_kod =$1`, [urun_kodu]);
+//                 const siparisVarmi = await pool.query(`SELECT * FROM  maliyet_satin_alma_siparis WHERE urun_kod =$1 AND sas_kod = $2`, [urun_kodu, data.siparis_kodu]);
+
+//                 if (siparisSayisi.rowCount <= 5 && siparisVarmi.rowCount == 0) {
+
+//                     let indexs = indexCarpanResult.rows[0] ? indexCarpanResult.rows[0].index : 1;
+
+//                     const insertSuccess = await insertOrUpdate(`INSERT INTO maliyet_satin_alma_siparis(
+//                         urun_kod, urun_aciklama, sas_tarih, sas_kod, sas_miktar, birim_fiyat)
+//                         VALUES($1,$2,$3,$4,$5,$6)`, [urun_kodu, data.MALZEME, data.tarih, data.siparis_kodu, data.siparis_adet, (data.birim_fiyat * indexs)]
+//                     );
+
+//                     if (insertSuccess) {
+//                         await insertOrUpdate(`UPDATE maliyet_urun_birim_fiyat SET birim_fiyat = (
+//                             SELECT CASE
+//                                 WHEN SUM(sas_miktar) = 0 OR SUM(sas_miktar) IS NULL THEN 0
+//                                 ELSE SUM(carpan) / SUM(sas_miktar)
+//                             END
+//                             FROM (
+//                                 SELECT sas_miktar * birim_fiyat AS carpan, sas_miktar
+//                                 FROM maliyet_satin_alma_siparis
+//                                 WHERE urun_kod = '${urun_kodu}'
+//                             ) AS toplam
+//                         )
+//                         WHERE urun_kodu ='${urun_kodu}'`);
+//                     }
+//                 }
+//             }
+//         }
+
+
+
+//     } catch (error) {
+//         console.error(error);
+//     }
+}
+async function satisSiparisCek(urun_kodu) {
+    try {
+        const mssqlPool = await poolPromises; // MSSQL connection
+        const tigerCariOku = mssqlPool.request();
+        const notCariList = ['ANADOLU OPTOMEKANİK TEKNOLOJiLERi A.Ş.',
+            'AET ELECTRONICS MÜHENDİSLİK SAN. TİC. A.Ş.',
+            'AKS KAPLAMA VE BOYA SAN. TİC. LTD. ŞTİ.',
+            'ANADOLU OPTOMEKANIK TEKNOLOJiLERi A.Ş.',
+            'CHONGQING WANCAI OPTICAL INSTRUMENT CO.,LTD. (EUR)',
+            'KÖPRÜÖREN MAKİNE İNŞ. GIDA İTH. İHR. SAN. TİC. LTD. ŞTİ.',
+            'MİKRON MAKİNA SAN.TİC.LTD.ŞTİ.',
+            'SİMSOFT BİLGİSAYAR TEKNOLOJİLERİ LTD. ŞTİ.',
+            'CNK ELEKTRONİK MAKİNA SANAYİ A.Ş.',
+            'GÖKBEY MÜHENDİSLİK MAK. LTD.ŞTİ.',
+            'İMA SAVUNMA SANAYİ VE TİC. A.Ş.',
+            'KADİR BORA - BORA TİCARET',
+            'OSTİM AKÜMÜLATÖR OTOMOTİV SAN. VE TİC. A.Ş.',
+            'PANGEA METAL SANAYİ VE TİC. LTD. ŞTİ.',
+            'SİVAS MİKRO MEKANİK TEKN. A.Ş.',
+            'TRABZON ŞEHİT MERİÇ ALEMDAR POLİS MESLEK EĞİTİM MÜD.',
+            'ALTECHNA UAB',
+            'ASSAN ELEKTRONİK İMALAT PAZ. SAN.TİC.AŞ',
+            'OJSC "MMW named after S.I. VAVILOV',
+            'TAYFX HASSAS OPTİK MEKANİK SAN TİC A.Ş.',
+            'ATASAV MÜH. HAVACILIK MAK. SAVUNMA A.Ş.',
+            'KAYMAZLAR SAVUNMA VE HAVACILIK LTD. ŞTİ.',
+            'UYGUR SAV.VE END.TİC.İNŞ.TAAH.LTD.ŞTİ',
+            'EKİP SERVİS SAN. VE TİC. LTD.ŞTİ.',
+            'ANADOLU OPTOMEKANİK TEKN. SAN. TİC. A.Ş.',
+            'BİRBEN MAKİNA İMALAT İTHALAT A.Ş.',
+            'METEKSAN SAVUNMA SANAYİ A.Ş',
+            'GEMAK GEMİ İNŞ. SAN. VE TİC. A.Ş.',
+            'OPHIR OPTRONICS SOLUTION LTD',
+            'MİLLİ EĞİTİM BAKANLIĞI DERS ALETLERİ YAPIM MERKEZİ',
+            'MY LASER MEKANİK ELEKT. OPTİK VE MED. SİS. A.Ş.',
+            'İNTERPREYO MÜHENDİSLİK LTD. ŞTİ.',
+            'BURGU METAL SAN VE TİC. LTD. ŞTİ.',
+            'MENATEK SAVUNMA TEKNOLOJİLERİ SAN.TİC.A.Ş.',
+            'TRAKYA ENDÜSTRİ FABRİKA MALZ. PAZ.SAN.VE TİC. A.Ş.',
+            'GEMPA ELEKTRO MEKANİK MÜH .LTD. ŞTİ.',
+            'GÜVENSOY İNŞAAT VE SANAYİ A.Ş.',
+            'MUHARREM KILINÇ',
+            'NANODEV TEKNOLOJİ A.Ş.']
+        let paramIndex = 1 // Eğer search varsa, depo parametreleri 2. parametreden başlar
+
+        // notCariList.forEach((cari, i) => {
+        //     tigerCariOku.input(`cari${i}`, mssql.NVarChar, cari)
+        // });
+        // const caris = notCariList.map((_, i) => `@cari${i}`).join(', ');
+
+        const siparisCek = await tigerCariOku.query(
+            `
+SELECT cari, max(siparis_adet) as siparis_adet,SUM(sevk_miktar) as sevk_adet,siparis_no, AVG(fiyat) fiyat ,malzeme_kodu FROM(
+SELECT cari,siparis_no,SUM(sevk_miktar) as sevk_miktar ,SUM(siparis_adet) as siparis_adet, AVG(fiyat) as fiyat ,malzeme_kodu FROM (
+SELECT         CL.DEFINITION_ AS cari, CONVERT(NVARCHAR, ORF.DATE_, 104) AS siparis_tarih, CONVERT(NVARCHAR, ORL.DUEDATE, 104)
+                         AS teslim_tarih, ORF.DOCODE AS siparis_no, 'MALZEME' AS tur, ITM.CODE AS malzeme_kodu,
+                         SUM(ORL.SHIPPEDAMOUNT) AS sevk_miktar, ORL.PRICE AS fiyat,
+                       SUM(ORL.AMOUNT) AS siparis_adet
+FROM            dbo.LG_225_01_ORFLINE AS ORL INNER JOIN
+                         dbo.LG_225_01_ORFICHE AS ORF ON ORL.ORDFICHEREF = ORF.LOGICALREF INNER JOIN
+                         dbo.LG_225_ITEMS AS ITM ON ORL.STOCKREF = ITM.LOGICALREF INNER JOIN
+                         dbo.LG_225_CLCARD AS CL ON ORL.CLIENTREF = CL.LOGICALREF INNER JOIN
+                         LG_225_PROJECT PRJ ON ORL.PROJECTREF = PRJ.LOGICALREF
+WHERE        (ORL.LINETYPE = 0) AND (ORF.TRCODE = 1) AND ORF.CANCELLED = 0 AND ORL.CLOSED = 0 AND ORF.STATUS=4 AND ORL.PRICE>10 AND ITM.CODE = '${urun_kodu}'
+AND CL.DEFINITION_ NOT IN (
+   'ANADOLU OPTOMEKANİK TEKNOLOJiLERi A.Ş.',
+            'AET ELECTRONICS MÜHENDİSLİK SAN. TİC. A.Ş.',
+            'AKS KAPLAMA VE BOYA SAN. TİC. LTD. ŞTİ.',
+            'ANADOLU OPTOMEKANIK TEKNOLOJiLERi A.Ş.',
+            'CHONGQING WANCAI OPTICAL INSTRUMENT CO.,LTD. (EUR)',
+            'KÖPRÜÖREN MAKİNE İNŞ. GIDA İTH. İHR. SAN. TİC. LTD. ŞTİ.',
+            'MİKRON MAKİNA SAN.TİC.LTD.ŞTİ.',
+            'SİMSOFT BİLGİSAYAR TEKNOLOJİLERİ LTD. ŞTİ.',
+            'CNK ELEKTRONİK MAKİNA SANAYİ A.Ş.',
+            'GÖKBEY MÜHENDİSLİK MAK. LTD.ŞTİ.',
+            'İMA SAVUNMA SANAYİ VE TİC. A.Ş.',
+            'KADİR BORA - BORA TİCARET',
+            'OSTİM AKÜMÜLATÖR OTOMOTİV SAN. VE TİC. A.Ş.',
+            'PANGEA METAL SANAYİ VE TİC. LTD. ŞTİ.',
+            'SİVAS MİKRO MEKANİK TEKN. A.Ş.',
+            'TRABZON ŞEHİT MERİÇ ALEMDAR POLİS MESLEK EĞİTİM MÜD.',
+            'ALTECHNA UAB',
+            'ASSAN ELEKTRONİK İMALAT PAZ. SAN.TİC.AŞ',
+            'OJSC "MMW named after S.I. VAVILOV',
+            'TAYFX HASSAS OPTİK MEKANİK SAN TİC A.Ş.',
+            'ATASAV MÜH. HAVACILIK MAK. SAVUNMA A.Ş.',
+            'KAYMAZLAR SAVUNMA VE HAVACILIK LTD. ŞTİ.',
+            'UYGUR SAV.VE END.TİC.İNŞ.TAAH.LTD.ŞTİ',
+            'EKİP SERVİS SAN. VE TİC. LTD.ŞTİ.',
+            'ANADOLU OPTOMEKANİK TEKN. SAN. TİC. A.Ş.',
+            'BİRBEN MAKİNA İMALAT İTHALAT A.Ş.',
+            'METEKSAN SAVUNMA SANAYİ A.Ş',
+            'GEMAK GEMİ İNŞ. SAN. VE TİC. A.Ş.',
+            'OPHIR OPTRONICS SOLUTION LTD',
+            'MİLLİ EĞİTİM BAKANLIĞI DERS ALETLERİ YAPIM MERKEZİ',
+            'MY LASER MEKANİK ELEKT. OPTİK VE MED. SİS. A.Ş.',
+            'İNTERPREYO MÜHENDİSLİK LTD. ŞTİ.',
+            'BURGU METAL SAN VE TİC. LTD. ŞTİ.',
+            'MENATEK SAVUNMA TEKNOLOJİLERİ SAN.TİC.A.Ş.',
+            'TRAKYA ENDÜSTRİ FABRİKA MALZ. PAZ.SAN.VE TİC. A.Ş.',
+            'GEMPA ELEKTRO MEKANİK MÜH .LTD. ŞTİ.',
+            'GÜVENSOY İNŞAAT VE SANAYİ A.Ş.',
+            'MUHARREM KILINÇ',
+            'NANODEV TEKNOLOJİ A.Ş.'
+)
+ GROUP BY  CL.DEFINITION_,ORF.DATE_,ORL.DUEDATE, ORF.DOCODE ,ITM.CODE,ORL.SHIPPEDAMOUNT , ORL.PRICE
+
+UNION ALL
+SELECT         CL.DEFINITION_ AS cari, CONVERT(NVARCHAR, ORF.DATE_, 104) AS siparis_tarih, CONVERT(NVARCHAR, ORL.DUEDATE, 104)
+                         AS teslim_tarih, ORF.DOCODE AS siparis_no, 'HİZMET' AS tur, ITM.CODE AS malzeme_kodu,
+                         SUM(ORL.SHIPPEDAMOUNT) AS sevk_miktar, ORL.PRICE AS fiyat,
+                       SUM(ORL.AMOUNT) AS siparis_adet
+FROM            dbo.LG_225_01_ORFLINE AS ORL INNER JOIN
+                         dbo.LG_225_01_ORFICHE AS ORF ON ORL.ORDFICHEREF = ORF.LOGICALREF INNER JOIN
+                         dbo.LG_225_SRVCARD AS ITM ON ORL.STOCKREF = ITM.LOGICALREF INNER JOIN
+                         dbo.LG_225_CLCARD AS CL ON ORL.CLIENTREF = CL.LOGICALREF INNER JOIN
+                         LG_225_PROJECT PRJ ON ORL.PROJECTREF = PRJ.LOGICALREF
+WHERE        (ORL.LINETYPE = 4) AND (ORF.TRCODE = 1) AND ORF.CANCELLED = 0 AND ORL.CLOSED = 0 AND ORF.STATUS=4 AND ORL.PRICE>10 AND ITM.CODE = '${urun_kodu}'
+AND CL.DEFINITION_ NOT IN (
+   'ANADOLU OPTOMEKANİK TEKNOLOJiLERi A.Ş.',
+            'AET ELECTRONICS MÜHENDİSLİK SAN. TİC. A.Ş.',
+            'AKS KAPLAMA VE BOYA SAN. TİC. LTD. ŞTİ.',
+            'ANADOLU OPTOMEKANIK TEKNOLOJiLERi A.Ş.',
+            'CHONGQING WANCAI OPTICAL INSTRUMENT CO.,LTD. (EUR)',
+            'KÖPRÜÖREN MAKİNE İNŞ. GIDA İTH. İHR. SAN. TİC. LTD. ŞTİ.',
+            'MİKRON MAKİNA SAN.TİC.LTD.ŞTİ.',
+            'SİMSOFT BİLGİSAYAR TEKNOLOJİLERİ LTD. ŞTİ.',
+            'CNK ELEKTRONİK MAKİNA SANAYİ A.Ş.',
+            'GÖKBEY MÜHENDİSLİK MAK. LTD.ŞTİ.',
+            'İMA SAVUNMA SANAYİ VE TİC. A.Ş.',
+            'KADİR BORA - BORA TİCARET',
+            'OSTİM AKÜMÜLATÖR OTOMOTİV SAN. VE TİC. A.Ş.',
+            'PANGEA METAL SANAYİ VE TİC. LTD. ŞTİ.',
+            'SİVAS MİKRO MEKANİK TEKN. A.Ş.',
+            'TRABZON ŞEHİT MERİÇ ALEMDAR POLİS MESLEK EĞİTİM MÜD.',
+            'ALTECHNA UAB',
+            'ASSAN ELEKTRONİK İMALAT PAZ. SAN.TİC.AŞ',
+            'OJSC "MMW named after S.I. VAVILOV',
+            'TAYFX HASSAS OPTİK MEKANİK SAN TİC A.Ş.',
+            'ATASAV MÜH. HAVACILIK MAK. SAVUNMA A.Ş.',
+            'KAYMAZLAR SAVUNMA VE HAVACILIK LTD. ŞTİ.',
+            'UYGUR SAV.VE END.TİC.İNŞ.TAAH.LTD.ŞTİ',
+            'EKİP SERVİS SAN. VE TİC. LTD.ŞTİ.',
+            'ANADOLU OPTOMEKANİK TEKN. SAN. TİC. A.Ş.',
+            'BİRBEN MAKİNA İMALAT İTHALAT A.Ş.',
+            'METEKSAN SAVUNMA SANAYİ A.Ş',
+            'GEMAK GEMİ İNŞ. SAN. VE TİC. A.Ş.',
+            'OPHIR OPTRONICS SOLUTION LTD',
+            'MİLLİ EĞİTİM BAKANLIĞI DERS ALETLERİ YAPIM MERKEZİ',
+            'MY LASER MEKANİK ELEKT. OPTİK VE MED. SİS. A.Ş.',
+            'İNTERPREYO MÜHENDİSLİK LTD. ŞTİ.',
+            'BURGU METAL SAN VE TİC. LTD. ŞTİ.',
+            'MENATEK SAVUNMA TEKNOLOJİLERİ SAN.TİC.A.Ş.',
+            'TRAKYA ENDÜSTRİ FABRİKA MALZ. PAZ.SAN.VE TİC. A.Ş.',
+            'GEMPA ELEKTRO MEKANİK MÜH .LTD. ŞTİ.',
+            'GÜVENSOY İNŞAAT VE SANAYİ A.Ş.',
+            'MUHARREM KILINÇ',
+            'NANODEV TEKNOLOJİ A.Ş.'
+)
+ GROUP BY  CL.DEFINITION_,ORF.DATE_,ORL.DUEDATE, ORF.DOCODE ,ITM.CODE,ORL.SHIPPEDAMOUNT , ORL.PRICE
+UNION ALL
+SELECT         CL.DEFINITION_ AS cari, CONVERT(NVARCHAR, ORF.DATE_, 104) AS siparis_tarih, CONVERT(NVARCHAR, ORL.DUEDATE, 104)
+                         AS teslim_tarih, ORF.DOCODE AS siparis_no, 'MALZEME' AS tur, ITM.CODE AS malzeme_kodu,
+                         SUM(ORL.SHIPPEDAMOUNT) AS sevk_miktar, ORL.PRICE AS fiyat,
+                         SUM(ORL.AMOUNT) AS siparis_adet
+FROM            dbo.LG_224_01_ORFLINE AS ORL INNER JOIN
+                         dbo.LG_224_01_ORFICHE AS ORF ON ORL.ORDFICHEREF = ORF.LOGICALREF INNER JOIN
+                         dbo.LG_224_ITEMS AS ITM ON ORL.STOCKREF = ITM.LOGICALREF INNER JOIN
+                         dbo.LG_224_CLCARD AS CL ON ORL.CLIENTREF = CL.LOGICALREF INNER JOIN
+                         LG_224_PROJECT PRJ ON ORL.PROJECTREF = PRJ.LOGICALREF
+WHERE        (ORL.LINETYPE = 0) AND (ORF.TRCODE = 1) AND ORF.CANCELLED = 0 AND ORL.CLOSED = 0 AND ORF.STATUS=4 AND ORL.PRICE>10 AND ITM.CODE = '${urun_kodu}'
+AND CL.DEFINITION_ NOT IN (
+   'ANADOLU OPTOMEKANİK TEKNOLOJiLERi A.Ş.',
+            'AET ELECTRONICS MÜHENDİSLİK SAN. TİC. A.Ş.',
+            'AKS KAPLAMA VE BOYA SAN. TİC. LTD. ŞTİ.',
+            'ANADOLU OPTOMEKANIK TEKNOLOJiLERi A.Ş.',
+            'CHONGQING WANCAI OPTICAL INSTRUMENT CO.,LTD. (EUR)',
+            'KÖPRÜÖREN MAKİNE İNŞ. GIDA İTH. İHR. SAN. TİC. LTD. ŞTİ.',
+            'MİKRON MAKİNA SAN.TİC.LTD.ŞTİ.',
+            'SİMSOFT BİLGİSAYAR TEKNOLOJİLERİ LTD. ŞTİ.',
+            'CNK ELEKTRONİK MAKİNA SANAYİ A.Ş.',
+            'GÖKBEY MÜHENDİSLİK MAK. LTD.ŞTİ.',
+            'İMA SAVUNMA SANAYİ VE TİC. A.Ş.',
+            'KADİR BORA - BORA TİCARET',
+            'OSTİM AKÜMÜLATÖR OTOMOTİV SAN. VE TİC. A.Ş.',
+            'PANGEA METAL SANAYİ VE TİC. LTD. ŞTİ.',
+            'SİVAS MİKRO MEKANİK TEKN. A.Ş.',
+            'TRABZON ŞEHİT MERİÇ ALEMDAR POLİS MESLEK EĞİTİM MÜD.',
+            'ALTECHNA UAB',
+            'ASSAN ELEKTRONİK İMALAT PAZ. SAN.TİC.AŞ',
+            'OJSC "MMW named after S.I. VAVILOV',
+            'TAYFX HASSAS OPTİK MEKANİK SAN TİC A.Ş.',
+            'ATASAV MÜH. HAVACILIK MAK. SAVUNMA A.Ş.',
+            'KAYMAZLAR SAVUNMA VE HAVACILIK LTD. ŞTİ.',
+            'UYGUR SAV.VE END.TİC.İNŞ.TAAH.LTD.ŞTİ',
+            'EKİP SERVİS SAN. VE TİC. LTD.ŞTİ.',
+            'ANADOLU OPTOMEKANİK TEKN. SAN. TİC. A.Ş.',
+            'BİRBEN MAKİNA İMALAT İTHALAT A.Ş.',
+            'METEKSAN SAVUNMA SANAYİ A.Ş',
+            'GEMAK GEMİ İNŞ. SAN. VE TİC. A.Ş.',
+            'OPHIR OPTRONICS SOLUTION LTD',
+            'MİLLİ EĞİTİM BAKANLIĞI DERS ALETLERİ YAPIM MERKEZİ',
+            'MY LASER MEKANİK ELEKT. OPTİK VE MED. SİS. A.Ş.',
+            'İNTERPREYO MÜHENDİSLİK LTD. ŞTİ.',
+            'BURGU METAL SAN VE TİC. LTD. ŞTİ.',
+            'MENATEK SAVUNMA TEKNOLOJİLERİ SAN.TİC.A.Ş.',
+            'TRAKYA ENDÜSTRİ FABRİKA MALZ. PAZ.SAN.VE TİC. A.Ş.',
+            'GEMPA ELEKTRO MEKANİK MÜH .LTD. ŞTİ.',
+            'GÜVENSOY İNŞAAT VE SANAYİ A.Ş.',
+            'MUHARREM KILINÇ',
+            'NANODEV TEKNOLOJİ A.Ş.'
+)
+ GROUP BY  CL.DEFINITION_,ORF.DATE_,ORL.DUEDATE, ORF.DOCODE ,ITM.CODE,ORL.SHIPPEDAMOUNT , ORL.PRICE
+UNION ALL
+SELECT         CL.DEFINITION_ AS cari, CONVERT(NVARCHAR, ORF.DATE_, 104) AS siparis_tarih, CONVERT(NVARCHAR, ORL.DUEDATE, 104)
+                         AS teslim_tarih, ORF.DOCODE AS siparis_no, 'HİZMET' AS tur, ITM.CODE AS malzeme_kodu,
+                         SUM(ORL.SHIPPEDAMOUNT) AS sevk_miktar, ORL.PRICE AS fiyat,
+                       SUM(ORL.AMOUNT) AS siparis_adet
+FROM            dbo.LG_224_01_ORFLINE AS ORL INNER JOIN
+                         dbo.LG_224_01_ORFICHE AS ORF ON ORL.ORDFICHEREF = ORF.LOGICALREF INNER JOIN
+                         dbo.LG_224_SRVCARD AS ITM ON ORL.STOCKREF = ITM.LOGICALREF INNER JOIN
+                         dbo.LG_224_CLCARD AS CL ON ORL.CLIENTREF = CL.LOGICALREF INNER JOIN
+                         LG_224_PROJECT PRJ ON ORL.PROJECTREF = PRJ.LOGICALREF
+WHERE        (ORL.LINETYPE = 4) AND (ORF.TRCODE = 1) AND ORF.CANCELLED = 0 AND ORL.CLOSED = 0 AND ORF.STATUS=4 AND ORL.PRICE>10 AND ITM.CODE = '${urun_kodu}'
+AND CL.DEFINITION_ NOT IN (
+   'ANADOLU OPTOMEKANİK TEKNOLOJiLERi A.Ş.',
+            'AET ELECTRONICS MÜHENDİSLİK SAN. TİC. A.Ş.',
+            'AKS KAPLAMA VE BOYA SAN. TİC. LTD. ŞTİ.',
+            'ANADOLU OPTOMEKANIK TEKNOLOJiLERi A.Ş.',
+            'CHONGQING WANCAI OPTICAL INSTRUMENT CO.,LTD. (EUR)',
+            'KÖPRÜÖREN MAKİNE İNŞ. GIDA İTH. İHR. SAN. TİC. LTD. ŞTİ.',
+            'MİKRON MAKİNA SAN.TİC.LTD.ŞTİ.',
+            'SİMSOFT BİLGİSAYAR TEKNOLOJİLERİ LTD. ŞTİ.',
+            'CNK ELEKTRONİK MAKİNA SANAYİ A.Ş.',
+            'GÖKBEY MÜHENDİSLİK MAK. LTD.ŞTİ.',
+            'İMA SAVUNMA SANAYİ VE TİC. A.Ş.',
+            'KADİR BORA - BORA TİCARET',
+            'OSTİM AKÜMÜLATÖR OTOMOTİV SAN. VE TİC. A.Ş.',
+            'PANGEA METAL SANAYİ VE TİC. LTD. ŞTİ.',
+            'SİVAS MİKRO MEKANİK TEKN. A.Ş.',
+            'TRABZON ŞEHİT MERİÇ ALEMDAR POLİS MESLEK EĞİTİM MÜD.',
+            'ALTECHNA UAB',
+            'ASSAN ELEKTRONİK İMALAT PAZ. SAN.TİC.AŞ',
+            'OJSC "MMW named after S.I. VAVILOV',
+            'TAYFX HASSAS OPTİK MEKANİK SAN TİC A.Ş.',
+            'ATASAV MÜH. HAVACILIK MAK. SAVUNMA A.Ş.',
+            'KAYMAZLAR SAVUNMA VE HAVACILIK LTD. ŞTİ.',
+            'UYGUR SAV.VE END.TİC.İNŞ.TAAH.LTD.ŞTİ',
+            'EKİP SERVİS SAN. VE TİC. LTD.ŞTİ.',
+            'ANADOLU OPTOMEKANİK TEKN. SAN. TİC. A.Ş.',
+            'BİRBEN MAKİNA İMALAT İTHALAT A.Ş.',
+            'METEKSAN SAVUNMA SANAYİ A.Ş',
+            'GEMAK GEMİ İNŞ. SAN. VE TİC. A.Ş.',
+            'OPHIR OPTRONICS SOLUTION LTD',
+            'MİLLİ EĞİTİM BAKANLIĞI DERS ALETLERİ YAPIM MERKEZİ',
+            'MY LASER MEKANİK ELEKT. OPTİK VE MED. SİS. A.Ş.',
+            'İNTERPREYO MÜHENDİSLİK LTD. ŞTİ.',
+            'BURGU METAL SAN VE TİC. LTD. ŞTİ.',
+            'MENATEK SAVUNMA TEKNOLOJİLERİ SAN.TİC.A.Ş.',
+            'TRAKYA ENDÜSTRİ FABRİKA MALZ. PAZ.SAN.VE TİC. A.Ş.',
+            'GEMPA ELEKTRO MEKANİK MÜH .LTD. ŞTİ.',
+            'GÜVENSOY İNŞAAT VE SANAYİ A.Ş.',
+            'MUHARREM KILINÇ',
+            'NANODEV TEKNOLOJİ A.Ş.'
+)
+ GROUP BY  CL.DEFINITION_,ORF.DATE_,ORL.DUEDATE, ORF.DOCODE ,ITM.CODE,ORL.SHIPPEDAMOUNT , ORL.PRICE
+
+UNION ALL
+SELECT         CL.DEFINITION_ AS cari, CONVERT(NVARCHAR, ORF.DATE_, 104) AS siparis_tarih, CONVERT(NVARCHAR, ORL.DUEDATE, 104)
+                         AS teslim_tarih, ORF.DOCODE AS siparis_no, 'MALZEME' AS tur, ITM.CODE AS malzeme_kodu,
+                         SUM(ORL.SHIPPEDAMOUNT) AS sevk_miktar, ORL.PRICE AS fiyat,
+                         SUM(ORL.AMOUNT) AS siparis_adet
+FROM            dbo.LG_223_01_ORFLINE AS ORL INNER JOIN
+                         dbo.LG_223_01_ORFICHE AS ORF ON ORL.ORDFICHEREF = ORF.LOGICALREF INNER JOIN
+                         dbo.LG_223_ITEMS AS ITM ON ORL.STOCKREF = ITM.LOGICALREF INNER JOIN
+                         dbo.LG_223_CLCARD AS CL ON ORL.CLIENTREF = CL.LOGICALREF INNER JOIN
+                         LG_223_PROJECT PRJ ON ORL.PROJECTREF = PRJ.LOGICALREF
+WHERE        (ORL.LINETYPE = 0) AND (ORF.TRCODE = 1) AND ORF.CANCELLED = 0 AND ORL.CLOSED = 0 AND ORF.STATUS=4 AND ORL.PRICE>10 AND ITM.CODE = '${urun_kodu}'
+AND CL.DEFINITION_ NOT IN (
+   'ANADOLU OPTOMEKANİK TEKNOLOJiLERi A.Ş.',
+            'AET ELECTRONICS MÜHENDİSLİK SAN. TİC. A.Ş.',
+            'AKS KAPLAMA VE BOYA SAN. TİC. LTD. ŞTİ.',
+            'ANADOLU OPTOMEKANIK TEKNOLOJiLERi A.Ş.',
+            'CHONGQING WANCAI OPTICAL INSTRUMENT CO.,LTD. (EUR)',
+            'KÖPRÜÖREN MAKİNE İNŞ. GIDA İTH. İHR. SAN. TİC. LTD. ŞTİ.',
+            'MİKRON MAKİNA SAN.TİC.LTD.ŞTİ.',
+            'SİMSOFT BİLGİSAYAR TEKNOLOJİLERİ LTD. ŞTİ.',
+            'CNK ELEKTRONİK MAKİNA SANAYİ A.Ş.',
+            'GÖKBEY MÜHENDİSLİK MAK. LTD.ŞTİ.',
+            'İMA SAVUNMA SANAYİ VE TİC. A.Ş.',
+            'KADİR BORA - BORA TİCARET',
+            'OSTİM AKÜMÜLATÖR OTOMOTİV SAN. VE TİC. A.Ş.',
+            'PANGEA METAL SANAYİ VE TİC. LTD. ŞTİ.',
+            'SİVAS MİKRO MEKANİK TEKN. A.Ş.',
+            'TRABZON ŞEHİT MERİÇ ALEMDAR POLİS MESLEK EĞİTİM MÜD.',
+            'ALTECHNA UAB',
+            'ASSAN ELEKTRONİK İMALAT PAZ. SAN.TİC.AŞ',
+            'OJSC "MMW named after S.I. VAVILOV',
+            'TAYFX HASSAS OPTİK MEKANİK SAN TİC A.Ş.',
+            'ATASAV MÜH. HAVACILIK MAK. SAVUNMA A.Ş.',
+            'KAYMAZLAR SAVUNMA VE HAVACILIK LTD. ŞTİ.',
+            'UYGUR SAV.VE END.TİC.İNŞ.TAAH.LTD.ŞTİ',
+            'EKİP SERVİS SAN. VE TİC. LTD.ŞTİ.',
+            'ANADOLU OPTOMEKANİK TEKN. SAN. TİC. A.Ş.',
+            'BİRBEN MAKİNA İMALAT İTHALAT A.Ş.',
+            'METEKSAN SAVUNMA SANAYİ A.Ş',
+            'GEMAK GEMİ İNŞ. SAN. VE TİC. A.Ş.',
+            'OPHIR OPTRONICS SOLUTION LTD',
+            'MİLLİ EĞİTİM BAKANLIĞI DERS ALETLERİ YAPIM MERKEZİ',
+            'MY LASER MEKANİK ELEKT. OPTİK VE MED. SİS. A.Ş.',
+            'İNTERPREYO MÜHENDİSLİK LTD. ŞTİ.',
+            'BURGU METAL SAN VE TİC. LTD. ŞTİ.',
+            'MENATEK SAVUNMA TEKNOLOJİLERİ SAN.TİC.A.Ş.',
+            'TRAKYA ENDÜSTRİ FABRİKA MALZ. PAZ.SAN.VE TİC. A.Ş.',
+            'GEMPA ELEKTRO MEKANİK MÜH .LTD. ŞTİ.',
+            'GÜVENSOY İNŞAAT VE SANAYİ A.Ş.',
+            'MUHARREM KILINÇ',
+            'NANODEV TEKNOLOJİ A.Ş.'
+)
+ GROUP BY  CL.DEFINITION_,ORF.DATE_,ORL.DUEDATE, ORF.DOCODE ,ITM.CODE,ORL.SHIPPEDAMOUNT , ORL.PRICE
+
+UNION ALL
+SELECT         CL.DEFINITION_ AS cari, CONVERT(NVARCHAR, ORF.DATE_, 104) AS siparis_tarih, CONVERT(NVARCHAR, ORL.DUEDATE, 104)
+                         AS teslim_tarih, ORF.DOCODE AS siparis_no, 'HİZMET' AS tur, ITM.CODE AS malzeme_kodu,
+                         SUM(ORL.SHIPPEDAMOUNT) AS sevk_miktar, ORL.PRICE AS fiyat,
+                       SUM(ORL.AMOUNT) AS siparis_adet
+FROM            dbo.LG_223_01_ORFLINE AS ORL INNER JOIN
+                         dbo.LG_223_01_ORFICHE AS ORF ON ORL.ORDFICHEREF = ORF.LOGICALREF INNER JOIN
+                         dbo.LG_223_SRVCARD AS ITM ON ORL.STOCKREF = ITM.LOGICALREF INNER JOIN
+                         dbo.LG_223_CLCARD AS CL ON ORL.CLIENTREF = CL.LOGICALREF INNER JOIN
+                         LG_223_PROJECT PRJ ON ORL.PROJECTREF = PRJ.LOGICALREF
+WHERE        (ORL.LINETYPE = 4) AND (ORF.TRCODE = 1) AND ORF.CANCELLED = 0 AND ORL.CLOSED = 0 AND ORF.STATUS=4 AND ORL.PRICE>10 AND ITM.CODE = '${urun_kodu}'
+AND CL.DEFINITION_ NOT IN (
+   'ANADOLU OPTOMEKANİK TEKNOLOJiLERi A.Ş.',
+            'AET ELECTRONICS MÜHENDİSLİK SAN. TİC. A.Ş.',
+            'AKS KAPLAMA VE BOYA SAN. TİC. LTD. ŞTİ.',
+            'ANADOLU OPTOMEKANIK TEKNOLOJiLERi A.Ş.',
+            'CHONGQING WANCAI OPTICAL INSTRUMENT CO.,LTD. (EUR)',
+            'KÖPRÜÖREN MAKİNE İNŞ. GIDA İTH. İHR. SAN. TİC. LTD. ŞTİ.',
+            'MİKRON MAKİNA SAN.TİC.LTD.ŞTİ.',
+            'SİMSOFT BİLGİSAYAR TEKNOLOJİLERİ LTD. ŞTİ.',
+            'CNK ELEKTRONİK MAKİNA SANAYİ A.Ş.',
+            'GÖKBEY MÜHENDİSLİK MAK. LTD.ŞTİ.',
+            'İMA SAVUNMA SANAYİ VE TİC. A.Ş.',
+            'KADİR BORA - BORA TİCARET',
+            'OSTİM AKÜMÜLATÖR OTOMOTİV SAN. VE TİC. A.Ş.',
+            'PANGEA METAL SANAYİ VE TİC. LTD. ŞTİ.',
+            'SİVAS MİKRO MEKANİK TEKN. A.Ş.',
+            'TRABZON ŞEHİT MERİÇ ALEMDAR POLİS MESLEK EĞİTİM MÜD.',
+            'ALTECHNA UAB',
+            'ASSAN ELEKTRONİK İMALAT PAZ. SAN.TİC.AŞ',
+            'OJSC "MMW named after S.I. VAVILOV',
+            'TAYFX HASSAS OPTİK MEKANİK SAN TİC A.Ş.',
+            'ATASAV MÜH. HAVACILIK MAK. SAVUNMA A.Ş.',
+            'KAYMAZLAR SAVUNMA VE HAVACILIK LTD. ŞTİ.',
+            'UYGUR SAV.VE END.TİC.İNŞ.TAAH.LTD.ŞTİ',
+            'EKİP SERVİS SAN. VE TİC. LTD.ŞTİ.',
+            'ANADOLU OPTOMEKANİK TEKN. SAN. TİC. A.Ş.',
+            'BİRBEN MAKİNA İMALAT İTHALAT A.Ş.',
+            'METEKSAN SAVUNMA SANAYİ A.Ş',
+            'GEMAK GEMİ İNŞ. SAN. VE TİC. A.Ş.',
+            'OPHIR OPTRONICS SOLUTION LTD',
+            'MİLLİ EĞİTİM BAKANLIĞI DERS ALETLERİ YAPIM MERKEZİ',
+            'MY LASER MEKANİK ELEKT. OPTİK VE MED. SİS. A.Ş.',
+            'İNTERPREYO MÜHENDİSLİK LTD. ŞTİ.',
+            'BURGU METAL SAN VE TİC. LTD. ŞTİ.',
+            'MENATEK SAVUNMA TEKNOLOJİLERİ SAN.TİC.A.Ş.',
+            'TRAKYA ENDÜSTRİ FABRİKA MALZ. PAZ.SAN.VE TİC. A.Ş.',
+            'GEMPA ELEKTRO MEKANİK MÜH .LTD. ŞTİ.',
+            'GÜVENSOY İNŞAAT VE SANAYİ A.Ş.',
+            'MUHARREM KILINÇ',
+            'NANODEV TEKNOLOJİ A.Ş.'
+)
+ GROUP BY  CL.DEFINITION_,ORF.DATE_,ORL.DUEDATE, ORF.DOCODE ,ITM.CODE,ORL.SHIPPEDAMOUNT , ORL.PRICE
+
+UNION ALL
+SELECT         CL.DEFINITION_ AS cari, CONVERT(NVARCHAR, ORF.DATE_, 104) AS siparis_tarih, CONVERT(NVARCHAR, ORL.DUEDATE, 104)
+                         AS teslim_tarih, ORF.DOCODE AS siparis_no, 'MALZEME' AS tur, ITM.CODE AS malzeme_kodu,
+                         SUM(ORL.SHIPPEDAMOUNT) AS sevk_miktar, ORL.PRICE AS fiyat,
+                        SUM(ORL.AMOUNT) AS siparis_adet
+FROM            dbo.LG_018_01_ORFLINE AS ORL INNER JOIN
+                         dbo.LG_018_01_ORFICHE AS ORF ON ORL.ORDFICHEREF = ORF.LOGICALREF INNER JOIN
+                         dbo.LG_018_ITEMS AS ITM ON ORL.STOCKREF = ITM.LOGICALREF INNER JOIN
+                         dbo.LG_018_CLCARD AS CL ON ORL.CLIENTREF = CL.LOGICALREF INNER JOIN
+                         LG_018_PROJECT PRJ ON ORL.PROJECTREF = PRJ.LOGICALREF
+WHERE        (ORL.LINETYPE = 0) AND (ORF.TRCODE = 1) AND ORF.CANCELLED = 0 AND ORL.CLOSED = 0 AND ORF.STATUS=4 AND ORL.PRICE>10 AND ITM.CODE = '${urun_kodu}'
+ AND CL.DEFINITION_ NOT IN (
+   'ANADOLU OPTOMEKANİK TEKNOLOJiLERi A.Ş.',
+            'AET ELECTRONICS MÜHENDİSLİK SAN. TİC. A.Ş.',
+            'AKS KAPLAMA VE BOYA SAN. TİC. LTD. ŞTİ.',
+            'ANADOLU OPTOMEKANIK TEKNOLOJiLERi A.Ş.',
+            'CHONGQING WANCAI OPTICAL INSTRUMENT CO.,LTD. (EUR)',
+            'KÖPRÜÖREN MAKİNE İNŞ. GIDA İTH. İHR. SAN. TİC. LTD. ŞTİ.',
+            'MİKRON MAKİNA SAN.TİC.LTD.ŞTİ.',
+            'SİMSOFT BİLGİSAYAR TEKNOLOJİLERİ LTD. ŞTİ.',
+            'CNK ELEKTRONİK MAKİNA SANAYİ A.Ş.',
+            'GÖKBEY MÜHENDİSLİK MAK. LTD.ŞTİ.',
+            'İMA SAVUNMA SANAYİ VE TİC. A.Ş.',
+            'KADİR BORA - BORA TİCARET',
+            'OSTİM AKÜMÜLATÖR OTOMOTİV SAN. VE TİC. A.Ş.',
+            'PANGEA METAL SANAYİ VE TİC. LTD. ŞTİ.',
+            'SİVAS MİKRO MEKANİK TEKN. A.Ş.',
+            'TRABZON ŞEHİT MERİÇ ALEMDAR POLİS MESLEK EĞİTİM MÜD.',
+            'ALTECHNA UAB',
+            'ASSAN ELEKTRONİK İMALAT PAZ. SAN.TİC.AŞ',
+            'OJSC "MMW named after S.I. VAVILOV',
+            'TAYFX HASSAS OPTİK MEKANİK SAN TİC A.Ş.',
+            'ATASAV MÜH. HAVACILIK MAK. SAVUNMA A.Ş.',
+            'KAYMAZLAR SAVUNMA VE HAVACILIK LTD. ŞTİ.',
+            'UYGUR SAV.VE END.TİC.İNŞ.TAAH.LTD.ŞTİ',
+            'EKİP SERVİS SAN. VE TİC. LTD.ŞTİ.',
+            'ANADOLU OPTOMEKANİK TEKN. SAN. TİC. A.Ş.',
+            'BİRBEN MAKİNA İMALAT İTHALAT A.Ş.',
+            'METEKSAN SAVUNMA SANAYİ A.Ş',
+            'GEMAK GEMİ İNŞ. SAN. VE TİC. A.Ş.',
+            'OPHIR OPTRONICS SOLUTION LTD',
+            'MİLLİ EĞİTİM BAKANLIĞI DERS ALETLERİ YAPIM MERKEZİ',
+            'MY LASER MEKANİK ELEKT. OPTİK VE MED. SİS. A.Ş.',
+            'İNTERPREYO MÜHENDİSLİK LTD. ŞTİ.',
+            'BURGU METAL SAN VE TİC. LTD. ŞTİ.',
+            'MENATEK SAVUNMA TEKNOLOJİLERİ SAN.TİC.A.Ş.',
+            'TRAKYA ENDÜSTRİ FABRİKA MALZ. PAZ.SAN.VE TİC. A.Ş.',
+            'GEMPA ELEKTRO MEKANİK MÜH .LTD. ŞTİ.',
+            'GÜVENSOY İNŞAAT VE SANAYİ A.Ş.',
+            'MUHARREM KILINÇ',
+            'NANODEV TEKNOLOJİ A.Ş.'
+)
+
+ GROUP BY  CL.DEFINITION_,ORF.DATE_,ORL.DUEDATE, ORF.DOCODE ,ITM.CODE,ORL.SHIPPEDAMOUNT , ORL.PRICE
+
+UNION ALL
+SELECT         CL.DEFINITION_ AS cari, CONVERT(NVARCHAR, ORF.DATE_, 104) AS siparis_tarih, CONVERT(NVARCHAR, ORL.DUEDATE, 104)
+                         AS teslim_tarih, ORF.DOCODE AS siparis_no, 'HİZMET' AS tur, ITM.CODE AS malzeme_kodu,
+                         SUM(ORL.SHIPPEDAMOUNT) AS sevk_miktar, ORL.PRICE AS fiyat,
+                       SUM(ORL.AMOUNT) AS siparis_adet
+FROM            dbo.LG_018_01_ORFLINE AS ORL INNER JOIN
+                         dbo.LG_018_01_ORFICHE AS ORF ON ORL.ORDFICHEREF = ORF.LOGICALREF INNER JOIN
+                         dbo.LG_018_SRVCARD AS ITM ON ORL.STOCKREF = ITM.LOGICALREF INNER JOIN
+                         dbo.LG_018_CLCARD AS CL ON ORL.CLIENTREF = CL.LOGICALREF INNER JOIN
+                         LG_018_PROJECT PRJ ON ORL.PROJECTREF = PRJ.LOGICALREF
+WHERE        (ORL.LINETYPE = 4) AND (ORF.TRCODE = 1) AND ORF.CANCELLED = 0 AND ORL.CLOSED = 0 AND ORF.STATUS=4 AND ORL.PRICE>10 AND ITM.CODE = '${urun_kodu}'
+AND CL.DEFINITION_ NOT IN (
+   'ANADOLU OPTOMEKANİK TEKNOLOJiLERi A.Ş.',
+            'AET ELECTRONICS MÜHENDİSLİK SAN. TİC. A.Ş.',
+            'AKS KAPLAMA VE BOYA SAN. TİC. LTD. ŞTİ.',
+            'ANADOLU OPTOMEKANIK TEKNOLOJiLERi A.Ş.',
+            'CHONGQING WANCAI OPTICAL INSTRUMENT CO.,LTD. (EUR)',
+            'KÖPRÜÖREN MAKİNE İNŞ. GIDA İTH. İHR. SAN. TİC. LTD. ŞTİ.',
+            'MİKRON MAKİNA SAN.TİC.LTD.ŞTİ.',
+            'SİMSOFT BİLGİSAYAR TEKNOLOJİLERİ LTD. ŞTİ.',
+            'CNK ELEKTRONİK MAKİNA SANAYİ A.Ş.',
+            'GÖKBEY MÜHENDİSLİK MAK. LTD.ŞTİ.',
+            'İMA SAVUNMA SANAYİ VE TİC. A.Ş.',
+            'KADİR BORA - BORA TİCARET',
+            'OSTİM AKÜMÜLATÖR OTOMOTİV SAN. VE TİC. A.Ş.',
+            'PANGEA METAL SANAYİ VE TİC. LTD. ŞTİ.',
+            'SİVAS MİKRO MEKANİK TEKN. A.Ş.',
+            'TRABZON ŞEHİT MERİÇ ALEMDAR POLİS MESLEK EĞİTİM MÜD.',
+            'ALTECHNA UAB',
+            'ASSAN ELEKTRONİK İMALAT PAZ. SAN.TİC.AŞ',
+            'OJSC "MMW named after S.I. VAVILOV',
+            'TAYFX HASSAS OPTİK MEKANİK SAN TİC A.Ş.',
+            'ATASAV MÜH. HAVACILIK MAK. SAVUNMA A.Ş.',
+            'KAYMAZLAR SAVUNMA VE HAVACILIK LTD. ŞTİ.',
+            'UYGUR SAV.VE END.TİC.İNŞ.TAAH.LTD.ŞTİ',
+            'EKİP SERVİS SAN. VE TİC. LTD.ŞTİ.',
+            'ANADOLU OPTOMEKANİK TEKN. SAN. TİC. A.Ş.',
+            'BİRBEN MAKİNA İMALAT İTHALAT A.Ş.',
+            'METEKSAN SAVUNMA SANAYİ A.Ş',
+            'GEMAK GEMİ İNŞ. SAN. VE TİC. A.Ş.',
+            'OPHIR OPTRONICS SOLUTION LTD',
+            'MİLLİ EĞİTİM BAKANLIĞI DERS ALETLERİ YAPIM MERKEZİ',
+            'MY LASER MEKANİK ELEKT. OPTİK VE MED. SİS. A.Ş.',
+            'İNTERPREYO MÜHENDİSLİK LTD. ŞTİ.',
+            'BURGU METAL SAN VE TİC. LTD. ŞTİ.',
+            'MENATEK SAVUNMA TEKNOLOJİLERİ SAN.TİC.A.Ş.',
+            'TRAKYA ENDÜSTRİ FABRİKA MALZ. PAZ.SAN.VE TİC. A.Ş.',
+            'GEMPA ELEKTRO MEKANİK MÜH .LTD. ŞTİ.',
+            'GÜVENSOY İNŞAAT VE SANAYİ A.Ş.',
+            'MUHARREM KILINÇ',
+            'NANODEV TEKNOLOJİ A.Ş.'
+)
+ GROUP BY  CL.DEFINITION_,ORF.DATE_,ORL.DUEDATE, ORF.DOCODE ,ITM.CODE,ORL.SHIPPEDAMOUNT , ORL.PRICE
+
+UNION ALL
+SELECT         CL.DEFINITION_ AS cari, CONVERT(NVARCHAR, ORF.DATE_, 104) AS siparis_tarih, CONVERT(NVARCHAR, ORL.DUEDATE, 104)
+                         AS teslim_tarih, ORF.DOCODE AS siparis_no, 'MALZEME' AS tur, ITM.CODE AS malzeme_kodu,
+                         SUM(ORL.SHIPPEDAMOUNT) AS sevk_miktar, ORL.PRICE AS fiyat,
+                        SUM(ORL.AMOUNT) AS siparis_adet
+FROM            dbo.LG_219_01_ORFLINE AS ORL INNER JOIN
+                         dbo.LG_219_01_ORFICHE AS ORF ON ORL.ORDFICHEREF = ORF.LOGICALREF INNER JOIN
+                         dbo.LG_219_ITEMS AS ITM ON ORL.STOCKREF = ITM.LOGICALREF INNER JOIN
+                         dbo.LG_219_CLCARD AS CL ON ORL.CLIENTREF = CL.LOGICALREF INNER JOIN
+                         LG_219_PROJECT PRJ ON ORL.PROJECTREF = PRJ.LOGICALREF
+WHERE        (ORL.LINETYPE = 0) AND (ORF.TRCODE = 1) AND ORF.CANCELLED = 0 AND ORL.CLOSED = 0 AND ORF.STATUS=4 AND ORL.PRICE>10 AND ITM.CODE = '${urun_kodu}'
+AND CL.DEFINITION_ NOT IN (
+   'ANADOLU OPTOMEKANİK TEKNOLOJiLERi A.Ş.',
+            'AET ELECTRONICS MÜHENDİSLİK SAN. TİC. A.Ş.',
+            'AKS KAPLAMA VE BOYA SAN. TİC. LTD. ŞTİ.',
+            'ANADOLU OPTOMEKANIK TEKNOLOJiLERi A.Ş.',
+            'CHONGQING WANCAI OPTICAL INSTRUMENT CO.,LTD. (EUR)',
+            'KÖPRÜÖREN MAKİNE İNŞ. GIDA İTH. İHR. SAN. TİC. LTD. ŞTİ.',
+            'MİKRON MAKİNA SAN.TİC.LTD.ŞTİ.',
+            'SİMSOFT BİLGİSAYAR TEKNOLOJİLERİ LTD. ŞTİ.',
+            'CNK ELEKTRONİK MAKİNA SANAYİ A.Ş.',
+            'GÖKBEY MÜHENDİSLİK MAK. LTD.ŞTİ.',
+            'İMA SAVUNMA SANAYİ VE TİC. A.Ş.',
+            'KADİR BORA - BORA TİCARET',
+            'OSTİM AKÜMÜLATÖR OTOMOTİV SAN. VE TİC. A.Ş.',
+            'PANGEA METAL SANAYİ VE TİC. LTD. ŞTİ.',
+            'SİVAS MİKRO MEKANİK TEKN. A.Ş.',
+            'TRABZON ŞEHİT MERİÇ ALEMDAR POLİS MESLEK EĞİTİM MÜD.',
+            'ALTECHNA UAB',
+            'ASSAN ELEKTRONİK İMALAT PAZ. SAN.TİC.AŞ',
+            'OJSC "MMW named after S.I. VAVILOV',
+            'TAYFX HASSAS OPTİK MEKANİK SAN TİC A.Ş.',
+            'ATASAV MÜH. HAVACILIK MAK. SAVUNMA A.Ş.',
+            'KAYMAZLAR SAVUNMA VE HAVACILIK LTD. ŞTİ.',
+            'UYGUR SAV.VE END.TİC.İNŞ.TAAH.LTD.ŞTİ',
+            'EKİP SERVİS SAN. VE TİC. LTD.ŞTİ.',
+            'ANADOLU OPTOMEKANİK TEKN. SAN. TİC. A.Ş.',
+            'BİRBEN MAKİNA İMALAT İTHALAT A.Ş.',
+            'METEKSAN SAVUNMA SANAYİ A.Ş',
+            'GEMAK GEMİ İNŞ. SAN. VE TİC. A.Ş.',
+            'OPHIR OPTRONICS SOLUTION LTD',
+            'MİLLİ EĞİTİM BAKANLIĞI DERS ALETLERİ YAPIM MERKEZİ',
+            'MY LASER MEKANİK ELEKT. OPTİK VE MED. SİS. A.Ş.',
+            'İNTERPREYO MÜHENDİSLİK LTD. ŞTİ.',
+            'BURGU METAL SAN VE TİC. LTD. ŞTİ.',
+            'MENATEK SAVUNMA TEKNOLOJİLERİ SAN.TİC.A.Ş.',
+            'TRAKYA ENDÜSTRİ FABRİKA MALZ. PAZ.SAN.VE TİC. A.Ş.',
+            'GEMPA ELEKTRO MEKANİK MÜH .LTD. ŞTİ.',
+            'GÜVENSOY İNŞAAT VE SANAYİ A.Ş.',
+            'MUHARREM KILINÇ',
+            'NANODEV TEKNOLOJİ A.Ş.'
+)
+ GROUP BY  CL.DEFINITION_,ORF.DATE_,ORL.DUEDATE, ORF.DOCODE ,ITM.CODE,ORL.SHIPPEDAMOUNT , ORL.PRICE
+
+UNION ALL
+SELECT         CL.DEFINITION_ AS cari, CONVERT(NVARCHAR, ORF.DATE_, 104) AS siparis_tarih, CONVERT(NVARCHAR, ORL.DUEDATE, 104)
+                         AS teslim_tarih, ORF.DOCODE AS siparis_no, 'HİZMET' AS tur, ITM.CODE AS malzeme_kodu,
+                         SUM(ORL.SHIPPEDAMOUNT) AS sevk_miktar, ORL.PRICE AS fiyat,
+                        SUM(ORL.AMOUNT) AS siparis_adet
+FROM            dbo.LG_219_01_ORFLINE AS ORL INNER JOIN
+                         dbo.LG_219_01_ORFICHE AS ORF ON ORL.ORDFICHEREF = ORF.LOGICALREF INNER JOIN
+                         dbo.LG_219_SRVCARD AS ITM ON ORL.STOCKREF = ITM.LOGICALREF INNER JOIN
+                         dbo.LG_219_CLCARD AS CL ON ORL.CLIENTREF = CL.LOGICALREF INNER JOIN
+                         LG_219_PROJECT PRJ ON ORL.PROJECTREF = PRJ.LOGICALREF
+WHERE        (ORL.LINETYPE = 4) AND (ORF.TRCODE = 1) AND ORF.CANCELLED = 0 AND ORL.CLOSED = 0 AND ORF.STATUS=4 AND ORL.PRICE>10 AND ITM.CODE = '${urun_kodu}'
+AND CL.DEFINITION_ NOT IN (
+   'ANADOLU OPTOMEKANİK TEKNOLOJiLERi A.Ş.',
+            'AET ELECTRONICS MÜHENDİSLİK SAN. TİC. A.Ş.',
+            'AKS KAPLAMA VE BOYA SAN. TİC. LTD. ŞTİ.',
+            'ANADOLU OPTOMEKANIK TEKNOLOJiLERi A.Ş.',
+            'CHONGQING WANCAI OPTICAL INSTRUMENT CO.,LTD. (EUR)',
+            'KÖPRÜÖREN MAKİNE İNŞ. GIDA İTH. İHR. SAN. TİC. LTD. ŞTİ.',
+            'MİKRON MAKİNA SAN.TİC.LTD.ŞTİ.',
+            'SİMSOFT BİLGİSAYAR TEKNOLOJİLERİ LTD. ŞTİ.',
+            'CNK ELEKTRONİK MAKİNA SANAYİ A.Ş.',
+            'GÖKBEY MÜHENDİSLİK MAK. LTD.ŞTİ.',
+            'İMA SAVUNMA SANAYİ VE TİC. A.Ş.',
+            'KADİR BORA - BORA TİCARET',
+            'OSTİM AKÜMÜLATÖR OTOMOTİV SAN. VE TİC. A.Ş.',
+            'PANGEA METAL SANAYİ VE TİC. LTD. ŞTİ.',
+            'SİVAS MİKRO MEKANİK TEKN. A.Ş.',
+            'TRABZON ŞEHİT MERİÇ ALEMDAR POLİS MESLEK EĞİTİM MÜD.',
+            'ALTECHNA UAB',
+            'ASSAN ELEKTRONİK İMALAT PAZ. SAN.TİC.AŞ',
+            'OJSC "MMW named after S.I. VAVILOV',
+            'TAYFX HASSAS OPTİK MEKANİK SAN TİC A.Ş.',
+            'ATASAV MÜH. HAVACILIK MAK. SAVUNMA A.Ş.',
+            'KAYMAZLAR SAVUNMA VE HAVACILIK LTD. ŞTİ.',
+            'UYGUR SAV.VE END.TİC.İNŞ.TAAH.LTD.ŞTİ',
+            'EKİP SERVİS SAN. VE TİC. LTD.ŞTİ.',
+            'ANADOLU OPTOMEKANİK TEKN. SAN. TİC. A.Ş.',
+            'BİRBEN MAKİNA İMALAT İTHALAT A.Ş.',
+            'METEKSAN SAVUNMA SANAYİ A.Ş',
+            'GEMAK GEMİ İNŞ. SAN. VE TİC. A.Ş.',
+            'OPHIR OPTRONICS SOLUTION LTD',
+            'MİLLİ EĞİTİM BAKANLIĞI DERS ALETLERİ YAPIM MERKEZİ',
+            'MY LASER MEKANİK ELEKT. OPTİK VE MED. SİS. A.Ş.',
+            'İNTERPREYO MÜHENDİSLİK LTD. ŞTİ.',
+            'BURGU METAL SAN VE TİC. LTD. ŞTİ.',
+            'MENATEK SAVUNMA TEKNOLOJİLERİ SAN.TİC.A.Ş.',
+            'TRAKYA ENDÜSTRİ FABRİKA MALZ. PAZ.SAN.VE TİC. A.Ş.',
+            'GEMPA ELEKTRO MEKANİK MÜH .LTD. ŞTİ.',
+            'GÜVENSOY İNŞAAT VE SANAYİ A.Ş.',
+            'MUHARREM KILINÇ',
+            'NANODEV TEKNOLOJİ A.Ş.'
+)
+ GROUP BY  CL.DEFINITION_,ORF.DATE_,ORL.DUEDATE, ORF.DOCODE ,ITM.CODE,ORL.SHIPPEDAMOUNT , ORL.PRICE
+
+UNION ALL
+SELECT         CL.DEFINITION_ AS cari, CONVERT(NVARCHAR, ORF.DATE_, 104) AS siparis_tarih, CONVERT(NVARCHAR, ORL.DUEDATE, 104)
+                         AS teslim_tarih, ORF.DOCODE AS siparis_no, 'MALZEME' AS tur, ITM.CODE AS malzeme_kodu,
+                         SUM(ORL.SHIPPEDAMOUNT) AS sevk_miktar, ORL.PRICE AS fiyat,
+                       SUM(ORL.AMOUNT) AS siparis_adet
+FROM            dbo.LG_220_01_ORFLINE AS ORL INNER JOIN
+                         dbo.LG_220_01_ORFICHE AS ORF ON ORL.ORDFICHEREF = ORF.LOGICALREF INNER JOIN
+                         dbo.LG_220_ITEMS AS ITM ON ORL.STOCKREF = ITM.LOGICALREF INNER JOIN
+                         dbo.LG_220_CLCARD AS CL ON ORL.CLIENTREF = CL.LOGICALREF INNER JOIN
+                         LG_220_PROJECT PRJ ON ORL.PROJECTREF = PRJ.LOGICALREF
+WHERE        (ORL.LINETYPE = 0) AND (ORF.TRCODE = 1) AND ORF.CANCELLED = 0 AND ORL.CLOSED = 0 AND ORF.STATUS=4 AND ORL.PRICE>10 AND ITM.CODE = '${urun_kodu}'
+AND CL.DEFINITION_ NOT IN (
+   'ANADOLU OPTOMEKANİK TEKNOLOJiLERi A.Ş.',
+            'AET ELECTRONICS MÜHENDİSLİK SAN. TİC. A.Ş.',
+            'AKS KAPLAMA VE BOYA SAN. TİC. LTD. ŞTİ.',
+            'ANADOLU OPTOMEKANIK TEKNOLOJiLERi A.Ş.',
+            'CHONGQING WANCAI OPTICAL INSTRUMENT CO.,LTD. (EUR)',
+            'KÖPRÜÖREN MAKİNE İNŞ. GIDA İTH. İHR. SAN. TİC. LTD. ŞTİ.',
+            'MİKRON MAKİNA SAN.TİC.LTD.ŞTİ.',
+            'SİMSOFT BİLGİSAYAR TEKNOLOJİLERİ LTD. ŞTİ.',
+            'CNK ELEKTRONİK MAKİNA SANAYİ A.Ş.',
+            'GÖKBEY MÜHENDİSLİK MAK. LTD.ŞTİ.',
+            'İMA SAVUNMA SANAYİ VE TİC. A.Ş.',
+            'KADİR BORA - BORA TİCARET',
+            'OSTİM AKÜMÜLATÖR OTOMOTİV SAN. VE TİC. A.Ş.',
+            'PANGEA METAL SANAYİ VE TİC. LTD. ŞTİ.',
+            'SİVAS MİKRO MEKANİK TEKN. A.Ş.',
+            'TRABZON ŞEHİT MERİÇ ALEMDAR POLİS MESLEK EĞİTİM MÜD.',
+            'ALTECHNA UAB',
+            'ASSAN ELEKTRONİK İMALAT PAZ. SAN.TİC.AŞ',
+            'OJSC "MMW named after S.I. VAVILOV',
+            'TAYFX HASSAS OPTİK MEKANİK SAN TİC A.Ş.',
+            'ATASAV MÜH. HAVACILIK MAK. SAVUNMA A.Ş.',
+            'KAYMAZLAR SAVUNMA VE HAVACILIK LTD. ŞTİ.',
+            'UYGUR SAV.VE END.TİC.İNŞ.TAAH.LTD.ŞTİ',
+            'EKİP SERVİS SAN. VE TİC. LTD.ŞTİ.',
+            'ANADOLU OPTOMEKANİK TEKN. SAN. TİC. A.Ş.',
+            'BİRBEN MAKİNA İMALAT İTHALAT A.Ş.',
+            'METEKSAN SAVUNMA SANAYİ A.Ş',
+            'GEMAK GEMİ İNŞ. SAN. VE TİC. A.Ş.',
+            'OPHIR OPTRONICS SOLUTION LTD',
+            'MİLLİ EĞİTİM BAKANLIĞI DERS ALETLERİ YAPIM MERKEZİ',
+            'MY LASER MEKANİK ELEKT. OPTİK VE MED. SİS. A.Ş.',
+            'İNTERPREYO MÜHENDİSLİK LTD. ŞTİ.',
+            'BURGU METAL SAN VE TİC. LTD. ŞTİ.',
+            'MENATEK SAVUNMA TEKNOLOJİLERİ SAN.TİC.A.Ş.',
+            'TRAKYA ENDÜSTRİ FABRİKA MALZ. PAZ.SAN.VE TİC. A.Ş.',
+            'GEMPA ELEKTRO MEKANİK MÜH .LTD. ŞTİ.',
+            'GÜVENSOY İNŞAAT VE SANAYİ A.Ş.',
+            'MUHARREM KILINÇ',
+            'NANODEV TEKNOLOJİ A.Ş.'
+)
+ GROUP BY  CL.DEFINITION_,ORF.DATE_,ORL.DUEDATE, ORF.DOCODE ,ITM.CODE,ORL.SHIPPEDAMOUNT , ORL.PRICE
+UNION ALL
+SELECT         CL.DEFINITION_ AS cari, CONVERT(NVARCHAR, ORF.DATE_, 104) AS siparis_tarih, CONVERT(NVARCHAR, ORL.DUEDATE, 104)
+                         AS teslim_tarih, ORF.DOCODE AS siparis_no, 'HİZMET' AS tur, ITM.CODE AS malzeme_kodu,
+                         SUM(ORL.SHIPPEDAMOUNT) AS sevk_miktar, ORL.PRICE AS fiyat,
+                        SUM(ORL.AMOUNT) AS siparis_adet
+FROM            dbo.LG_220_01_ORFLINE AS ORL INNER JOIN
+                         dbo.LG_220_01_ORFICHE AS ORF ON ORL.ORDFICHEREF = ORF.LOGICALREF INNER JOIN
+                         dbo.LG_220_SRVCARD AS ITM ON ORL.STOCKREF = ITM.LOGICALREF INNER JOIN
+                         dbo.LG_220_CLCARD AS CL ON ORL.CLIENTREF = CL.LOGICALREF INNER JOIN
+                         LG_220_PROJECT PRJ ON ORL.PROJECTREF = PRJ.LOGICALREF
+WHERE        (ORL.LINETYPE = 4) AND (ORF.TRCODE = 1) AND ORF.CANCELLED = 0 AND ORL.CLOSED = 0 AND ORF.STATUS=4 AND ORL.PRICE>10 AND ITM.CODE = '${urun_kodu}'
+AND CL.DEFINITION_ NOT IN (
+   'ANADOLU OPTOMEKANİK TEKNOLOJiLERi A.Ş.',
+            'AET ELECTRONICS MÜHENDİSLİK SAN. TİC. A.Ş.',
+            'AKS KAPLAMA VE BOYA SAN. TİC. LTD. ŞTİ.',
+            'ANADOLU OPTOMEKANIK TEKNOLOJiLERi A.Ş.',
+            'CHONGQING WANCAI OPTICAL INSTRUMENT CO.,LTD. (EUR)',
+            'KÖPRÜÖREN MAKİNE İNŞ. GIDA İTH. İHR. SAN. TİC. LTD. ŞTİ.',
+            'MİKRON MAKİNA SAN.TİC.LTD.ŞTİ.',
+            'SİMSOFT BİLGİSAYAR TEKNOLOJİLERİ LTD. ŞTİ.',
+            'CNK ELEKTRONİK MAKİNA SANAYİ A.Ş.',
+            'GÖKBEY MÜHENDİSLİK MAK. LTD.ŞTİ.',
+            'İMA SAVUNMA SANAYİ VE TİC. A.Ş.',
+            'KADİR BORA - BORA TİCARET',
+            'OSTİM AKÜMÜLATÖR OTOMOTİV SAN. VE TİC. A.Ş.',
+            'PANGEA METAL SANAYİ VE TİC. LTD. ŞTİ.',
+            'SİVAS MİKRO MEKANİK TEKN. A.Ş.',
+            'TRABZON ŞEHİT MERİÇ ALEMDAR POLİS MESLEK EĞİTİM MÜD.',
+            'ALTECHNA UAB',
+            'ASSAN ELEKTRONİK İMALAT PAZ. SAN.TİC.AŞ',
+            'OJSC "MMW named after S.I. VAVILOV',
+            'TAYFX HASSAS OPTİK MEKANİK SAN TİC A.Ş.',
+            'ATASAV MÜH. HAVACILIK MAK. SAVUNMA A.Ş.',
+            'KAYMAZLAR SAVUNMA VE HAVACILIK LTD. ŞTİ.',
+            'UYGUR SAV.VE END.TİC.İNŞ.TAAH.LTD.ŞTİ',
+            'EKİP SERVİS SAN. VE TİC. LTD.ŞTİ.',
+            'ANADOLU OPTOMEKANİK TEKN. SAN. TİC. A.Ş.',
+            'BİRBEN MAKİNA İMALAT İTHALAT A.Ş.',
+            'METEKSAN SAVUNMA SANAYİ A.Ş',
+            'GEMAK GEMİ İNŞ. SAN. VE TİC. A.Ş.',
+            'OPHIR OPTRONICS SOLUTION LTD',
+            'MİLLİ EĞİTİM BAKANLIĞI DERS ALETLERİ YAPIM MERKEZİ',
+            'MY LASER MEKANİK ELEKT. OPTİK VE MED. SİS. A.Ş.',
+            'İNTERPREYO MÜHENDİSLİK LTD. ŞTİ.',
+            'BURGU METAL SAN VE TİC. LTD. ŞTİ.',
+            'MENATEK SAVUNMA TEKNOLOJİLERİ SAN.TİC.A.Ş.',
+            'TRAKYA ENDÜSTRİ FABRİKA MALZ. PAZ.SAN.VE TİC. A.Ş.',
+            'GEMPA ELEKTRO MEKANİK MÜH .LTD. ŞTİ.',
+            'GÜVENSOY İNŞAAT VE SANAYİ A.Ş.',
+            'MUHARREM KILINÇ',
+            'NANODEV TEKNOLOJİ A.Ş.'
+)
+ GROUP BY  CL.DEFINITION_,ORF.DATE_,ORL.DUEDATE, ORF.DOCODE ,ITM.CODE,ORL.SHIPPEDAMOUNT , ORL.PRICE
+
+ ) datas
+ GROUP BY cari,siparis_tarih,siparis_no,tur,malzeme_kodu
+ ) datass  GROUP BY siparis_no,cari ,malzeme_kodu
+`
+        )
+
+        if (siparisCek.recordset && siparisCek.rowsAffected > 0) {
+
+            let satinAlmaSiparis = siparisCek.recordsets[0];
+            for (let data of satinAlmaSiparis) {
+                const siparisVarmiQuery = await pool.query(`SELECT * FROM maliyet_satis_siparis WHERE urun_kodu = $1 AND siparis_no = $2`, [urun_kodu, data.siparis_no])
+                if (siparisVarmiQuery.rowCount == 0) {
+                    const insertSiparis = await pool.query(`INSERT INTO maliyet_satis_siparis(
+	cari, siparis_no, birim_fiyat, siparis_miktar, acik_siparis, urun_kodu)
+	VALUES ($1, $2, $3, $4, $5, $6)`, [data.cari, data.siparis_no, data.fiyat, data.siparis_adet, (data.siparis_adet - data.sevk_adet), data.malzeme_kodu])
+                } else {
+                    const updateSiparis = await pool.query(`UPDATE maliyet_satis_siparis SET siparis_miktar=$1, acik_siparis=$2 WHERE urun_kodu = $3 AND siparis_no = $4`, [data.siparis_adet, (data.siparis_adet - data.sevk_adet), urun_kodu, data.siparis_no])
+                }
+            }
+        }
+
+        return 0
 
     } catch (error) {
         console.error(error);
@@ -1118,24 +2332,29 @@ async function insertOrUpdate(query, params) {
 async function bomCek(code, cari_yil) {
     const mssqlPool = await poolPromises; // MSSQL connection
     const tigerCariOku = mssqlPool.request();
-    const visitedCodes = new Set();
     const cariKodlar = [224, 225, 223, 220, 219];
-    const fetchBomData = async (kod, yil, seviye) => {
-        const key = `${code}-${kod}-${yil}`;
+    const fetchBomData = async (kod, ust_kod, yil, seviye, path = [], visitedCodes = new Set()) => {
+        const key = `${code}-${ust_kod}-${kod}-${yil}-${seviye}`;
+        if (path.includes(kod)) {
+            console.warn(`Döngü tespit edildi: ${[...path, kod].join(" → ")}`);
+            return; // Sonsuz döngüyü engelle
+        }
+        const newPath = [...path, kod]; // Yeni path'e kodu ekle
+
         if (visitedCodes.has(key)) return;
         visitedCodes.add(key);
 
         const bomQuery = await tigerCariOku.query(`
             SELECT     line.OPERATIONREF,
- item.CODE as ana_urun,
-    item.NAME as ana_urun_aciklama,item.LOGICALREF,bom.LOGICALREF,line.AMOUNT, 
- (SELECT NAME FROM LG_${yil}_ITEMS WHERE LOGICALREF = line.ITEMREF) AS NAME,
-    (SELECT CODE FROM LG_${yil}_ITEMS WHERE LOGICALREF = line.ITEMREF) AS CODE
-FROM LG_${yil}_ITEMS item 
-INNER JOIN LG_${yil}_BOMASTER bom ON bom.MAINPRODREF=item.LOGICALREF and bom.ACTIVE = 0
-INNER JOIN LG_${yil}_BOMLINE line ON line.BOMMASTERREF = bom.LOGICALREF
-WHERE item.CODE ='${kod}'
-          
+                    item.CODE as ana_urun,
+                        item.NAME as ana_urun_aciklama,item.LOGICALREF,bom.LOGICALREF,line.AMOUNT,
+                    (SELECT NAME FROM LG_${yil}_ITEMS WHERE LOGICALREF = line.ITEMREF) AS NAME,
+                        (SELECT CODE FROM LG_${yil}_ITEMS WHERE LOGICALREF = line.ITEMREF) AS CODE
+                    FROM LG_${yil}_ITEMS item
+                    INNER JOIN LG_${yil}_BOMASTER bom ON bom.MAINPRODREF=item.LOGICALREF and bom.ACTIVE = 0
+                    INNER JOIN LG_${yil}_BOMLINE line ON line.BOMMASTERREF = bom.LOGICALREF
+                    WHERE item.CODE ='${kod}'
+
         `);
         let operasyonID = []
         if (bomQuery.rowsAffected > 0 && bomQuery.recordset.length > 0) {
@@ -1156,24 +2375,24 @@ WHERE item.CODE ='${kod}'
             const opIDsString = operasyonID.join(',');
 
             const timeQuery = await tigerCariOku.query(`
-                    
 
-SELECT 
-    worksta.NAME AS istasyonname, 
+
+SELECT
+    worksta.NAME AS istasyonname,
     worksta.CODE AS istasyonkod,
  (
         COALESCE(SUM(opq.HEADTIME), 0) +
         COALESCE(SUM(opq.WAITBATCHTIME / NULLIF(opq.WAITBATCHQTY, 0)), 0) +
         COALESCE(SUM(opq.FIXEDSETUPTIME), 0) +
         COALESCE(SUM(opq.RUNTIME / NULLIF(opq.BATCHQUANTITY, 0)), 0)
-    ) AS islemzaman   FROM 
-    LG_${yil}_OPRTREQ opq 
-INNER JOIN 
-    LG_${yil}_WORKSTAT worksta 
-    ON worksta.LOGICALREF = opq.WSREF 
-WHERE 
+    ) AS islemzaman   FROM
+    LG_${yil}_OPRTREQ opq
+INNER JOIN
+    LG_${yil}_WORKSTAT worksta
+    ON worksta.LOGICALREF = opq.WSREF
+WHERE
     opq.OPERATIONREF IN (${opIDsString})
-GROUP BY 
+GROUP BY
     worksta.NAME,     worksta.CODE
                 `);
 
@@ -1216,7 +2435,8 @@ GROUP BY
                         }
                         // Alt BOM’ları kontrol et (bazı kodları dışla)
                         if (!/(100\.%|800\.%|200\.%|300\.|400\.|500\.|600|700|53\*\*-)/.test(element.CODE)) {
-                            await fetchBomData(element.CODE, cari_yil, seviye + 1);  // <-- SEVİYE + 1
+                            await fetchBomData(element.CODE, kod, cari_yil, seviye + 1, newPath, visitedCodes);
+
                         }
                     }
 
@@ -1224,15 +2444,18 @@ GROUP BY
             }
         } else {
             // BOM yoksa, bir sonraki yıl kodunu dene
-            const currentIndex = cariKodlar.indexOf(yil);
-            if (currentIndex !== -1 && currentIndex + 1 < cariKodlar.length) {
-                await fetchBomData(kod, cariKodlar[currentIndex + 1], seviye);  // <-- SEVİYE sabit
+            let kacinci = cariKodlar.findIndex(s => s == yil);
+            if (kacinci > -1 && kacinci < cariKodlar.length - 1) {
+                let sonrakiCariKod = cariKodlar[kacinci + 1];
+                await fetchBomData(kod, kod, sonrakiCariKod, seviye);  // <-- SEVİYE sabit
+
             }
+
         }
 
 
     };
-    await fetchBomData(code, cari_yil, 0);
+    await fetchBomData(code, code, cari_yil, 0);
 
 
     // 2. Hesaplanan birim_fiyat'ı bom_fiyat olarak ata

@@ -816,3 +816,37 @@ Error occurred at 2025-01-24T14:15:45.802Z:
 Error: ReferenceError: data is not defined
 Error occurred at 2025-01-24T14:17:28.188Z:
 Error: ReferenceError: data is not defined
+Error occurred at 2025-04-30T11:10:16.065Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2025-04-30T11:10:38.020Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2025-04-30T11:11:20.377Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2025-04-30T11:11:30.370Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2025-04-30T11:13:14.369Z:
+Error: error: invalid input syntax for type double precision: ""
+Error occurred at 2025-04-30T11:13:33.705Z:
+Error: error: invalid input syntax for type double precision: ""
+Error occurred at 2025-04-30T11:13:52.313Z:
+Error: error: invalid input syntax for type double precision: ""
+Error occurred at 2025-04-30T11:14:03.121Z:
+Error: error: invalid input syntax for type double precision: ""
+Error occurred at 2025-04-30T11:14:30.439Z:
+Error: error: invalid input syntax for type double precision: ""
+Error occurred at 2025-04-30T11:14:51.612Z:
+Error: error: invalid input syntax for type double precision: ""
+Error occurred at 2025-04-30T11:17:52.817Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2025-04-30T11:19:26.507Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2025-04-30T11:27:17.794Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2025-04-30T12:57:44.648Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2025-04-30T12:58:39.863Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2025-04-30T13:03:56.485Z:
+Error: ReferenceError: data is not defined
+Error occurred at 2025-04-30T13:23:49.733Z:
+Error: ReferenceError: data is not defined

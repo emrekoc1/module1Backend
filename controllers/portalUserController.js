@@ -81,8 +81,16 @@ const getGenelQuery = `SELECT
           FROM portal_user_departman pud 
           WHERE pu.sicil = pud.user_id) AS departman) AS departman 
 FROM portal_user pu`
-const selectUserSicilOrgQury = `SELECT usr.*,'[]' as yetenek,(SELECT json_agg(egitim)as  egitim FROM(SELECT*
-	FROM portal_user_egitim WHERE sicil=usr.sicil) egitim),(SELECT json_agg(aho_egitim) as aho_egitim FROM (SELECT *  FROM portal_user_egitim_aho puae WHERE puae.sicil=usr.sicil ) aho_egitim) , (SELECT json_agg(birim) as birim FROM (SELECT *,(SELECT name FROM portal_departman_organizasyon WHERE id = pud.department_id )  FROM portal_departman_users pud WHERE pud.sicil=usr.sicil ) birim) FROM portal_user usr WHERE usr.sicil= $1`
+const selectUserSicilOrgQury = `SELECT usr.*,'[]' as yetenek,
+(SELECT json_agg(video_egitim)as  video_egitim FROM(	 SELECT video.*,users.video_time,users.read_time,users.status,users.is_end
+										FROM portal_egitim_user users 
+										INNER JOIN portal_egitim_video video ON users.video_id = video.id
+										AND video.is_deleted=false AND video.is_active=true WHERE user_id=usr.sicil) video_egitim)
+,(SELECT json_agg(egitim)as  egitim FROM(SELECT*
+	FROM portal_user_egitim WHERE sicil=usr.sicil) egitim),(SELECT json_agg(aho_egitim) as aho_egitim FROM (SELECT *  FROM portal_user_egitim_aho puae WHERE puae.sicil=usr.sicil ) aho_egitim) , 
+    (SELECT json_agg(birim) as birim FROM (SELECT *,
+    (SELECT name FROM portal_departman_organizasyon WHERE id = pud.department_id ) 
+     FROM portal_departman_users pud WHERE pud.sicil=usr.sicil ) birim) FROM portal_user usr WHERE usr.sicil= $1`
 const insertBirimOrganizasyon = `INSERT INTO portal_departman_organizasyon ( name, parent_id, css_class, img, departman_id, aciklama) VALUES ($1,$2,$3,$4,$5,$6) RETURNING * `
 const insertUserAhoEgitimQuery = `INSERT INTO portal_user_egitim_aho(
 	 sicil, egitim_adi, egitim_veren, egitim_yeri, sertifika, egitim_tarih, egitim_suresi)
@@ -1585,6 +1593,7 @@ exports.updatePaswordUser = async (req, res) => {
         const { password, sicil } = req.body
         const mssqlPool = await poolPromise; 
         const poolRequest = mssqlPool.request();
+        console.log("buraya gheldimi")
         const result = await pool.query(updateUserPaswordQuery, [sicil, password, false])
         const msqlRslt = await poolRequest.query(`UPDATE users SET password_status = 1,password_='${password}' WHERE sicil = '${sicil}'`);
 

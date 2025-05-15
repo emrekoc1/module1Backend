@@ -481,41 +481,52 @@ AND bom.seviye = (SELECT MIN(seviye) FROM maliyet_bom bom2 WHERE bom2.ana_urun =
 };
 exports.depoHareketAnalizi = async (req, res) => {
     try {
-        const depoResult = `SELECT 
-            SUM(depo.depo_miktar * fiyat.birim_fiyat) AS toplam_maliyet,
-            depo.son_hareket
-        FROM maliyet_urun_depo depo
-        INNER JOIN maliyet_urun_birim_fiyat fiyat ON fiyat.urun_kodu = depo.urun_kodu AND fiyat.birim_fiyat is not null 
-        WHERE depo.son_hareket is not null GROUP BY depo.son_hareket`;
+        const depoResult = `
+            SELECT 
+                depo.urun_kodu,
+                SUM(depo.depo_miktar * fiyat.birim_fiyat) AS toplam_maliyet,
+                depo.son_hareket
+            FROM maliyet_urun_depo depo
+            INNER JOIN maliyet_urun_birim_fiyat fiyat 
+                ON fiyat.urun_kodu = depo.urun_kodu AND fiyat.birim_fiyat IS NOT NULL 
+            WHERE depo.son_hareket IS NOT NULL
+            GROUP BY depo.urun_kodu, depo.son_hareket`;
 
         let result = await pool.query(depoResult);
 
-
-        // Belirtilen gruplara göre boş bir maliyet listesi oluştur
         const ayGruplari = [1, 2, 3, 4, 5, 6, 9, 12, 18, 24, 36, 48, 60, 72, 84, 96, 108, 130, 150, 180];
-        const maliyetGruplari = ayGruplari.map(ay => ({ ay, toplam_fiyat: 0 }));
 
-        // Son hareketleri belirlenen gruplara göre dağıt
+        const maliyetGruplari = ayGruplari.map(ay => ({
+            ay,
+            toplam_fiyat: 0,
+            urunler: new Set(),  // Benzersiz ürün kodlarını tutar
+        }));
+
         result.rows.forEach(row => {
-            const hareketGun = row.son_hareket ?? 0;
-            const maliyet = row.toplam_maliyet ?? 0; // ✅ Doğru alan adı kullanıldı!
+            const hareketGun = row.son_hareket; // NULL olmayacağı garanti (WHERE koşulu)
+            const maliyet = row.toplam_maliyet ?? 0;
+            const urunKodu = row.urun_kodu;
 
-            let ay = Math.ceil(hareketGun / 30);
-
-            // **Ay değerini en uygun gruba yerleştirme**
+            const ay = Math.ceil(hareketGun / 30);
             let uygunGrupIndex = ayGruplari.findIndex(grupAy => ay <= grupAy);
-            if (uygunGrupIndex === -1) {
-                uygunGrupIndex = ayGruplari.length - 1; // En büyük gruba koy
-            }
+            if (uygunGrupIndex === -1) uygunGrupIndex = ayGruplari.length - 1;
 
             maliyetGruplari[uygunGrupIndex].toplam_fiyat += maliyet;
+            maliyetGruplari[uygunGrupIndex].urunler.add(urunKodu);
         });
 
-        res.status(200).json({ status: 200, data: maliyetGruplari });
+        // Sonucu hazırla
+        const sonuc = maliyetGruplari.map(g => ({
+            ay: g.ay,
+            toplam_fiyat: g.toplam_fiyat,
+            urun_sayisi: g.urunler.size // Bu zaten tam sayıdır
+        }));
+
+        res.status(200).json({ status: 200, data: sonuc });
 
     } catch (error) {
         console.error("Hata:", error);
-        res.status(400).json({ status: 400, data: error });
+        res.status(400).json({ status: 400, data: error.message }); // Hata mesajını da gönder
     }
 };
 exports.depoToplamMaliyet = async (req, res) => {

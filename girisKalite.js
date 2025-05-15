@@ -816,58 +816,62 @@ WHERE        (ACTIVE = 0) AND CODE LIKE '%${urun_kod}%'`);
 
 
 router.post('/uretimSarfSorgu', cors(), async (req, res) => {
-
     const { id, kalite_tur } = req.body;
-
-
+    console.log(req.body);
 
     getToken(async (error, access_token) => {
         if (error) {
-
-
             res.status(500).json({ error: error });
             return;
-
         }
-        // const query = encodeURIComponent("SELECT * FROM AMBAR_TOPLAMLARI_225 WHERE KODU = '" + code + "'");
-        // const url = `http://20.0.0.14:32001/api/v1/queries?tsql=${query}`;
-        const insertQuery = await pool.query(`
-            SELECT gkuk.id,gkuk.created_date, gkuk.stok_no,gkuk.status, gkuk.stok_aciklama, gkuk.lot,
-              gkuk.proje, gkuk.tur, gkuk.cari, gkuk.siparis_no, gkuk.kaplama_fimasi,
-              gkuk.aciklama, gkuk.gelen_miktar, gkuk.kabul, gkuk.ogk, gkuk.iade,
-              gkuk.rework, gkuk.bildirim_no,gkuk.qr,
-              (SELECT name FROM s_cari WHERE id = gkuk.cari) as cari_name,
-              (SELECT id FROM gk_gkk WHERE id = gkuk.bildirim_no ) as gkk_bildirim_no ,
-              (SELECT json_agg(dokumans.*) FROM (SELECT * FROM gk_dokuman gkd WHERE type=1 AND bagli_id = gkuk.id UNION SELECT gkd.* FROM gk_dokuman gkd WHERE type = 2 AND bagli_id = (SELECT id FROM gk_gkk WHERE gkuk.id=gk_id)) as dokumans) as dokumanlar
-          FROM gk_urun_kontrol gkuk WHERE id = ${id} AND kalite_tur=${kalite_tur}
-              `);
 
+        // Koşullu WHERE sorgusu oluşturma
+        let whereClause = `WHERE id = ${id}`;
+        if (kalite_tur) {
+            whereClause += ` AND kalite_tur = ${kalite_tur}`;
+        }
+
+        const insertQuery = await pool.query(`
+            SELECT gkuk.id, gkuk.created_date, gkuk.stok_no, gkuk.status, gkuk.stok_aciklama, gkuk.lot,
+                gkuk.proje, gkuk.tur, gkuk.cari, gkuk.siparis_no, gkuk.kaplama_fimasi,
+                gkuk.aciklama, gkuk.gelen_miktar, gkuk.kabul, gkuk.ogk, gkuk.iade,
+                gkuk.rework, gkuk.bildirim_no, gkuk.qr,
+                (SELECT name FROM s_cari WHERE id = gkuk.cari) as cari_name,
+                (SELECT id FROM gk_gkk WHERE id = gkuk.bildirim_no ) as gkk_bildirim_no,
+                (SELECT json_agg(dokumans.*) FROM (
+                    SELECT * FROM gk_dokuman gkd WHERE type=1 AND bagli_id = gkuk.id 
+                    UNION 
+                    SELECT gkd.* FROM gk_dokuman gkd WHERE type = 2 AND bagli_id = (SELECT id FROM gk_gkk WHERE gkuk.id=gk_id)
+                ) as dokumans) as dokumanlar
+            FROM gk_urun_kontrol gkuk 
+            ${whereClause}
+        `);
 
         if (insertQuery.rowCount > 0) {
-            const { stok_no, lot } = insertQuery.rows[0]
+            const { stok_no, lot } = insertQuery.rows[0];
             const url = `http://20.0.0.14:32001/api/v1/queries?tsql=${encodeURIComponent(`
-            SELECT 
-              proItem.CODE as urun_kod,
-              proItem.NAME as urun_aciklama,
-              sarfSatir.INSLAMOUNT as sarf_miktar,
-              sarfSatir.DATE_ as sarf_tarih 
-            FROM LG_225_ITEMS item 
-            INNER JOIN LG_225_01_SERILOTN lotBul 
-              ON lotBul.CODE = '${lot}' 
-              AND lotBul.ITEMREF = item.LOGICALREF  
-            INNER JOIN LG_225_01_SLTRANS sarfSatir 
-              ON sarfSatir.ITEMREF = item.LOGICALREF 
-              AND sarfSatir.IOCODE = 4 
-              AND sarfSatir.SLREF = lotBul.LOGICALREF 
-              AND sarfSatir.FICHETYPE = 12  
-            INNER JOIN LG_225_01_STFICHE fich 
-              ON fich.LOGICALREF = sarfSatir.STFICHEREF  
-            INNER JOIN LG_225_PRODORD prod 
-              ON prod.LOGICALREF = fich.PRODORDERREF  
-            INNER JOIN LG_225_ITEMS proItem 
-              ON proItem.LOGICALREF = prod.ITEMREF    
-            WHERE item.CODE = '${stok_no}'
-          `)}`;
+                SELECT 
+                    proItem.CODE as urun_kod,
+                    proItem.NAME as urun_aciklama,
+                    sarfSatir.INSLAMOUNT as sarf_miktar,
+                    sarfSatir.DATE_ as sarf_tarih 
+                FROM LG_225_ITEMS item 
+                INNER JOIN LG_225_01_SERILOTN lotBul 
+                    ON lotBul.CODE = '${lot}' 
+                    AND lotBul.ITEMREF = item.LOGICALREF  
+                INNER JOIN LG_225_01_SLTRANS sarfSatir 
+                    ON sarfSatir.ITEMREF = item.LOGICALREF 
+                    AND sarfSatir.IOCODE = 4 
+                    AND sarfSatir.SLREF = lotBul.LOGICALREF 
+                    AND sarfSatir.FICHETYPE = 12  
+                INNER JOIN LG_225_01_STFICHE fich 
+                    ON fich.LOGICALREF = sarfSatir.STFICHEREF  
+                INNER JOIN LG_225_PRODORD prod 
+                    ON prod.LOGICALREF = fich.PRODORDERREF  
+                INNER JOIN LG_225_ITEMS proItem 
+                    ON proItem.LOGICALREF = prod.ITEMREF    
+                WHERE item.CODE = '${stok_no}'
+            `)}`;
 
             const options = {
                 method: 'GET',
@@ -878,22 +882,19 @@ router.post('/uretimSarfSorgu', cors(), async (req, res) => {
                     Accept: 'application/json'
                 }
             };
+
             request(options, async function (error, response, body) {
                 if (error) {
-
                     res.status(500).json({ error: error });
                     return;
                 }
 
                 const parsedBody = JSON.parse(body);
-
-                ambar = parsedBody.items || []; // "items" özelliğini kullanarak sipariş verilerini alın
-
-
-                res.json({ data: ambar, olcum: insertQuery.rows }); // İşlenen veriyi JSON olarak yanıt olarak gönderin
+                ambar = parsedBody.items || [];
+                res.json({ data: ambar, olcum: insertQuery.rows });
             });
         } else {
-            res.json({ olcum: insertQuery.rows, data: [{ "veri gelmedi": "" }] })
+            res.json({ olcum: insertQuery.rows, data: [{ "veri gelmedi": "" }] });
         }
     });
 });
